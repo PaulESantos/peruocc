@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"name": "ocurrencias_tarma_biodiversidad_20260817",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "scientificName": "Cantua buxifolia Juss. ex Lam.", "decimalLatitude": -11.474876, "decimalLongitude": -75.686764, "eventDate": "2026-01-14T11:38:17", "taxonRank": "SPECIES", "kingdom": "Plantae", "phylum": "Tracheophyta", "class": "Magnoliopsida", "order": "Ericales", "family": "Polemoniaceae", "genus": "Cantua", "species": "Cantua buxifolia", "recordedBy": "nakw", "coordinateUncertaintyInMeters": 80.0, "source": "GBIF", "district": "TARMA" }, "geometry": { "type": "Point", "coordinates": [ -75.686764, -11.474876 ] } },
+{ "type": "Feature", "properties": { "scientificName": "Cantua buxifolia", "decimalLatitude": -11.4748762595, "decimalLongitude": -75.686763748499999, "eventDate": "2026-01-14", "taxonRank": null, "kingdom": null, "phylum": null, "class": null, "order": null, "family": null, "genus": null, "species": null, "recordedBy": "nakw", "coordinateUncertaintyInMeters": 80.0, "source": "iNaturalist", "district": "TARMA" }, "geometry": { "type": "Point", "coordinates": [ -75.686763748499999, -11.4748762595 ] } },
+{ "type": "Feature", "properties": { "scientificName": "Cantua buxifolia", "decimalLatitude": -11.43041309, "decimalLongitude": -75.69339829, "eventDate": "2021-05-01", "taxonRank": null, "kingdom": null, "phylum": null, "class": null, "order": null, "family": null, "genus": null, "species": null, "recordedBy": "maria1809", "coordinateUncertaintyInMeters": 6.0, "source": "iNaturalist", "district": "TARMA" }, "geometry": { "type": "Point", "coordinates": [ -75.69339829, -11.43041309 ] } }
+]
+}

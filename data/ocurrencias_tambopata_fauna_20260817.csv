@@ -1,0 +1,148 @@
+scientificName,decimalLatitude,decimalLongitude,eventDate,taxonRank,kingdom,phylum,class,order,family,genus,species,recordedBy,coordinateUncertaintyInMeters,source,district
+"Melanosuchus niger (Spix, 1825)",-12.610645,-69.042419,2026-01-02T09:12:15,SPECIES,Animalia,Chordata,Crocodylia,NA,Alligatoridae,Melanosuchus,Melanosuchus niger,abriberman,NA,GBIF,TAMBOPATA
+"Anhinga anhinga (Linnaeus, 1766)",-12.608778,-69.043854,2026-01-02T08:38:03,SPECIES,Animalia,Chordata,Aves,Suliformes,Anhingidae,Anhinga,Anhinga anhinga,abriberman,NA,GBIF,TAMBOPATA
+"Boa constrictor Linnaeus, 1758",-12.608573,-69.190035,2026-01-01T21:31:55,SPECIES,Animalia,Chordata,Squamata,NA,Boidae,Boa,Boa constrictor,Suze LdA,40,GBIF,TAMBOPATA
+"Monasa nigrifrons (von Spix, 1824)",-12.607547,-69.080742,2026-01-04T12:02:10,SPECIES,Animalia,Chordata,Aves,Piciformes,Bucconidae,Monasa,Monasa nigrifrons,Simon RB,NA,GBIF,TAMBOPATA
+"Anartia amathea (Linnaeus, 1758)",-12.610253,-69.04895,2026-01-02T07:56:19,SPECIES,Animalia,Arthropoda,Insecta,Lepidoptera,Nymphalidae,Anartia,Anartia amathea,abriberman,NA,GBIF,TAMBOPATA
+"Ara ararauna (Linnaeus, 1758)",-12.954651,-69.488091,2026-01-11T23:36:42,SPECIES,Animalia,Chordata,Aves,Psittaciformes,Psittacidae,Ara,Ara ararauna,Truman Gilliam,31057,GBIF,TAMBOPATA
+"Ameerega trivittata (Spix, 1824)",-12.185146,-69.549022,2026-01-18,SPECIES,Animalia,Chordata,Amphibia,Anura,Dendrobatidae,Ameerega,Ameerega trivittata,Alonso Huyhua Cornejo,43095,GBIF,TAMBOPATA
+Colubridae,-12.138547,-69.414865,2026-01-18,FAMILY,Animalia,Chordata,Squamata,NA,Colubridae,NA,NA,Alonso Huyhua Cornejo,32497,GBIF,TAMBOPATA
+"Corallus hortulana (Linnaeus, 1758)",-12.200629,-69.499308,2026-01-18,SPECIES,Animalia,Chordata,Squamata,NA,Boidae,Corallus,Corallus hortulana,Alonso Huyhua Cornejo,40763,GBIF,TAMBOPATA
+"Oxyrhopus occipitalis (Wied-Neuwied, 1824)",-12.05953,-69.526739,2026-01-09T18:39:58,SPECIES,Animalia,Chordata,Squamata,NA,Colubridae,Oxyrhopus,Oxyrhopus occipitalis,Raul Achahuanco Huallpa,NA,GBIF,TAMBOPATA
+"Podocnemis unifilis Troschel, 1848",-12.146766,-69.58753,2026-01-23T16:00:48,SPECIES,Animalia,Chordata,Testudines,NA,Podocnemididae,Podocnemis,Podocnemis unifilis,jeffreyps,31104,GBIF,TAMBOPATA
+"Hoploxypterus cayanus (Latham, 1790)",-12.052952,-69.527604,2026-01-30T16:32:53,SPECIES,Animalia,Chordata,Aves,Charadriiformes,Charadriidae,Hoploxypterus,Hoploxypterus cayanus,jeffreyps,155,GBIF,TAMBOPATA
+"Ameerega hahneli (Boulenger, 1884)",-12.050119,-69.531822,2026-01-22T13:39:15,SPECIES,Animalia,Chordata,Amphibia,Anura,Dendrobatidae,Ameerega,Ameerega hahneli,mialoren24,10,GBIF,TAMBOPATA
+"Pyrrhopygopsis socrates (Ménétriés, 1885)",-12.049895,-69.532048,2026-01-21T13:35:19,SPECIES,Animalia,Arthropoda,Insecta,Lepidoptera,Hesperiidae,Pyrrhopygopsis,Pyrrhopygopsis socrates,jeffreyps,2,GBIF,TAMBOPATA
+"Calydna cea Hewitson, 1859",-12.049689,-69.53127,2026-01-25T14:04:18,SPECIES,Animalia,NA,NA,NA,NA,Calydna,Calydna cea,jeffreyps,408,GBIF,TAMBOPATA
+"Desmia bajulalis Guenée, 1854",-12.049968,-69.531869,2026-01-24T19:18:14,SPECIES,Animalia,Arthropoda,Insecta,Lepidoptera,Crambidae,Desmia,Desmia bajulalis,jeffreyps,2,GBIF,TAMBOPATA
+"Morpho helenor Cramer, 1782",-12.0499,-69.531799,2026-01-21T07:37:59,SPECIES,Animalia,Arthropoda,Insecta,Lepidoptera,Nymphalidae,Morpho,Morpho helenor,jeffreyps,159,GBIF,TAMBOPATA
+"Anasa jucunda Breddin, 1904",-12.053067,-69.535972,2026-01-31T11:45:50,SPECIES,Animalia,Arthropoda,Insecta,Hemiptera,Coreidae,Anasa,Anasa jucunda,jeffreyps,5,GBIF,TAMBOPATA
+"Actitis macularius (Linnaeus, 1766)",-12.050132,-69.529729,2026-01-23T16:05:39,SPECIES,Animalia,Chordata,Aves,Charadriiformes,Scolopacidae,Actitis,Actitis macularius,jeffreyps,408,GBIF,TAMBOPATA
+"Oxysternon conspicillatum (Weber, 1801)",-12.050021,-69.531871,2026-01-21T13:35:19,SPECIES,Animalia,Arthropoda,Insecta,Coleoptera,Scarabaeidae,Oxysternon,Oxysternon conspicillatum,jeffreyps,7,GBIF,TAMBOPATA
+"Opisthocomus hoazin (Statius Muller, 1776)",-12.57623,-69.058322,2026-01-05T08:16:30,SPECIES,Animalia,Chordata,Aves,Opisthocomiformes,Opisthocomidae,Opisthocomus,Opisthocomus hoazin,Simon RB,1852,GBIF,TAMBOPATA
+"Sapajus apella (Linnaeus, 1758)",-12.039408,-69.540609,2026-01-30T06:25:01,SPECIES,Animalia,Chordata,Mammalia,Primates,Cebidae,Sapajus,Sapajus apella,jeffreyps,408,GBIF,TAMBOPATA
+"Pristimantis fenestratus (Steindachner, 1864)",-12.050417,-69.531913,2026-01-28T20:48:06,SPECIES,Animalia,Chordata,Amphibia,Anura,Craugastoridae,Pristimantis,Pristimantis fenestratus,mialoren24,9,GBIF,TAMBOPATA
+"Erythrolamprus aesculapii (Linnaeus, 1758)",-12.051429,-69.531781,2026-01-30T07:12:10,SPECIES,Animalia,Chordata,Squamata,NA,Colubridae,Erythrolamprus,Erythrolamprus aesculapii,mialoren24,122,GBIF,TAMBOPATA
+"Vila emilia Cramer, 1779",-12.049364,-69.53046,2026-01-25T12:47:20,SPECIES,Animalia,Arthropoda,Insecta,Lepidoptera,Nymphalidae,Vila,Vila emilia,jeffreyps,171,GBIF,TAMBOPATA
+"Gonatodes humeralis (Guichenot, 1855)",-12.049678,-69.531906,2026-01-25T15:39:20,SPECIES,Animalia,Chordata,Squamata,NA,Sphaerodactylidae,Gonatodes,Gonatodes humeralis,jeffreyps,134,GBIF,TAMBOPATA
+"Avicularia avicularia (Linnaeus, 1758)",-12.049994,-69.531967,2026-01-30T08:13:39,SPECIES,Animalia,Arthropoda,Arachnida,Araneae,Theraphosidae,Avicularia,Avicularia avicularia,jeffreyps,82,GBIF,TAMBOPATA
+"Ameerega hahneli (Boulenger, 1884)",-12.049767,-69.53205,2026-01-22T17:11:22,SPECIES,Animalia,Chordata,Amphibia,Anura,Dendrobatidae,Ameerega,Ameerega hahneli,jeffreyps,187,GBIF,TAMBOPATA
+"Periplaneta americana (Linnaeus, 1758)",-12.050465,-69.531998,2026-01-21T14:53:55,SPECIES,Animalia,Arthropoda,Insecta,Blattodea,Blattidae,Periplaneta,Periplaneta americana,jeffreyps,170,GBIF,TAMBOPATA
+"Turdus hauxwelli Lawrence, 1869",-12.045798,-69.535586,2026-01-30T06:50:52,SPECIES,Animalia,Chordata,Aves,Passeriformes,Turdidae,Turdus,Turdus hauxwelli,jeffreyps,408,GBIF,TAMBOPATA
+"Ochthornis littoralis (Pelzeln, 1868)",-12.071623,-69.490462,2026-01-30T16:16:20,SPECIES,Animalia,Chordata,Aves,Passeriformes,Tyrannidae,Ochthornis,Ochthornis littoralis,jeffreyps,408,GBIF,TAMBOPATA
+"Erythrolamprus aesculapii (Linnaeus, 1758)",-12.047406,-69.535369,2026-01-30T07:12:10,SPECIES,Animalia,Chordata,Squamata,NA,Colubridae,Erythrolamprus,Erythrolamprus aesculapii,jeffreyps,408,GBIF,TAMBOPATA
+"Herpetotheres cachinnans (Linnaeus, 1758)",-12.072374,-69.489677,2026-01-30T16:03:36,SPECIES,Animalia,Chordata,Aves,Falconiformes,Falconidae,Herpetotheres,Herpetotheres cachinnans,jeffreyps,408,GBIF,TAMBOPATA
+"Cochlearius cochlearius (Linnaeus, 1766)",-12.051489,-69.534737,2026-01-26T11:54:55,SPECIES,Animalia,Chordata,Aves,Pelecaniformes,Ardeidae,Cochlearius,Cochlearius cochlearius,mialoren24,4,GBIF,TAMBOPATA
+"Leptotila rufaxilla (Richard & Bernard, 1792)",-12.595033,-69.177812,2026-01-31T11:56:06,SPECIES,Animalia,Chordata,Aves,Columbiformes,Columbidae,Leptotila,Leptotila rufaxilla,Rajan Rao,13,GBIF,TAMBOPATA
+"Ardea alba Linnaeus, 1758",-12.065509,-69.52119,2026-01-30T16:21:07,SPECIES,Animalia,Chordata,Aves,Pelecaniformes,Ardeidae,Ardea,Ardea alba,jeffreyps,408,GBIF,TAMBOPATA
+"Atticora fasciata (Gmelin, 1789)",-12.067541,-69.511958,2026-01-23T15:57:33,SPECIES,Animalia,Chordata,Aves,Passeriformes,Hirundinidae,Atticora,Atticora fasciata,jeffreyps,408,GBIF,TAMBOPATA
+"Zelurus festivus (Stål, 1859)",-12.053225,-69.535737,2026-01-30T11:17:02,SPECIES,Animalia,Arthropoda,Insecta,Hemiptera,Reduviidae,Zelurus,Zelurus festivus,jeffreyps,17,GBIF,TAMBOPATA
+"Opisthocomus hoazin (Statius Muller, 1776)",-12.095605,-69.474437,2026-01-30T16:27:41,SPECIES,Animalia,Chordata,Aves,Opisthocomiformes,Opisthocomidae,Opisthocomus,Opisthocomus hoazin,jeffreyps,408,GBIF,TAMBOPATA
+"Ameerega trivittata (Spix, 1824)",-12.052339,-69.53118,2026-01-30T09:01:19,SPECIES,Animalia,Chordata,Amphibia,Anura,Dendrobatidae,Ameerega,Ameerega trivittata,jeffreyps,13,GBIF,TAMBOPATA
+"Ateles chamek (Humboldt, 1812)",-12.046134,-69.572277,2026-01-30T07:05:40,SPECIES,Animalia,Chordata,Mammalia,Primates,Atelidae,Ateles,Ateles chamek,jeffreyps,31104,GBIF,TAMBOPATA
+"Monasa nigrifrons (von Spix, 1824)",-12.049671,-69.532058,2026-01-22T17:28:04,SPECIES,Animalia,Chordata,Aves,Piciformes,Bucconidae,Monasa,Monasa nigrifrons,jeffreyps,48,GBIF,TAMBOPATA
+"Hamptophryne boliviana (Parker, 1927)",-12.0504,-69.531953,2026-01-25T20:54:45,SPECIES,Animalia,Chordata,Amphibia,Anura,Microhylidae,Hamptophryne,Hamptophryne boliviana,mialoren24,13,GBIF,TAMBOPATA
+"Stelgidopteryx ruficollis (Vieillot, 1817)",-12.78764,-69.333679,2026-01-07T13:34:36,SPECIES,Animalia,Chordata,Aves,Passeriformes,Hirundinidae,Stelgidopteryx,Stelgidopteryx ruficollis,sanna_birding,37,GBIF,TAMBOPATA
+"Tachycineta albiventer (Boddaert, 1783)",-12.787599,-69.333423,2026-01-07T13:34:15,SPECIES,Animalia,Chordata,Aves,Passeriformes,Hirundinidae,Tachycineta,Tachycineta albiventer,sanna_birding,94,GBIF,TAMBOPATA
+"Edalorhina perezi Jiménez de la Espada, 1870",-12.052897,-69.531647,2026-01-31T09:45:11,SPECIES,Animalia,Chordata,Amphibia,Anura,Leptodactylidae,Edalorhina,Edalorhina perezi,jeffreyps,5,GBIF,TAMBOPATA
+"Bradypus variegatus infuscatus Wagler, 1831",-12.592622,-69.174545,2026-01-31T13:41:19,SUBSPECIES,Animalia,Chordata,Mammalia,Pilosa,Bradypodidae,Bradypus,Bradypus variegatus,Rajan Rao,4,GBIF,TAMBOPATA
+"Phlegopsis nigromaculata (Orbigny & Lafresnaye, 1837)",-12.838677,-69.293491,2026-01-08T18:43:33,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thamnophilidae,Phlegopsis,Phlegopsis nigromaculata,sanna_birding,1288,GBIF,TAMBOPATA
+"Dendrexetastes rufigula (Lesson, 1844)",-12.827756,-69.289856,2026-01-10T13:01:46,SPECIES,Animalia,Chordata,Aves,Passeriformes,Furnariidae,Dendrexetastes,Dendrexetastes rufigula,sanna_birding,26,GBIF,TAMBOPATA
+"Crotophaga major Gmelin, 1788",-12.790921,-69.340428,2026-01-07T15:58:16,SPECIES,Animalia,Chordata,Aves,Cuculiformes,Cuculidae,Crotophaga,Crotophaga major,sanna_birding,404,GBIF,TAMBOPATA
+"Paroaria gularis (Linnaeus, 1766)",-12.788154,-69.339264,2026-01-07T13:59:33,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Paroaria,Paroaria gularis,sanna_birding,81,GBIF,TAMBOPATA
+"Trogon viridis Linnaeus, 1766",-12.836595,-69.284021,2026-01-08T00:34:13,SPECIES,Animalia,Chordata,Aves,Trogoniformes,Trogonidae,Trogon,Trogon viridis,sanna_birding,146,GBIF,TAMBOPATA
+"Willisornis poecilinotus (Cabanis, 1847)",-12.827726,-69.28285,2026-01-10T14:04:37,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thamnophilidae,Willisornis,Willisornis poecilinotus,sanna_birding,799,GBIF,TAMBOPATA
+"Campephilus melanoleucos (J.F.Gmelin, 1788)",-12.784934,-69.32775,2026-01-07T14:18:38,SPECIES,Animalia,Chordata,Aves,Piciformes,Picidae,Campephilus,Campephilus melanoleucos,sanna_birding,1214,GBIF,TAMBOPATA
+"Anolis tandai Avila-Pires, 1995",-12.05228,-69.535355,2026-01-29T15:01:10,SPECIES,Animalia,Chordata,Squamata,NA,Dactyloidae,Anolis,Anolis tandai,mialoren24,4,GBIF,TAMBOPATA
+"Oxysternon conspicillatum (Weber, 1801)",-12.410678,-69.6703,2026-01-28T12:37:36,SPECIES,Animalia,Arthropoda,Insecta,Coleoptera,Scarabaeidae,Oxysternon,Oxysternon conspicillatum,Tapir Wasi - ARCNP,7,GBIF,TAMBOPATA
+"Brotogeris cyanoptera (Pelzeln, 1870)",-12.955713,-69.360746,2026-01-09T15:12:35,SPECIES,Animalia,Chordata,Aves,Psittaciformes,Psittacidae,Brotogeris,Brotogeris cyanoptera,sanna_birding,31057,GBIF,TAMBOPATA
+"Morpho helenor Cramer, 1782",-12.594462,-69.17527,2026-01-31T11:50:42,SPECIES,Animalia,Arthropoda,Insecta,Lepidoptera,Nymphalidae,Morpho,Morpho helenor,Rajan Rao,15,GBIF,TAMBOPATA
+"Donacobius atricapilla (Linnaeus, 1766)",-12.791393,-69.344704,2026-01-07T15:24:42,SPECIES,Animalia,Chordata,Aves,Passeriformes,Donacobiidae,Donacobius,Donacobius atricapilla,sanna_birding,44,GBIF,TAMBOPATA
+"Gymnoderus foetidus (Linnaeus, 1758)",-12.835324,-69.293072,2026-01-08T13:51:04,SPECIES,Animalia,Chordata,Aves,Passeriformes,Cotingidae,Gymnoderus,Gymnoderus foetidus,sanna_birding,558,GBIF,TAMBOPATA
+"Galbula cyanescens Deville, 1849",-12.841591,-69.290915,2026-01-08T18:44:55,SPECIES,Animalia,Chordata,Aves,Piciformes,Galbulidae,Galbula,Galbula cyanescens,sanna_birding,862,GBIF,TAMBOPATA
+"Patagioenas cayennensis (Bonnaterre, 1792)",-12.832341,-69.266579,2026-01-10T18:05:58,SPECIES,Animalia,Chordata,Aves,Columbiformes,Columbidae,Patagioenas,Patagioenas cayennensis,sanna_birding,7387,GBIF,TAMBOPATA
+"Butorides striata (Linnaeus, 1758)",-12.788424,-69.340147,2026-01-07T14:01:12,SPECIES,Animalia,Chordata,Aves,Pelecaniformes,Ardeidae,Butorides,Butorides striata,sanna_birding,92,GBIF,TAMBOPATA
+"Tangara chilensis (Vigors, 1832)",-12.836887,-69.283909,2026-01-07T23:45:30,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Tangara,Tangara chilensis,sanna_birding,17,GBIF,TAMBOPATA
+"Ara chloropterus G.R.Gray, 1859",-12.868966,-69.328885,2026-01-07T17:11:34,SPECIES,Animalia,Chordata,Aves,Psittaciformes,Psittacidae,Ara,Ara chloropterus,sanna_birding,31057,GBIF,TAMBOPATA
+"Pionites leucogaster (Kuhl, 1820)",-12.633212,-69.081475,2026-01-02T07:37:36,SPECIES,Animalia,Chordata,Aves,Psittaciformes,Psittacidae,Pionites,Pionites leucogaster,abriberman,31069,GBIF,TAMBOPATA
+"Pteroglossus beauharnaisii Wagler, 1831",-12.836848,-69.283815,2026-01-07T23:30:26,SPECIES,Animalia,Chordata,Aves,Piciformes,Ramphastidae,Pteroglossus,Pteroglossus beauharnaisii,sanna_birding,50,GBIF,TAMBOPATA
+"Chloroceryle amazona (Latham, 1790)",-12.78995,-69.347891,2026-01-07T15:36:05,SPECIES,Animalia,Chordata,Aves,Coraciiformes,Alcedinidae,Chloroceryle,Chloroceryle amazona,sanna_birding,446,GBIF,TAMBOPATA
+"Tityra cayana (Linnaeus, 1766)",-12.836931,-69.283732,2026-01-07T23:48:58,SPECIES,Animalia,Chordata,Aves,Passeriformes,Cotingidae,Tityra,Tityra cayana,sanna_birding,98,GBIF,TAMBOPATA
+"Notharchus hyperrhynchus (P.L.Sclater, 1856)",-12.836899,-69.283999,2026-01-07T22:53:38,SPECIES,Animalia,Chordata,Aves,Piciformes,Bucconidae,Notharchus,Notharchus hyperrhynchus,sanna_birding,26,GBIF,TAMBOPATA
+"Myrmoborus leucophrys (Tschudi, 1844)",-12.840864,-69.281645,2026-01-08T21:40:27,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thamnophilidae,Myrmoborus,Myrmoborus leucophrys,sanna_birding,2833,GBIF,TAMBOPATA
+"Icterus croconotus (Wagler, 1829)",-12.836748,-69.293507,2026-01-08T23:23:58,SPECIES,Animalia,Chordata,Aves,Passeriformes,Icteridae,Icterus,Icterus icterus,sanna_birding,30,GBIF,TAMBOPATA
+"Parkerthraustes humeralis (Lawrence, 1867)",-12.835947,-69.283756,2026-01-07T23:54:57,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Parkerthraustes,Parkerthraustes humeralis,sanna_birding,643,GBIF,TAMBOPATA
+"Dacnis cayana (Linnaeus, 1766)",-12.836807,-69.283921,2026-01-07T23:57:15,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Dacnis,Dacnis cayana,sanna_birding,69,GBIF,TAMBOPATA
+"Saltator maximus (P.L.S.Müller, 1776)",-12.836101,-69.294549,2026-01-08T15:48:33,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Saltator,Saltator maximus,sanna_birding,92,GBIF,TAMBOPATA
+"Hamptophryne boliviana (Parker, 1927)",-12.037103,-69.542383,2026-01-30T06:44:43,SPECIES,Animalia,Chordata,Amphibia,Anura,Microhylidae,Hamptophryne,Hamptophryne boliviana,jeffreyps,2504,GBIF,TAMBOPATA
+"Nannopterum brasilianum (J.F.Gmelin, 1789)",-12.789058,-69.334701,2026-01-07T16:11:22,SPECIES,Animalia,Chordata,Aves,Suliformes,Phalacrocoracidae,Phalacrocorax,Phalacrocorax brasilianus,sanna_birding,312,GBIF,TAMBOPATA
+"Oxysternon conspicillatum (Weber, 1801)",-12.410803,-69.67034,2026-01-28T12:36:58,SPECIES,Animalia,Arthropoda,Insecta,Coleoptera,Scarabaeidae,Oxysternon,Oxysternon conspicillatum,Tapir Wasi - ARCNP,9,GBIF,TAMBOPATA
+"Psarocolius angustifrons (Spix, 1824)",-12.836416,-69.294246,2026-01-08T11:59:56,SPECIES,Animalia,Chordata,Aves,Passeriformes,Icteridae,Psarocolius,Psarocolius angustifrons,sanna_birding,195,GBIF,TAMBOPATA
+"Melanerpes cruentatus (Boddaert, 1783)",-12.836734,-69.293494,2026-01-07T22:03:18,SPECIES,Animalia,Chordata,Aves,Piciformes,Picidae,Melanerpes,Melanerpes cruentatus,sanna_birding,4,GBIF,TAMBOPATA
+"Thamnophilus doliatus (Linnaeus, 1764)",-12.835416,-69.294073,2026-01-08T13:37:49,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thamnophilidae,Thamnophilus,Thamnophilus doliatus,sanna_birding,63,GBIF,TAMBOPATA
+"Myiozetetes cayanensis (Linnaeus, 1766)",-12.837483,-69.293454,2026-01-08T20:56:42,SPECIES,Animalia,Chordata,Aves,Passeriformes,Tyrannidae,Myiozetetes,Myiozetetes cayanensis,sanna_birding,271,GBIF,TAMBOPATA
+"Pteroglossus castanotis Gould, 1834",-12.83459,-69.293094,2026-01-08T16:33:25,SPECIES,Animalia,Chordata,Aves,Piciformes,Ramphastidae,Pteroglossus,Pteroglossus castanotis,sanna_birding,75,GBIF,TAMBOPATA
+"Cochlearius cochlearius (Linnaeus, 1766)",-12.818391,-69.261597,2026-01-10T15:30:12,SPECIES,Animalia,Chordata,Aves,Pelecaniformes,Ardeidae,Cochlearius,Cochlearius cochlearius,sanna_birding,20,GBIF,TAMBOPATA
+"Leptotila rufaxilla (Richard & Bernard, 1792)",-12.786684,-69.325845,2026-01-07T18:39:55,SPECIES,Animalia,Chordata,Aves,Columbiformes,Columbidae,Leptotila,Leptotila rufaxilla,sanna_birding,11641,GBIF,TAMBOPATA
+"Sclateria naevia (Gmelin, 1788)",-12.788772,-69.34098,2026-01-07T15:41:19,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thamnophilidae,Sclateria,Sclateria naevia,sanna_birding,616,GBIF,TAMBOPATA
+"Tangara mexicana (Linnaeus, 1766)",-12.836998,-69.283867,2026-01-09T14:06:25,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Tangara,Tangara mexicana,sanna_birding,30,GBIF,TAMBOPATA
+"Opisthocomus hoazin (Statius Muller, 1776)",-12.791302,-69.343376,2026-01-07T15:58:24,SPECIES,Animalia,Chordata,Aves,Opisthocomiformes,Opisthocomidae,Opisthocomus,Opisthocomus hoazin,sanna_birding,369,GBIF,TAMBOPATA
+"Monasa nigrifrons (von Spix, 1824)",-12.83538,-69.291937,2026-01-08T18:44:10,SPECIES,Animalia,Chordata,Aves,Piciformes,Bucconidae,Monasa,Monasa nigrifrons,sanna_birding,2014,GBIF,TAMBOPATA
+"Dacnis lineata (J.F.Gmelin, 1789)",-12.836873,-69.283877,2026-01-09T14:04:51,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Dacnis,Dacnis lineata,sanna_birding,60,GBIF,TAMBOPATA
+"Ramphocelus carbo (Pallas, 1764)",-12.841761,-69.290575,2026-01-08T16:11:08,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Ramphocelus,Ramphocelus carbo,sanna_birding,1835,GBIF,TAMBOPATA
+"Selenidera reinwardtii (Wagler, 1827)",-12.836627,-69.283904,2026-01-07T23:05:10,SPECIES,Animalia,Chordata,Aves,Piciformes,Ramphastidae,Selenidera,Selenidera reinwardtii,sanna_birding,101,GBIF,TAMBOPATA
+"Galbula cyanescens Deville, 1849",-12.836081,-69.294324,2026-01-08T14:41:03,SPECIES,Animalia,Chordata,Aves,Piciformes,Galbulidae,Galbula,Galbula cyanescens,sanna_birding,74,GBIF,TAMBOPATA
+"Celeus elegans (P.L.S.Müller, 1776)",-12.837303,-69.29502,2026-01-08T18:22:07,SPECIES,Animalia,Chordata,Aves,Piciformes,Picidae,Celeus,Celeus elegans,sanna_birding,101,GBIF,TAMBOPATA
+"Euphonia chrysopasta P.L.Sclater & Salvin, 1869",-12.836367,-69.294851,2026-01-08T13:55:51,SPECIES,Animalia,Chordata,Aves,Passeriformes,Fringillidae,Euphonia,Euphonia chrysopasta,sanna_birding,57,GBIF,TAMBOPATA
+"Sirystes albocinereus P.L.Sclater & Salvin, 1880",-12.836971,-69.283914,2026-01-07T23:42:52,SPECIES,Animalia,Chordata,Aves,Passeriformes,Tyrannidae,Sirystes,Sirystes albocinereus,sanna_birding,62,GBIF,TAMBOPATA
+"Tityra semifasciata (Spix, 1825)",-12.836694,-69.28381,2026-01-07T22:13:44,SPECIES,Animalia,Chordata,Aves,Passeriformes,Cotingidae,Tityra,Tityra semifasciata,sanna_birding,157,GBIF,TAMBOPATA
+"Jacana jacana (Linnaeus, 1766)",-12.787802,-69.333498,2026-01-07T16:20:32,SPECIES,Animalia,Chordata,Aves,Charadriiformes,Jacanidae,Jacana,Jacana jacana,sanna_birding,186,GBIF,TAMBOPATA
+"Campylorhynchus turdinus (Wied-Neuwied, 1821)",-12.836823,-69.293457,2026-01-07T18:55:30,SPECIES,Animalia,Chordata,Aves,Passeriformes,Troglodytidae,Campylorhynchus,Campylorhynchus turdinus,sanna_birding,64,GBIF,TAMBOPATA
+"Ara severus (Linnaeus, 1758)",-12.983643,-69.345884,2026-01-10T12:53:48,SPECIES,Animalia,Chordata,Aves,Psittaciformes,Psittacidae,Ara,Ara severus,sanna_birding,31057,GBIF,TAMBOPATA
+"Turdus ignobilis P.L.Sclater, 1858",-12.836689,-69.29358,2026-01-08T11:56:41,SPECIES,Animalia,Chordata,Aves,Passeriformes,Turdidae,Turdus,Turdus ignobilis,sanna_birding,93,GBIF,TAMBOPATA
+"Ara macao (Linnaeus, 1758)",-12.869198,-69.342811,2026-01-13T13:22:20,SPECIES,Animalia,Chordata,Aves,Psittaciformes,Psittacidae,Ara,Ara macao,sanna_birding,31057,GBIF,TAMBOPATA
+"Thamnomanes ardesiacus (P.L.Sclater & Salvin, 1868)",-12.839029,-69.294598,2026-01-11T15:27:56,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thamnophilidae,Thamnomanes,Thamnomanes ardesiacus,sanna_birding,271,GBIF,TAMBOPATA
+"Pilherodius pileatus (Boddaert, 1783)",-12.798342,-69.312458,2026-01-13T00:15:30,SPECIES,Animalia,Chordata,Aves,Pelecaniformes,Ardeidae,Pilherodius,Pilherodius pileatus,sanna_birding,90,GBIF,TAMBOPATA
+"Hoploxypterus cayanus (Latham, 1790)",-12.84273,-69.297102,2026-01-11T22:28:07,SPECIES,Animalia,Chordata,Aves,Charadriiformes,Charadriidae,Hoploxypterus,Hoploxypterus cayanus,sanna_birding,90,GBIF,TAMBOPATA
+"Geotrygon montana (Linnaeus, 1758)",-12.836685,-69.290418,2026-01-13T12:05:56,SPECIES,Animalia,Chordata,Aves,Columbiformes,Columbidae,Geotrygon,Geotrygon montana,sanna_birding,346,GBIF,TAMBOPATA
+"Tangara schrankii (Spix, 1825)",-12.836836,-69.283978,2026-01-09T14:03:24,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Tangara,Tangara schrankii,sanna_birding,51,GBIF,TAMBOPATA
+"Todirostrum maculatum (Desmarest, 1806)",-12.592925,-69.174858,2026-01-31T14:00:59,SPECIES,Animalia,Chordata,Aves,Passeriformes,Tyrannidae,Todirostrum,Todirostrum maculatum,Rajan Rao,4,GBIF,TAMBOPATA
+"Ramphastos vitellinus M.H.K.Lichtenstein, 1823",-12.83618,-69.284185,2026-01-13T12:45:01,SPECIES,Animalia,Chordata,Aves,Piciformes,Ramphastidae,Ramphastos,Ramphastos vitellinus,sanna_birding,129,GBIF,TAMBOPATA
+"Anhima cornuta (Linnaeus, 1766)",-12.852779,-69.297907,2026-01-12T16:45:58,SPECIES,Animalia,Chordata,Aves,Anseriformes,Anhimidae,Anhima,Anhima cornuta,sanna_birding,347,GBIF,TAMBOPATA
+"Semiotus ligneus (Linnaeus, 1767)",-12.05318,-69.535713,2026-01-31T11:42:21,SPECIES,Animalia,Arthropoda,Insecta,Coleoptera,Elateridae,Semiotus,Semiotus ligneus,jeffreyps,13,GBIF,TAMBOPATA
+"Daptrius ater Vieillot, 1816",-12.84416,-69.297033,2026-01-11T23:59:09,SPECIES,Animalia,Chordata,Aves,Falconiformes,Falconidae,Daptrius,Daptrius ater,sanna_birding,267,GBIF,TAMBOPATA
+"Aulacorhynchus albivitta (Boissonneau, 1840)",-12.836376,-69.294358,2026-01-11T13:08:08,SPECIES,Animalia,Chordata,Aves,Piciformes,Ramphastidae,Aulacorhynchus,Aulacorhynchus albivitta,sanna_birding,99,GBIF,TAMBOPATA
+"Spizaetus tyrannus (Wied-Neuwied, 1820)",-12.849233,-69.295741,2026-01-12T16:28:56,SPECIES,Animalia,Chordata,Aves,Accipitriformes,Accipitridae,Spizaetus,Spizaetus tyrannus,sanna_birding,370,GBIF,TAMBOPATA
+"Phoneutria boliviensis (F.O.Pickard-Cambridge, 1897)",-12.050433,-69.532037,2026-01-31T20:38:38,SPECIES,Animalia,Arthropoda,Arachnida,Araneae,Ctenidae,Phoneutria,Phoneutria boliviensis,jeffreyps,5,GBIF,TAMBOPATA
+"Momotus momota (Linnaeus, 1766)",-12.838705,-69.29592,2026-01-08T22:18:15,SPECIES,Animalia,Chordata,Aves,Coraciiformes,Momotidae,Momotus,Momotus momota,sanna_birding,162,GBIF,TAMBOPATA
+"Pionites leucogaster (Kuhl, 1820)",-12.947472,-69.376412,2026-01-13T13:07:08,SPECIES,Animalia,Chordata,Aves,Psittaciformes,Psittacidae,Pionites,Pionites leucogaster,sanna_birding,31057,GBIF,TAMBOPATA
+"Platyrinchus coronatus P.L.Sclater, 1858",-12.837151,-69.291829,2026-01-13T16:55:15,SPECIES,Animalia,Chordata,Aves,Passeriformes,Tyrannidae,Platyrinchus,Platyrinchus coronatus,sanna_birding,161,GBIF,TAMBOPATA
+"Tyrannus tyrannus (Linnaeus, 1758)",-12.597134,-69.176348,2026-01-23T18:52:56,SPECIES,Animalia,Chordata,Aves,Passeriformes,Tyrannidae,Tyrannus,Tyrannus tyrannus,sanna_birding,25,GBIF,TAMBOPATA
+"Sicalis flaveola (Linnaeus, 1766)",-12.596795,-69.176489,2026-01-23T19:30:59,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Sicalis,Sicalis flaveola,sanna_birding,17,GBIF,TAMBOPATA
+"Stilpnia nigrocincta (Bonaparte, 1838)",-12.836433,-69.294637,2026-01-13T17:33:27,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Stilpnia,Stilpnia nigrocincta,sanna_birding,52,GBIF,TAMBOPATA
+"Ardea cocoi Linnaeus, 1766",-12.606746,-69.079591,2026-01-16T21:41:47,SPECIES,Animalia,Chordata,Aves,Pelecaniformes,Ardeidae,Ardea,Ardea cocoi,sanna_birding,85,GBIF,TAMBOPATA
+"Ramphocelus carbo (Pallas, 1764)",-12.835368,-69.294134,2026-01-10T23:53:42,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Ramphocelus,Ramphocelus carbo,sanna_birding,48,GBIF,TAMBOPATA
+"Monasa morphoeus (Hahn & Küster, 1823)",-12.837029,-69.28358,2026-01-13T13:56:02,SPECIES,Animalia,Chordata,Aves,Piciformes,Bucconidae,Monasa,Monasa morphoeus,sanna_birding,463,GBIF,TAMBOPATA
+"Capito auratus (Dumont, 1805)",-12.837056,-69.283679,2026-01-13T15:16:17,SPECIES,Animalia,Chordata,Aves,Piciformes,Capitonidae,Capito,Capito auratus,sanna_birding,217,GBIF,TAMBOPATA
+"Haetera piera (Linnaeus, 1758)",-12.056583,-69.542687,2026-01-30T07:11:48,SPECIES,Animalia,Arthropoda,Insecta,Lepidoptera,Nymphalidae,Haetera,Haetera piera,jeffreyps,1983044,GBIF,TAMBOPATA
+"Thraupis episcopus (Linnaeus, 1766)",-12.836313,-69.294595,2026-01-10T23:32:57,SPECIES,Animalia,Chordata,Aves,Passeriformes,Thraupidae,Thraupis,Thraupis episcopus,sanna_birding,141,GBIF,TAMBOPATA
+"Querula purpurata (Statius Muller, 1776)",-12.836988,-69.283762,2026-01-13T14:11:16,SPECIES,Animalia,Chordata,Aves,Passeriformes,Cotingidae,Querula,Querula purpurata,sanna_birding,88,GBIF,TAMBOPATA
+"Aramides cajanea (Statius Muller, 1776)",-12.600777,-69.049122,2026-01-15T15:59:37,SPECIES,Animalia,Chordata,Aves,Gruiformes,Rallidae,Aramides,Aramides cajanea,sanna_birding,463,GBIF,TAMBOPATA
+"Pionus menstruus (Linnaeus, 1766)",-12.974104,-69.33795,2026-01-13T23:35:28,SPECIES,Animalia,Chordata,Aves,Psittaciformes,Psittacidae,Pionus,Pionus menstruus,sanna_birding,31057,GBIF,TAMBOPATA
+Rhinella marina,-12.9269269189,-69.4700773629,2026-08-14,NA,Animalia,NA,NA,NA,NA,NA,NA,chrisz52,61,iNaturalist,TAMBOPATA
+Phoneutria fera,-12.8686852534,-69.4910070061,2026-08-14,NA,Animalia,NA,NA,NA,NA,NA,NA,chrisz52,61,iNaturalist,TAMBOPATA
+Rhinella marina,-12.8741078974,-69.4639670873,2026-08-13,NA,Animalia,NA,NA,NA,NA,NA,NA,chrisz52,61,iNaturalist,TAMBOPATA
+Leptodactylus didymus,-12.9814226934,-69.4765500793,2026-08-12,NA,Animalia,NA,NA,NA,NA,NA,NA,chrisz52,61,iNaturalist,TAMBOPATA
+Paleosuchus trigonatus,-11.9726988777,-70.5317195728,2024-04-05,NA,Animalia,NA,NA,NA,NA,NA,NA,mariafvaz,183486,iNaturalist,TAMBOPATA
+Opisthocomus hoazin,-12.6007808882,-69.0399483675,2024-04-03,NA,Animalia,NA,NA,NA,NA,NA,NA,mariafvaz,1095,iNaturalist,TAMBOPATA
+Anhinga anhinga,-12.6014566398,-69.0398418397,2024-04-03,NA,Animalia,NA,NA,NA,NA,NA,NA,mariafvaz,1095,iNaturalist,TAMBOPATA
+Saimiri boliviensis,-12.6028341279,-69.0399483675,2024-04-03,NA,Animalia,NA,NA,NA,NA,NA,NA,mariafvaz,1095,iNaturalist,TAMBOPATA
+Pteronura brasiliensis,-12.7081669738,-69.1668501584,2024-04-03,NA,Animalia,NA,NA,NA,NA,NA,NA,mariafvaz,1335,iNaturalist,TAMBOPATA
+Hydrochoerus hydrochaeris,-12.8990335397,-69.4640632233,2026-08-13,NA,Animalia,NA,NA,NA,NA,NA,NA,megan58322,11650,iNaturalist,TAMBOPATA
+Brotogeris cyanoptera,-12.6709589924,-69.3624321868,2026-07-18,NA,Animalia,NA,NA,NA,NA,NA,NA,dbeeke,488,iNaturalist,TAMBOPATA
+Coelomera cajennensis,-12.5919716667,-69.1772533333,2026-07-19,NA,Animalia,NA,NA,NA,NA,NA,NA,thaliavillana,9,iNaturalist,TAMBOPATA
+Todirostrum maculatum,-12.59752,-69.1912,2026-07-27,NA,Animalia,NA,NA,NA,NA,NA,NA,thaliavillana,10,iNaturalist,TAMBOPATA
+Siphonops annulatus,-12.62745,-69.1877833333,2026-08-09,NA,Animalia,NA,NA,NA,NA,NA,NA,thaliavillana,16,iNaturalist,TAMBOPATA
+Macromantis hyalina,-12.8577951163,-69.4790609925,2025-08-08,NA,Animalia,NA,NA,NA,NA,NA,NA,lukeyinthewild,NA,iNaturalist,TAMBOPATA
+Panacea prola,-12.59372,-69.1799916667,2026-08-04,NA,Animalia,NA,NA,NA,NA,NA,NA,valentina58296,11,iNaturalist,TAMBOPATA
+Hydrochoerus hydrochaeris,-12.7870165735,-69.2793443597,2024-04-05,NA,Animalia,NA,NA,NA,NA,NA,NA,boenci,42,iNaturalist,TAMBOPATA

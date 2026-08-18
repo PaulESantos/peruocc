@@ -1,0 +1,4 @@
+scientificName,decimalLatitude,decimalLongitude,eventDate,taxonRank,kingdom,phylum,class,order,family,genus,species,recordedBy,coordinateUncertaintyInMeters,source,district
+Cantua buxifolia Juss. ex Lam.,-11.474876,-75.686764,2026-01-14T11:38:17,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Ericales,Polemoniaceae,Cantua,Cantua buxifolia,nakw,80,GBIF,TARMA
+Cantua buxifolia,-11.4748762595,-75.6867637485,2026-01-14,NA,NA,NA,NA,NA,NA,NA,NA,nakw,80,iNaturalist,TARMA
+Cantua buxifolia,-11.43041309,-75.69339829,2021-05-01,NA,NA,NA,NA,NA,NA,NA,NA,maria1809,6,iNaturalist,TARMA

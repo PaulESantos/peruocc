@@ -1,0 +1,191 @@
+scientificName,decimalLatitude,decimalLongitude,eventDate,taxonRank,kingdom,phylum,class,order,family,genus,species,recordedBy,coordinateUncertaintyInMeters,source,district
+Lonicera japonica Thunb.,-12.113445,-77.030906,2026-01-17T20:29,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Dipsacales,Caprifoliaceae,Lonicera,Lonicera japonica,David Valenzuela,537,GBIF,MIRAFLORES
+Schinus terebinthifolia Raddi,-12.126984,-77.033815,2026-01-17T03:25,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Sapindales,Anacardiaceae,Schinus,Schinus terebinthifolia,David Valenzuela,425,GBIF,MIRAFLORES
+Physalis peruviana L.,-12.119107,-77.040148,2026-02-06T15:22:11,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Solanaceae,Physalis,Physalis peruviana,jocean,6,GBIF,MIRAFLORES
+Datura stramonium L.,-12.111029,-77.043236,2026-02-06T15:40:46,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Solanaceae,Datura,Datura stramonium,jocean,6,GBIF,MIRAFLORES
+Nicandra physalodes (L.) Gaertn.,-12.119055,-77.03854,2026-02-06T15:18:56,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Solanaceae,Nicandra,Nicandra physalodes,jocean,6,GBIF,MIRAFLORES
+Oxalis debilis Kunth,-12.111929,-77.043515,2026-02-06T15:38:32,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis debilis,jocean,6,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.131244,-77.03143,2026-02-16T13:37:01,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,Elliot Greiner,27,GBIF,MIRAFLORES
+Heliotropium curassavicum L.,-12.127979,-77.036265,2026-02-21T00:31,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Boraginales,Heliotropiaceae,Heliotropium,Heliotropium curassavicum,Hubert Szczygieł,8,GBIF,MIRAFLORES
+Stellaria media (L.) Vill.,-12.120415,-77.034883,2026-02-16T11:05:57,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Caryophyllaceae,Stellaria,Stellaria media,Elliot Greiner,17,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.11911,-77.033803,2026-03-15T13:44:20,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Elliot Greiner,13,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.119051,-77.032429,2026-03-15T14:39:10,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Elliot Greiner,12,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.119058,-77.032087,2026-03-15T14:40:05,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Elliot Greiner,22,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.119169,-77.033562,2026-03-15T13:43:58,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Elliot Greiner,19,GBIF,MIRAFLORES
+Amaranthus blitum L.,-12.127952,-77.035167,2026-03-13T16:34:41,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Amaranthaceae,Amaranthus,Amaranthus blitum,Elliot Greiner,21,GBIF,MIRAFLORES
+Euphorbia peplus L.,-12.118875,-77.030084,2026-03-15T13:38:22,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Malpighiales,Euphorbiaceae,Euphorbia,Euphorbia peplus,Elliot Greiner,23,GBIF,MIRAFLORES
+Trifolium repens L.,-12.119144,-77.032805,2026-03-15T13:42:55,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Fabales,Fabaceae,Trifolium,Trifolium repens,Elliot Greiner,12,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.119034,-77.032111,2026-03-15T14:39:54,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Elliot Greiner,22,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.118954,-77.030842,2026-03-15T14:43:06,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Elliot Greiner,8,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.119033,-77.034357,2026-03-15T14:34:46,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Elliot Greiner,15,GBIF,MIRAFLORES
+Schinus terebinthifolia Raddi,-12.127254,-77.036562,2026-03-24T14:34:14,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Sapindales,Anacardiaceae,Schinus,Schinus terebinthifolia,Betsy Snow,8,GBIF,MIRAFLORES
+Oxalis debilis Kunth,-12.119061,-77.030353,2026-03-15T14:43:59,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis debilis,Elliot Greiner,21,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.119071,-77.032692,2026-03-15T14:38:17,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Elliot Greiner,23,GBIF,MIRAFLORES
+Oxalis debilis Kunth,-12.11896,-77.034546,2026-03-15T14:34:03,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis debilis,Elliot Greiner,30,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.118901,-77.033099000000007,2026-03-15T14:37:46,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Elliot Greiner,23,GBIF,MIRAFLORES
+Oxalis debilis Kunth,-12.119103,-77.031485,2026-03-15T14:41:05,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis debilis,Elliot Greiner,22,GBIF,MIRAFLORES
+Stellaria media (L.) Vill.,-12.11888,-77.030571,2026-03-15T13:40:43,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Caryophyllaceae,Stellaria,Stellaria media,Elliot Greiner,30,GBIF,MIRAFLORES
+Stellaria media (L.) Vill.,-12.119137,-77.029883,2026-03-15T14:44:24,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Caryophyllaceae,Stellaria,Stellaria media,Elliot Greiner,23,GBIF,MIRAFLORES
+Stellaria media (L.) Vill.,-12.119074,-77.031094,2026-03-15T14:42:04,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Caryophyllaceae,Stellaria,Stellaria media,Elliot Greiner,18,GBIF,MIRAFLORES
+Ruellia simplex C.Wright,-12.106432,-77.030028,2026-03-14T17:14:38,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Lamiales,Acanthaceae,Ruellia,Ruellia simplex,Elliot Greiner,18,GBIF,MIRAFLORES
+Taraxacum officinale Weber ex F.H.Wigg.,-12.119061,-77.034367,2026-03-15T14:35:06,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Taraxacum,Taraxacum officinale,Elliot Greiner,17,GBIF,MIRAFLORES
+Taraxacum officinale Weber ex F.H.Wigg.,-12.119004,-77.032109,2026-03-15T14:39:43,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Taraxacum,Taraxacum officinale,Elliot Greiner,22,GBIF,MIRAFLORES
+Taraxacum officinale Weber ex F.H.Wigg.,-12.128861,-77.02982,2026-03-13T17:08:12,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Taraxacum,Taraxacum officinale,Elliot Greiner,22,GBIF,MIRAFLORES
+Antigonon leptopus Hook. & Arn.,-12.112519,-77.033067,2026-03-07T13:13:19,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Polygonaceae,Antigonon,Antigonon leptopus,danplant,NA,GBIF,MIRAFLORES
+Agave attenuata Salm-Dyck,-12.110062,-77.033165,2026-04-30T16:48:04,SPECIES,Plantae,Tracheophyta,Liliopsida,Asparagales,Asparagaceae,Agave,Agave attenuata,fullmoonbloom,17,GBIF,MIRAFLORES
+Allamanda cathartica L.,-12.116971,-77.041222,2026-04-05T10:41:41,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Gentianales,Apocynaceae,Allamanda,Allamanda cathartica,"UNIRSE Rodrigo,Revilla Calle",8,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.131036,-77.032228,2026-05-26T18:04:49,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,Dra. Leah,21,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.12689,-77.036362,2026-05-07T09:39:30,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,Benigno Gómez Garza,NA,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.127107,-77.035989,2026-07-12T11:32:06,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,Elijah Okeefe,36,GBIF,MIRAFLORES
+Ipomoea cairica (L.) Sweet,-12.127711,-77.035922,2026-07-12T14:22:22,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea cairica,Elijah Okeefe,14,GBIF,MIRAFLORES
+Ipomoea nil (L.) Roth,-12.112089,-77.051041,2026-07-18T08:51:21,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea nil,arooj54,2,GBIF,MIRAFLORES
+Ipomoea cairica (L.) Sweet,-12.123644,-77.040522,2026-07-28T12:18:15,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea cairica,Sebastián Ordóñez,NA,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.126233,-77.036578,2026-07-28T11:44:27,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,Sebastián Ordóñez,NA,GBIF,MIRAFLORES
+Schinus terebinthifolia Raddi,-12.122933,-77.034901,2026-07-13T06:02:29,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Sapindales,Anacardiaceae,Schinus,Schinus terebinthifolia,Elijah Okeefe,24,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.124982,-77.0335,2025-02-23T14:12:17,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,Markus Ackermann,NA,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.1277,-77.027453,2025-02-19T21:54:28Z,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,NA,NA,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.12618,-77.036842,2025-02-17T09:24:59,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,speciesexplorer,21,GBIF,MIRAFLORES
+Bellis perennis L.,-12.121786,-77.030449,2025-03-01T13:22:05,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Bellis,Bellis perennis,Alejandra Yamaca,204,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.1189,-77.033428,2025-03-30T16:31:56,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,ZooMuchInformation,NA,GBIF,MIRAFLORES
+Solanum pimpinellifolium L.,-12.111211,-77.040638,2025-04-25T16:23:50,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Solanaceae,Solanum,Solanum pimpinellifolium,jocean,6,GBIF,MIRAFLORES
+Cosmos bipinnatus Cav.,-12.126673,-77.036196,2025-04-28T08:26:47,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Cosmos,Cosmos bipinnatus,kercap,23,GBIF,MIRAFLORES
+Euphorbia tirucalli L.,-12.11446,-77.04113,2025-05-02T11:01:15,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Malpighiales,Euphorbiaceae,Euphorbia,Euphorbia tirucalli,Joaquín Boluarte,10,GBIF,MIRAFLORES
+Heliotropium angiospermum Murray,-12.136625,-77.025952,2025-05-19T17:28:02,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Boraginales,Heliotropiaceae,Heliotropium,Heliotropium angiospermum,Miguel Bailetti,10,GBIF,MIRAFLORES
+Asclepias curassavica L.,-12.119067,-77.044442,2025-05-19T11:10:50,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Gentianales,Apocynaceae,Asclepias,Asclepias curassavica,cynthiajoan,48,GBIF,MIRAFLORES
+Oxalis corniculata L.,-12.124333,-77.032944,2025-05-07T11:55,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis corniculata,Martine Lapointe,NA,GBIF,MIRAFLORES
+Sapindus saponaria L.,-12.136509,-77.026291,2025-05-19T17:36:54,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Sapindales,Sapindaceae,Sapindus,Sapindus saponaria,Miguel Bailetti,10,GBIF,MIRAFLORES
+Duranta erecta L.,-12.130066,-77.03299,2025-06-15T14:36:25,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Lamiales,Verbenaceae,Duranta,Duranta erecta,bsanchez1,30,GBIF,MIRAFLORES
+Melaleuca viminalis (Gaertn.) Byrnes,-12.122032,-77.030991,2025-06-17T22:32:32,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Myrtales,Myrtaceae,Callistemon,Callistemon viminalis,yasline,23,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.121209,-77.044128,2025-06-18T08:17:32,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,yasline,1154,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.127147,-77.036414,2025-06-18T17:52:37,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,Julio Campis,6,GBIF,MIRAFLORES
+Schinus terebinthifolia Raddi,-12.121655,-77.030067,2025-06-18T16:31:01,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Sapindales,Anacardiaceae,Schinus,Schinus terebinthifolia,Julio Campis,12,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.134798,-77.028241,2025-06-15T09:33:04,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,mike_dalen,13,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.130145,-77.033432,2025-06-15T14:35:24,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,bsanchez1,66,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.121514,-77.044196,2025-07-20T10:23,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,Ludwig Treuter,NA,GBIF,MIRAFLORES
+Schinus terebinthifolia Raddi,-12.126659,-77.036686,2025-07-16T10:43:31,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Sapindales,Anacardiaceae,Schinus,Schinus terebinthifolia,kantrim,4,GBIF,MIRAFLORES
+Mesembryanthemum cordifolium L.fil.,-12.121276,-77.043711,2025-07-20T11:08,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Aizoaceae,Mesembryanthemum,Mesembryanthemum cordifolium,Ludwig Treuter,NA,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.127142,-77.036111,2025-07-22T16:39:32,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,nhallancia,80,GBIF,MIRAFLORES
+Calodendrum capense (L.fil.) Thunb.,-12.118743,-77.044703,2025-07-29T17:28,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Sapindales,Rutaceae,Calodendrum,Calodendrum capense,Nadia Ponce,32,GBIF,MIRAFLORES
+Ipomoea cairica (L.) Sweet,-12.135826,-77.025345,2025-07-28T13:27:22,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea cairica,Estefanía Aldana,NA,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.127169,-77.036439,2025-07-22T16:41:03,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,nhallancia,26,GBIF,MIRAFLORES
+Duranta erecta L.,-12.124325,-77.038117,2025-08-05T15:25:54,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Lamiales,Verbenaceae,Duranta,Duranta erecta,jeffbirdswatching,14,GBIF,MIRAFLORES
+Solanum americanum Mill.,-12.109467,-77.032481,2025-08-07T12:52,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Solanaceae,Solanum,Solanum americanum,Eric Schmidt,NA,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.124769,-77.037367,2025-08-07T14:31,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,Eric Schmidt,NA,GBIF,MIRAFLORES
+Oxalis debilis Kunth,-12.11215,-77.033311,2025-08-07T13:10,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Oxalidales,Oxalidaceae,Oxalis,Oxalis debilis,Eric Schmidt,NA,GBIF,MIRAFLORES
+Ipomoea cairica (L.) Sweet,-12.121298,-77.039929,2025-09-05T13:22:33,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea cairica,Santiago Adolfo PAREDES MADRID,17,GBIF,MIRAFLORES
+Asclepias curassavica L.,-12.122486,-77.031354,2025-09-21T01:21,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Gentianales,Apocynaceae,Asclepias,Asclepias curassavica,Catalina Tong,3945,GBIF,MIRAFLORES
+Bougainvillea glabra Choisy,-12.130138,-77.033913,2025-09-23T17:05:38,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Nyctaginaceae,Bougainvillea,Bougainvillea glabra,Martin Roy,6,GBIF,MIRAFLORES
+Myoporum laetum G.Forst.,-12.126843,-77.03647,2025-09-09T11:41:14,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Lamiales,Scrophulariaceae,Myoporum,Myoporum laetum,tbonsack,4,GBIF,MIRAFLORES
+Lonicera japonica Thunb.,-12.138022,-77.027293,2025-09-01T15:39:41,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Dipsacales,Caprifoliaceae,Lonicera,Lonicera japonica,msmnificent,23,GBIF,MIRAFLORES
+Medicago lupulina L.,-12.113518,-77.040601,2025-10-27T10:29:58,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Fabales,Fabaceae,Medicago,Medicago lupulina,exceedfinch,13,GBIF,MIRAFLORES
+Pouteria lucuma (Ruiz & Pav.) Kuntze,-12.110033,-77.033818,2025-10-03T13:21:48,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Ericales,Sapotaceae,Pouteria,Pouteria lucuma,avazqu0898,21,GBIF,MIRAFLORES
+Taraxacum officinale Weber ex F.H.Wigg.,-12.113578,-77.040747,2025-10-27T10:40:20,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Taraxacum,Taraxacum officinale,Kaleb Burgess,18,GBIF,MIRAFLORES
+Ipomoea indica (Burm.) Merr.,-12.116858,-77.048019,2025-11-12T15:47:11,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Convolvulaceae,Ipomoea,Ipomoea indica,André Ambrozio,22,GBIF,MIRAFLORES
+Heliotropium curassavicum L.,-12.130113,-77.03548,2025-11-05T11:45:32,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Boraginales,Heliotropiaceae,Heliotropium,Heliotropium curassavicum,Clarissa Rodriguez,21,GBIF,MIRAFLORES
+Lonicera japonica Thunb.,-12.135483,-77.024622,2025-11-12T15:37:44,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Dipsacales,Caprifoliaceae,Lonicera,Lonicera japonica,Ellky Arteta Paredes,NA,GBIF,MIRAFLORES
+Araucaria bidwillii Hook.,-12.122111,-77.029686,2025-12-06T16:41:50,SPECIES,Plantae,Tracheophyta,Pinopsida,Pinales,Araucariaceae,Araucaria,Araucaria bidwillii,campc,23,GBIF,MIRAFLORES
+Agave cordillerensis Lodé & Pino,-12.132758,-77.02967,2025-12-19T11:34:09,SPECIES,Plantae,Tracheophyta,Liliopsida,Asparagales,Asparagaceae,Agave,Agave americana,Charlie Fox-Whelpton,11,GBIF,MIRAFLORES
+Alternanthera halimifolia (Lam.) Standl. ex Pittier,-12.130658,-77.032608,2024-01-24T07:10,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Amaranthaceae,Alternanthera,Alternanthera halimifolia,Maël Taupin,NA,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.130712,-77.032532,2024-01-24T07:09,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,Maël Taupin,NA,GBIF,MIRAFLORES
+Lonicera japonica Thunb.,-12.111107,-77.04771,2024-02-20T09:30:29,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Dipsacales,Caprifoliaceae,Lonicera,Lonicera japonica,landscapeinteractions,35,GBIF,MIRAFLORES
+Capsicum baccatum L.,-12.111153,-77.047711,2024-02-20T09:31:22,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Solanales,Solanaceae,Capsicum,Capsicum baccatum,landscapeinteractions,35,GBIF,MIRAFLORES
+Portulaca grandiflora Hook.,-12.135742,-77.025803,2024-02-21T17:10,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Portulacaceae,Portulaca,Portulaca grandiflora,Ellky Arteta Paredes,NA,GBIF,MIRAFLORES
+Lonicera japonica Thunb.,-12.135111,-77.024589,2024-02-21T16:31:24,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Dipsacales,Caprifoliaceae,Lonicera,Lonicera japonica,Ellky Arteta Paredes,NA,GBIF,MIRAFLORES
+Sapindus saponaria L.,-12.135742,-77.025803,2024-02-21T17:10:28,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Sapindales,Sapindaceae,Sapindus,Sapindus saponaria,Ellky Arteta Paredes,NA,GBIF,MIRAFLORES
+Portulaca oleracea L.,-12.135575,-77.025108,2024-02-21T16:35:38,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Caryophyllales,Portulacaceae,Portulaca,Portulaca oleracea,Ellky Arteta Paredes,NA,GBIF,MIRAFLORES
+Scaevola taccada (Gaertn.) Roxb.,-12.135111,-77.024589,2024-02-21T16:30:46,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Goodeniaceae,Scaevola,Scaevola taccada,Ellky Arteta Paredes,NA,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.127026,-77.036544,2024-05-05T15:57:41,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,Jacek Pietruszewski,NA,GBIF,MIRAFLORES
+Schinus terebinthifolia Raddi,-12.126739,-77.036716,2024-05-05T15:59:52,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Sapindales,Anacardiaceae,Schinus,Schinus terebinthifolia,Jacek Pietruszewski,NA,GBIF,MIRAFLORES
+Sphagneticola trilobata (L.) Pruski,-12.111536,-77.033211,2024-05-29T11:22:53Z,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Asterales,Asteraceae,Sphagneticola,Sphagneticola trilobata,NA,7,GBIF,MIRAFLORES
+Lonicera japonica Thunb.,-12.129447,-77.028232,2024-05-04T10:33:49Z,SPECIES,Plantae,Tracheophyta,Magnoliopsida,Dipsacales,Caprifoliaceae,Lonicera,Lonicera japonica,NA,NA,GBIF,MIRAFLORES
+Tropaeolum majus,-12.1376539577,-77.0274533479,2026-07-22,NA,Plantae,NA,NA,NA,NA,NA,NA,mariangiordano,14,iNaturalist,MIRAFLORES
+Ipomoea cairica,-12.1236444444,-77.0405222222,2026-07-28,NA,Plantae,NA,NA,NA,NA,NA,NA,sebas_o,NA,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1262333333,-77.0365777778,2026-07-28,NA,Plantae,NA,NA,NA,NA,NA,NA,sebas_o,NA,iNaturalist,MIRAFLORES
+Ipomoea nil,-12.1120891571,-77.0510406494,2026-07-18,NA,Plantae,NA,NA,NA,NA,NA,NA,arooj54,2,iNaturalist,MIRAFLORES
+Schinus terebinthifolia,-12.1229333475,-77.0349010321,2026-07-13,NA,Plantae,NA,NA,NA,NA,NA,NA,elijah_okeefe,24,iNaturalist,MIRAFLORES
+Ipomoea cairica,-12.1277111061,-77.0359223079,2026-07-12,NA,Plantae,NA,NA,NA,NA,NA,NA,elijah_okeefe,14,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1271065312,-77.0359890327,2026-07-12,NA,Plantae,NA,NA,NA,NA,NA,NA,elijah_okeefe,36,iNaturalist,MIRAFLORES
+Allamanda cathartica,-12.12011037,-77.04205078,2026-05-14,NA,Plantae,NA,NA,NA,NA,NA,NA,erick_estrada,3,iNaturalist,MIRAFLORES
+Sphagneticola trilobata,-12.1310361667,-77.0322278333,2026-05-26,NA,Plantae,NA,NA,NA,NA,NA,NA,draleah,21,iNaturalist,MIRAFLORES
+Bauhinia tomentosa,-12.1326718,-77.0273420997,2026-05-13,NA,Plantae,NA,NA,NA,NA,NA,NA,nextessentialdread,NA,iNaturalist,MIRAFLORES
+Sphagneticola trilobata,-12.1268901667,-77.0363616944,2026-05-07,NA,Plantae,NA,NA,NA,NA,NA,NA,benigno-gomez,NA,iNaturalist,MIRAFLORES
+Agave attenuata,-12.1100622052,-77.0331649256,2026-04-30,NA,Plantae,NA,NA,NA,NA,NA,NA,fullmoonbloom,17,iNaturalist,MIRAFLORES
+Passiflora ligularis,-12.1295555,-77.0339138333,2026-04-03,NA,Plantae,NA,NA,NA,NA,NA,NA,shriya_chamarty,21,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1275861667,-77.0355083333,2026-04-04,NA,Plantae,NA,NA,NA,NA,NA,NA,shriya_chamarty,21,iNaturalist,MIRAFLORES
+Allamanda cathartica,-12.1169712575,-77.0412215693,2026-04-05,NA,Plantae,NA,NA,NA,NA,NA,NA,unirse_rodrigo_revilla_calle,8,iNaturalist,MIRAFLORES
+Schinus terebinthifolia,-12.1272544275,-77.036561925,2026-03-24,NA,Plantae,NA,NA,NA,NA,NA,NA,betsysnow,8,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1247694444,-77.0373666667,2025-08-07,NA,Plantae,NA,NA,NA,NA,NA,NA,eric-schmitty,NA,iNaturalist,MIRAFLORES
+Oxalis debilis,-12.11215,-77.0333111111,2025-08-07,NA,Plantae,NA,NA,NA,NA,NA,NA,eric-schmitty,NA,iNaturalist,MIRAFLORES
+Solanum americanum,-12.1094666667,-77.0324805556,2025-08-07,NA,Plantae,NA,NA,NA,NA,NA,NA,eric-schmitty,NA,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1198904511,-77.0456228834,2014-03-25,NA,Plantae,NA,NA,NA,NA,NA,NA,elprofer,61,iNaturalist,MIRAFLORES
+Stellaria media,-12.119136506,-77.0298830746,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,23,iNaturalist,MIRAFLORES
+Oxalis debilis,-12.1190607392,-77.0303532492,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,21,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.1189537613,-77.0308417143,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,8,iNaturalist,MIRAFLORES
+Stellaria media,-12.1190735613,-77.0310941102,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,18,iNaturalist,MIRAFLORES
+Oxalis debilis,-12.1191034835,-77.0314849563,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,22,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.119058352,-77.0320874546,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,22,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.1190343304,-77.0321113863,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,22,iNaturalist,MIRAFLORES
+Taraxacum officinale,-12.1190043306,-77.0321089961,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,22,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.1190510608,-77.0324289001,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,12,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.1190707398,-77.0326917591,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,23,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.1189014427,-77.0330994018,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,23,iNaturalist,MIRAFLORES
+Taraxacum officinale,-12.1190614772,-77.0343670564,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,17,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.1190333527,-77.0343569007,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,15,iNaturalist,MIRAFLORES
+Oxalis debilis,-12.1189598443,-77.0345459636,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,30,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.119110102,-77.0338028126,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,13,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.1191690078,-77.0335621375,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,19,iNaturalist,MIRAFLORES
+Trifolium repens,-12.1191436264,-77.0328053268,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,12,iNaturalist,MIRAFLORES
+Stellaria media,-12.1188798123,-77.0305707427,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,30,iNaturalist,MIRAFLORES
+Euphorbia peplus,-12.118874914,-77.0300841798,2026-03-15,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,23,iNaturalist,MIRAFLORES
+Ruellia simplex,-12.1064324343,-77.030028396,2026-03-14,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,18,iNaturalist,MIRAFLORES
+Taraxacum officinale,-12.128861323,-77.0298198146,2026-03-13,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,22,iNaturalist,MIRAFLORES
+Amaranthus blitum,-12.1279524313,-77.0351667982,2026-03-13,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,21,iNaturalist,MIRAFLORES
+Antigonon leptopus,-12.112519,-77.0330669,2026-03-07,NA,Plantae,NA,NA,NA,NA,NA,NA,danplant,NA,iNaturalist,MIRAFLORES
+Heliotropium curassavicum,-12.1279785373,-77.0362647652,2026-02-21,NA,Plantae,NA,NA,NA,NA,NA,NA,hubertszcz,8,iNaturalist,MIRAFLORES
+Asclepias curassavica,-12.1214221667,-77.0276861667,2026-02-23,NA,Plantae,NA,NA,NA,NA,NA,NA,jeremy_grossman,4,iNaturalist,MIRAFLORES
+Ipomoea cairica,-12.1178244211,-77.0461742379,2026-02-21,NA,Plantae,NA,NA,NA,NA,NA,NA,shaneweisz,14,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1312442401,-77.0314302678,2026-02-16,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,27,iNaturalist,MIRAFLORES
+Stellaria media,-12.120415369,-77.0348831216,2026-02-16,NA,Plantae,NA,NA,NA,NA,NA,NA,elliotgreiner,17,iNaturalist,MIRAFLORES
+Oxalis debilis,-12.1119294572,-77.0435149223,2026-02-06,NA,Plantae,NA,NA,NA,NA,NA,NA,jocean,6,iNaturalist,MIRAFLORES
+Nicandra physalodes,-12.1190553553,-77.0385404304,2026-02-06,NA,Plantae,NA,NA,NA,NA,NA,NA,jocean,6,iNaturalist,MIRAFLORES
+Datura stramonium,-12.1110286262,-77.0432356372,2026-02-06,NA,Plantae,NA,NA,NA,NA,NA,NA,jocean,6,iNaturalist,MIRAFLORES
+Physalis peruviana,-12.1191068205,-77.0401477441,2026-02-06,NA,Plantae,NA,NA,NA,NA,NA,NA,jocean,6,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1261805,-77.0368416667,2025-02-17,NA,Plantae,NA,NA,NA,NA,NA,NA,speciesexplorer,21,iNaturalist,MIRAFLORES
+Lonicera japonica,-12.113444761,-77.030906491,2026-01-17,NA,Plantae,NA,NA,NA,NA,NA,NA,davitejon,537,iNaturalist,MIRAFLORES
+Schinus terebinthifolia,-12.1269842134,-77.0338147517,2026-01-17,NA,Plantae,NA,NA,NA,NA,NA,NA,davitejon,425,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1271471667,-77.0364138333,2025-06-18,NA,Plantae,NA,NA,NA,NA,NA,NA,julio_campis,6,iNaturalist,MIRAFLORES
+Schinus terebinthifolia,-12.1216555,-77.0300666667,2025-06-18,NA,Plantae,NA,NA,NA,NA,NA,NA,julio_campis,12,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1184607182,-77.0453730226,2011-06-10,NA,Plantae,NA,NA,NA,NA,NA,NA,tomnatprairie,74,iNaturalist,MIRAFLORES
+Agave cordillerensis,-12.1327578053,-77.0296695464,2025-12-19,NA,Plantae,NA,NA,NA,NA,NA,NA,cfoxwhelpton,11,iNaturalist,MIRAFLORES
+Asclepias curassavica,-12.1190419153,-77.0392052829,2025-12-13,NA,Plantae,NA,NA,NA,NA,NA,NA,ciclolibres,28,iNaturalist,MIRAFLORES
+Araucaria bidwillii,-12.1221111667,-77.0296861667,2025-12-06,NA,Plantae,NA,NA,NA,NA,NA,NA,campc,23,iNaturalist,MIRAFLORES
+Myoporum laetum,-12.1268433035,-77.0364699115,2025-09-09,NA,Plantae,NA,NA,NA,NA,NA,NA,tbonsack,4,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1168583333,-77.0480195,2025-11-12,NA,Plantae,NA,NA,NA,NA,NA,NA,andre_ambrozio,22,iNaturalist,MIRAFLORES
+Lonicera japonica,-12.1354833333,-77.0246222222,2025-11-12,NA,Plantae,NA,NA,NA,NA,NA,NA,ellky,NA,iNaturalist,MIRAFLORES
+Heliotropium curassavicum,-12.1301128669,-77.0354801976,2025-11-05,NA,Plantae,NA,NA,NA,NA,NA,NA,clarissarodd,21,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.115166818,-77.0491729196,2011-11-30,NA,Plantae,NA,NA,NA,NA,NA,NA,russellbarrett,117,iNaturalist,MIRAFLORES
+Medicago lupulina,-12.1135182217,-77.0406008251,2025-10-27,NA,Plantae,NA,NA,NA,NA,NA,NA,exceedfinch,13,iNaturalist,MIRAFLORES
+Taraxacum officinale,-12.1135775003,-77.040747108,2025-10-27,NA,Plantae,NA,NA,NA,NA,NA,NA,shadowash,18,iNaturalist,MIRAFLORES
+Agave attenuata,-12.1325311661,-77.0258255005,2025-10-19,NA,Plantae,NA,NA,NA,NA,NA,NA,cdfleischer,5,iNaturalist,MIRAFLORES
+Myoporum laetum,-12.1211169,-77.0432332,2025-10-16,NA,Plantae,NA,NA,NA,NA,NA,NA,angel457,NA,iNaturalist,MIRAFLORES
+Veronica persica,-12.1211326411,-77.0119577274,2019-01-01,NA,Plantae,NA,NA,NA,NA,NA,NA,gabedelatorre,316,iNaturalist,MIRAFLORES
+Asclepias curassavica,-12.1196670368,-77.0096828789,2019-04-09,NA,Plantae,NA,NA,NA,NA,NA,NA,gabedelatorre,92,iNaturalist,MIRAFLORES
+Pouteria lucuma,-12.1100327186,-77.0338182338,2025-10-03,NA,Plantae,NA,NA,NA,NA,NA,NA,avazqu0898,21,iNaturalist,MIRAFLORES
+Bougainvillea glabra,-12.1301376773,-77.0339129493,2025-09-23,NA,Plantae,NA,NA,NA,NA,NA,NA,lehuart,6,iNaturalist,MIRAFLORES
+Asclepias curassavica,-12.122486,-77.0313539,2025-09-21,NA,Plantae,NA,NA,NA,NA,NA,NA,catalinatong,3945,iNaturalist,MIRAFLORES
+Ipomoea cairica,-12.121297991,-77.0399286167,2025-09-05,NA,Plantae,NA,NA,NA,NA,NA,NA,santiago_adolfo,17,iNaturalist,MIRAFLORES
+Lonicera japonica,-12.1380220909,-77.0272931813,2025-09-01,NA,Plantae,NA,NA,NA,NA,NA,NA,msmnificent,23,iNaturalist,MIRAFLORES
+Duranta erecta,-12.124325,-77.0381166667,2025-08-05,NA,Plantae,NA,NA,NA,NA,NA,NA,jeffbirdswatching,14,iNaturalist,MIRAFLORES
+Calodendrum capense,-12.118743446,-77.0447025142,2025-07-29,NA,Plantae,NA,NA,NA,NA,NA,NA,nadia_ponce,32,iNaturalist,MIRAFLORES
+Ipomoea cairica,-12.1358257997,-77.0253454,2025-07-28,NA,Plantae,NA,NA,NA,NA,NA,NA,ealdana_geo,NA,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1271416667,-77.0361111667,2025-07-22,NA,Plantae,NA,NA,NA,NA,NA,NA,nhallancia,80,iNaturalist,MIRAFLORES
+Sphagneticola trilobata,-12.1271695,-77.0364388333,2025-07-22,NA,Plantae,NA,NA,NA,NA,NA,NA,nhallancia,26,iNaturalist,MIRAFLORES
+Mesembryanthemum cordifolium,-12.1212756997,-77.0437108997,2025-07-20,NA,Plantae,NA,NA,NA,NA,NA,NA,ludwigia_badensis,NA,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1215144,-77.0441962997,2025-07-20,NA,Plantae,NA,NA,NA,NA,NA,NA,ludwigia_badensis,NA,iNaturalist,MIRAFLORES
+Schinus terebinthifolia,-12.12665918,-77.03668556,2025-07-16,NA,Plantae,NA,NA,NA,NA,NA,NA,kantrim,4,iNaturalist,MIRAFLORES
+Oxalis corniculata,-12.1243333333,-77.0329444444,2025-05-07,NA,Plantae,NA,NA,NA,NA,NA,NA,martine_lapointe,NA,iNaturalist,MIRAFLORES
+Ipomoea indica,-12.1212091446,-77.044128418,2025-06-18,NA,Plantae,NA,NA,NA,NA,NA,NA,yasline,1154,iNaturalist,MIRAFLORES
+Melaleuca viminalis,-12.1220321655,-77.0309906006,2025-06-17,NA,Plantae,NA,NA,NA,NA,NA,NA,yasline,23,iNaturalist,MIRAFLORES
+Duranta erecta,-12.130065918,-77.032989502,2025-06-15,NA,Plantae,NA,NA,NA,NA,NA,NA,bsanchez1,30,iNaturalist,MIRAFLORES
+Sphagneticola trilobata,-12.1301450729,-77.0334320068,2025-06-15,NA,Plantae,NA,NA,NA,NA,NA,NA,bsanchez1,66,iNaturalist,MIRAFLORES
+Sphagneticola trilobata,-12.1347982818,-77.0282408393,2025-06-15,NA,Plantae,NA,NA,NA,NA,NA,NA,mike_dalen,13,iNaturalist,MIRAFLORES
