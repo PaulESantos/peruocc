@@ -1,0 +1,28 @@
+Package: peruspecies
+Title: Reproducible Biodiversity Occurrence Queries for Peru
+Version: 0.1.0
+Authors@R: 
+    person(given = "Peru Species Project", family = "Maintainers", role = c("aut", "cre"), email = "TODO@example.com")
+Description: Downloads, spatially validates, normalizes, and exports GBIF and
+    iNaturalist occurrence records for districts in Peru. Administrative
+    boundaries are retrieved with geoperu and each run generates output
+    artifacts and provenance metadata.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.1.0)
+Imports:
+    dplyr,
+    geoperu,
+    ggplot2,
+    jsonlite,
+    readr,
+    rgbif,
+    rinat,
+    sf
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+URL: https://paulesantos.github.io/peru_species_project/
+Config/roxygen2/version: 8.0.0

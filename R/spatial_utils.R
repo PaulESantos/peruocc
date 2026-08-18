@@ -1,27 +1,25 @@
 # spatial_utils.R
-# Funciones auxiliares para el procesamiento espacial de polígonos de distritos de Perú.
+# Funciones auxiliares para el procesamiento espacial de poligonos de distritos de Peru.
 
-library(sf)
-library(geoperu)
-
-# Función interna para normalizar cadenas de texto (quitar tildes, mayúsculas, etc.)
+# Funcion interna para normalizar cadenas de texto (quitar tildes, mayusculas, etc.)
 normalizar_texto <- function(texto) {
   if (is.null(texto)) return(NULL)
   texto <- toupper(texto)
-  # Reemplazar caracteres especiales y acentos en español
-  texto <- chartr("ÁÉÍÓÚÜÑ", "AEIOUDN", texto)
-  # Quitar puntuaciones y caracteres no alfanuméricos (mantener espacios)
+  # Reemplazar caracteres especiales y acentos en espanol
+  texto <- chartr("\u00c1\u00c9\u00cd\u00d3\u00da\u00dc\u00d1", "AEIOUDN", texto)
+  # Quitar puntuaciones y caracteres no alfanumericos (mantener espacios)
   texto <- gsub("[^A-Z0-9 ]", "", texto)
   texto <- trimws(texto)
   return(texto)
 }
 
-#' Obtiene el polígono de un distrito específico en el Perú
+#' Obtiene el poligono de un distrito especifico en el Peru
 #'
 #' @param distrito Nombre del distrito (requerido).
-#' @param departamento Nombre del departamento (opcional, para resolver ambigüedades).
-#' @param provincia Nombre de la provincia (opcional, para resolver ambigüedades).
-#' @return Un objeto sf con el polígono del distrito.
+#' @param departamento Nombre del departamento (opcional, para resolver ambiguedades).
+#' @param provincia Nombre de la provincia (opcional, para resolver ambiguedades).
+#' @return Un objeto sf con el poligono del distrito.
+#' @export
 obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia = NULL) {
   if (missing(distrito) || is.null(distrito)) {
     stop("Error: Debe proporcionar el nombre de un distrito.")
@@ -42,7 +40,7 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
                       "PUNO", "SAN MARTIN", "TACNA", "TUMBES", "UCAYALI")
   
   # Crear carpeta data si no existe
-  dir.create("data/cache", recursive = TRUE, showWarnings = FALSE)
+  dir.create(ruta_peruspecies("cache"), recursive = TRUE, showWarnings = FALSE)
   
   if (!is.null(departamento_norm)) {
     # Buscar coincidencia del departamento especificado
@@ -50,32 +48,32 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
     indice_dep <- which(deps_norm == departamento_norm)
     
     if (length(indice_dep) == 0) {
-      stop(sprintf("Error: El departamento '%s' no es válido en el Perú.", departamento))
+      stop(sprintf("Error: El departamento '%s' no es valido en el Peru.", departamento))
     }
     
     dep_oficial <- deps_oficiales[indice_dep]
     dep_clean <- gsub(" ", "_", tolower(departamento_norm))
-    rds_path <- sprintf("data/cache/distritos_%s.rds", dep_clean)
+    rds_path <- ruta_peruspecies("cache", sprintf("distritos_%s.rds", dep_clean))
     
     if (file.exists(rds_path)) {
-      cat(sprintf("[SPATIAL] Cargando límites de %s desde el caché local...\n", dep_oficial))
+      cat(sprintf("[SPATIAL] Cargando limites de %s desde el cache local...\n", dep_oficial))
       mapa <- readRDS(rds_path)
     } else {
-      cat(sprintf("[SPATIAL] Descargando límites de %s vía geoperu...\n", dep_oficial))
+      cat(sprintf("[SPATIAL] Descargando limites de %s via geoperu...\n", dep_oficial))
       mapa <- tryCatch({
         geoperu::get_geo_peru(geography = dep_oficial, level = "dep", simplified = FALSE, showProgress = FALSE)
       }, error = function(e) {
-        stop(sprintf("Error al descargar límites de geoperu: %s", e$message))
+        stop(sprintf("Error al descargar limites de geoperu: %s", e$message))
       })
       saveRDS(mapa, rds_path)
     }
   } else {
-    # Si no se especifica departamento, buscar primero en los archivos de caché ya existentes
-    archivos_cache <- list.files("data/cache", pattern = "^distritos_.*\\.rds$", full.names = TRUE)
+    # Si no se especifica departamento, buscar primero en los archivos de cache ya existentes
+    archivos_cache <- list.files(ruta_peruspecies("cache"), pattern = "^distritos_.*\\.rds$", full.names = TRUE)
     archivos_cache <- archivos_cache[!grepl("distritos_peru_completo.rds$", archivos_cache)]
     
     if (length(archivos_cache) > 0) {
-      cat("[SPATIAL] Buscando distrito en los departamentos ya descargados en caché...\n")
+      cat("[SPATIAL] Buscando distrito en los departamentos ya descargados en cache...\n")
       lista_mapas <- lapply(archivos_cache, readRDS)
       mapa_acumulado <- do.call(rbind, lista_mapas)
       
@@ -88,18 +86,18 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
       }
     }
     
-    # Si no se encontró en los ya descargados, cargamos el completo o descargamos todo
+    # Si no se encontro en los ya descargados, cargamos el completo o descargamos todo
     if (is.null(mapa)) {
-      rds_completo <- "data/cache/distritos_peru_completo.rds"
+      rds_completo <- ruta_peruspecies("cache", "distritos_peru_completo.rds")
       if (file.exists(rds_completo)) {
-        cat("[SPATIAL] Cargando base de datos completa de distritos desde caché local...\n")
+        cat("[SPATIAL] Cargando base de datos completa de distritos desde cache local...\n")
         mapa <- readRDS(rds_completo)
       } else {
-        cat("[SPATIAL] Departamento no especificado. Descargando TODOS los distritos del Perú vía geoperu para el caché...\n")
+        cat("[SPATIAL] Departamento no especificado. Descargando TODOS los distritos del Peru via geoperu para el cache...\n")
         lista_todos <- list()
         for (dep in deps_oficiales) {
           dep_clean <- gsub(" ", "_", tolower(normalizar_texto(dep)))
-          rds_path <- sprintf("data/cache/distritos_%s.rds", dep_clean)
+          rds_path <- ruta_peruspecies("cache", sprintf("distritos_%s.rds", dep_clean))
           
           if (file.exists(rds_path)) {
             lista_todos[[dep]] <- readRDS(rds_path)
@@ -119,7 +117,7 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
         }
         mapa <- do.call(rbind, lista_todos)
         saveRDS(mapa, rds_completo)
-        cat("[SPATIAL] Caché local completo creado con éxito.\n")
+        cat("[SPATIAL] Cache local completo creado con exito.\n")
       }
     }
   }
@@ -132,11 +130,11 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
   coincidencias <- mapa[mapa$distrito_norm == distrito_norm, ]
   
   if (nrow(coincidencias) == 0) {
-    sugerencias <- unique(mapa$distrito[agrep(distrito_norm, mapa$distrito_norm, max.distance = 0.1)])
-    mensaje_error <- paste0("Error: No se encontró el distrito '", distrito, "'.")
+    sugerencias <- unique(utils::head(mapa$distrito[agrep(distrito_norm, mapa$distrito_norm, max.distance = 0.1)], 5))
+    mensaje_error <- paste0("Error: No se encontro el distrito '", distrito, "'.")
     if (length(sugerencias) > 0) {
-      mensaje_error <- paste0(mensaje_error, " ¿Quiso decir uno de estos?: ", 
-                              paste(head(sugerencias, 5), collapse = ", "))
+      mensaje_error <- paste0(mensaje_error, " Quiso decir uno de estos?: ",
+                              paste(sugerencias, collapse = ", "))
     }
     stop(mensaje_error)
   }
@@ -151,16 +149,16 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
     coincidencias <- coincidencias[coincidencias$departamento_norm == departamento_norm, ]
   }
   
-  # Si quedan múltiples registros
+  # Si quedan multiples registros
   if (nrow(coincidencias) > 1) {
-    cat("\nSe encontraron múltiples distritos con el nombre '", distrito, "':\n")
+    cat("\nSe encontraron multiples distritos con el nombre '", distrito, "':\n")
     for (i in 1:nrow(coincidencias)) {
       cat(sprintf("  - Departamento: %s | Provincia: %s | Distrito: %s\n", 
                   coincidencias$departamento[i], 
                   coincidencias$provincia[i], 
                   coincidencias$distrito[i]))
     }
-    stop("Ambigüedad detectada. Por favor especifique el parámetro 'departamento' o 'provincia' para afinar la búsqueda.")
+    stop("Ambiguedad detectada. Por favor especifique el parametro 'departamento' o 'provincia' para afinar la busqueda.")
   }
   
   # Limpiar columnas auxiliares y retornar
@@ -168,17 +166,17 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
   coincidencias$provincia_norm <- NULL
   coincidencias$departamento_norm <- NULL
   
-  # Asegurar clase sf y geometría válida
+  # Asegurar clase sf y geometria valida
   coincidencias <- sf::st_as_sf(coincidencias)
   coincidencias <- sf::st_make_valid(coincidencias)
   
-  # Forzar orientación antihoraria (CCW) requerida por APIs de biodiversidad (GBIF)
+  # Forzar orientacion antihoraria (CCW) requerida por APIs de biodiversidad (GBIF)
   coincidencias <- asegurar_orientacion_antihoraria(coincidencias)
   
   return(coincidencias)
 }
 
-#' Corrige la orientación de un polígono sf para que el anillo exterior sea CCW
+#' Corrige la orientacion de un poligono sf para que el anillo exterior sea CCW
 #' y los anillos interiores (huecos) sean CW.
 #'
 #' @param poly Objeto de tipo polygon de sf (lista de matrices).
@@ -191,11 +189,11 @@ corregir_poligono_ccw <- function(poly) {
     if (n >= 4) {
       x <- ring[, 1]
       y <- ring[, 2]
-      # Fórmula de Shoelace para área con signo
+      # Formula de Shoelace para area con signo
       area <- sum(x[1:(n-1)] * y[2:n] - x[2:n] * y[1:(n-1)])
       
-      # Anillo exterior (j == 1): Debe ser CCW (área > 0)
-      # Anillos interiores/huecos (j > 1): Deben ser CW (área < 0)
+      # Anillo exterior (j == 1): Debe ser CCW (area > 0)
+      # Anillos interiores/huecos (j > 1): Deben ser CW (area < 0)
       if (j == 1 && area < 0) {
         ring <- ring[n:1, ]
       } else if (j > 1 && area > 0) {
@@ -207,7 +205,7 @@ corregir_poligono_ccw <- function(poly) {
   return(sf::st_polygon(nuevo_poly))
 }
 
-#' Asegura que todas las geometrías de un objeto sf tengan orientación antihoraria (CCW)
+#' Asegura que todas las geometrias de un objeto sf tengan orientacion antihoraria (CCW)
 #'
 #' @param sf_obj Objeto sf.
 #' @return Objeto sf con orientaciones corregidas.
@@ -225,11 +223,12 @@ asegurar_orientacion_antihoraria <- function(sf_obj) {
   return(sf_obj)
 }
 
-#' Simplifica un polígono sf o genera su bounding box si es muy complejo
-#' para cumplir con el límite de longitud de caracteres de WKT.
+#' Simplifica un poligono sf o genera su bounding box si es muy complejo
+#' para cumplir con el limite de longitud de caracteres de WKT.
 #'
 #' @param sf_obj Objeto sf.
-#' @param max_char Límite de caracteres WKT (def: 1500).
+#' @param max_char Limite de caracteres WKT (def: 1500).
+#' @param tolerancia_inicial_metros Tolerancia inicial en metros para la simplificacion.
 #' @return Objeto sf simplificado (o su bbox) apto para consulta.
 simplificar_para_api <- function(sf_obj, max_char = 1500, tolerancia_inicial_metros = 100) {
   geom <- sf::st_geometry(sf_obj)
@@ -248,7 +247,7 @@ simplificar_para_api <- function(sf_obj, max_char = 1500, tolerancia_inicial_met
     wkt_simp <- sf::st_as_text(geom_simp[[1]])
     
     if (nchar(wkt_simp) <= max_char) {
-      cat(sprintf("[SPATIAL] Polígono simplificado con éxito a tolerancia de %d metros (WKT: %d caracteres).\n", tol_metros, nchar(wkt_simp)))
+      cat(sprintf("[SPATIAL] Poligono simplificado con exito a tolerancia de %d metros (WKT: %d caracteres).\n", tol_metros, nchar(wkt_simp)))
       return(sf_simp)
     }
     
@@ -256,7 +255,7 @@ simplificar_para_api <- function(sf_obj, max_char = 1500, tolerancia_inicial_met
   }
   
   # Si sigue siendo demasiado complejo, usar el Bounding Box como fallback
-  cat("[SPATIAL] Polígono demasiado complejo. Usando Bounding Box como fallback para la consulta API.\n")
+  cat("[SPATIAL] Poligono demasiado complejo. Usando Bounding Box como fallback para la consulta API.\n")
   bbox <- sf::st_bbox(sf_obj)
   sf_bbox <- sf::st_as_sf(sf::st_as_sfc(bbox))
   
@@ -271,29 +270,29 @@ simplificar_para_api <- function(sf_obj, max_char = 1500, tolerancia_inicial_met
 }
 
 
-#' Simplifica un polígono de tipo sf usando proyecciones UTM
+#' Simplifica un poligono de tipo sf usando proyecciones UTM
 #'
-#' @param sf_obj Objeto sf con la geometría.
-#' @param tolerancia_metros Tolerancia de simplificación en metros (def: 100 metros).
+#' @param sf_obj Objeto sf con la geometria.
+#' @param tolerancia_metros Tolerancia de simplificacion en metros (def: 100 metros).
 #' @return Objeto sf simplificado en EPSG:4326.
 simplificar_poligono <- function(sf_obj, tolerancia_metros = 100) {
   if (tolerancia_metros <= 0) {
     return(sf_obj)
   }
   
-  # Seleccionar zona UTM a partir del centroide: Perú abarca 17S, 18S y 19S.
+  # Seleccionar zona UTM a partir del centroide: Peru abarca 17S, 18S y 19S.
   centroide <- sf::st_coordinates(sf::st_centroid(sf::st_union(sf::st_transform(sf_obj, 4326))))[1, ]
   zona_utm <- max(1, min(60, floor((centroide[1] + 180) / 6) + 1))
   epsg_utm <- 32700 + zona_utm
   sf_utm <- sf::st_transform(sf_obj, crs = epsg_utm)
   
-  # Simplificar geometría
+  # Simplificar geometria
   sf_utm_sim <- sf::st_simplify(sf_utm, preserveTopology = TRUE, dTolerance = tolerancia_metros)
   
-  # Volver a proyectar a EPSG:4326 (coordenadas geográficas WGS84)
+  # Volver a proyectar a EPSG:4326 (coordenadas geograficas WGS84)
   sf_wgs84 <- sf::st_transform(sf_utm_sim, crs = 4326)
   
-  # Asegurar que siga siendo válido
+  # Asegurar que siga siendo valido
   sf_wgs84 <- sf::st_make_valid(sf_wgs84)
   
   return(sf_wgs84)
@@ -304,18 +303,18 @@ simplificar_poligono <- function(sf_obj, tolerancia_metros = 100) {
 #' @param sf_obj Objeto sf.
 #' @return Una cadena de texto en formato WKT.
 poligono_a_wkt <- function(sf_obj) {
-  # Extraer la geometría y hacerla válida
+  # Extraer la geometria y hacerla valida
   geom <- sf::st_geometry(sf_obj)
   geom <- sf::st_make_valid(geom)
   
   # Convertir a texto WKT
   wkt <- sf::st_as_text(geom[[1]])
   
-  # GBIF requiere sentido antihorario (CCW) para los polígonos.
-  # st_as_text con el motor S2 activo en sf suele formatear las geometrías según el estándar OGC.
+  # GBIF requiere sentido antihorario (CCW) para los poligonos.
+  # st_as_text con el motor S2 activo en sf suele formatear las geometrias segun el estandar OGC.
   # Si el WKT es extremadamente largo, imprimimos una advertencia.
   if (nchar(wkt) > 1500) {
-    warning("La geometría WKT es muy larga (", nchar(wkt), " caracteres). Puede provocar fallos en la consulta API de GBIF. Considere aumentar el parámetro de simplificación.")
+    warning("La geometria WKT es muy larga (", nchar(wkt), " caracteres). Puede provocar fallos en la consulta API de GBIF. Considere aumentar el parametro de simplificacion.")
   }
   
   return(wkt)

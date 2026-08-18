@@ -1,20 +1,13 @@
 # query_gbif.R
 # Funciones para consultar ocurrencias de especies en la base de datos de GBIF.
 
-library(rgbif)
-library(dplyr)
-library(sf)
-
-source("R/spatial_utils.R")
-source("R/project_utils.R")
-
-#' Busca ocurrencias de especies en GBIF dentro de un polígono de distrito
+#' Busca ocurrencias de especies en GBIF dentro de un poligono de distrito
 #'
 #' @param poligono_sf Objeto sf que representa el distrito (EPSG:4326).
-#' @param nombre_cientifico Nombre de la especie o grupo taxonómico (opcional).
-#' @param grupo Grupo taxonómico: "flora", "fauna" o NULL.
-#' @param limite Número máximo de registros a recuperar (máx. 100000 para occ_search).
-#' @param tolerancia_simplificacion Tolerancia de simplificación en metros (def: 100 metros).
+#' @param nombre_cientifico Nombre de la especie o grupo taxonomico (opcional).
+#' @param grupo Grupo taxonomico: "flora", "fauna" o NULL.
+#' @param limite Numero maximo de registros a recuperar (max. 100000 para occ_search).
+#' @param tolerancia_simplificacion Tolerancia de simplificacion en metros (def: 100 metros).
 #' @return Un dataframe estandarizado con los registros encontrados.
 buscar_gbif_por_poligono <- function(poligono_sf, 
                                      nombre_cientifico = NULL, 
@@ -22,23 +15,23 @@ buscar_gbif_por_poligono <- function(poligono_sf,
                                      limite = 500, 
                                      tolerancia_simplificacion = 100) {
   
-  cat("[GBIF] Iniciando búsqueda de ocurrencias...\n")
+  cat("[GBIF] Iniciando busqueda de ocurrencias...\n")
   
-  # 1. Simplificar el polígono de manera inteligente para la API (límite de longitud WKT <= 1500)
+  # 1. Simplificar el poligono de manera inteligente para la API (limite de longitud WKT <= 1500)
   poligono_api <- simplificar_para_api(poligono_sf, tolerancia_inicial_metros = tolerancia_simplificacion)
   wkt <- poligono_a_wkt(poligono_api)
   
   # Obtener nombre del distrito para registrar en el dataset
   nombre_distrito <- ifelse(!is.null(poligono_sf$distrito), poligono_sf$distrito[1], "Desconocido")
   
-  # 2. Configurar filtros taxonómicos
+  # 2. Configurar filtros taxonomicos
   taxon_key <- NULL
   if (!is.null(nombre_cientifico) && nombre_cientifico != "") {
-    cat(sprintf("[GBIF] Resolviendo taxonomía para '%s'...\n", nombre_cientifico))
+    cat(sprintf("[GBIF] Resolviendo taxonomia para '%s'...\n", nombre_cientifico))
     resolucion <- tryCatch({
       rgbif::name_backbone(name = nombre_cientifico)
     }, error = function(e) {
-      cat("[GBIF] Advertencia: No se pudo conectar al resolutor taxonómico de GBIF.\n")
+      cat("[GBIF] Advertencia: No se pudo conectar al resolutor taxonomico de GBIF.\n")
       return(NULL)
     })
     
@@ -47,7 +40,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
       cat(sprintf("[GBIF] Taxon resuelto: %s (Key: %s, Rank: %s)\n", 
                   resolucion$scientificName, as.character(taxon_key), resolucion$rank))
     } else {
-      cat(sprintf("[GBIF] Advertencia: No se encontró coincidencia taxonómica para '%s'. Se buscará por texto libre.\n", nombre_cientifico))
+      cat(sprintf("[GBIF] Advertencia: No se encontro coincidencia taxonomica para '%s'. Se buscara por texto libre.\n", nombre_cientifico))
     }
   }
   
@@ -67,7 +60,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
   
   # 3. Ejecutar consulta
   limite_etiqueta <- if (is.null(limite)) "completo" else as.character(limite)
-  cat(sprintf("[GBIF] Consultando registros dentro del polígono de '%s' (límite: %s)...\n", nombre_distrito, limite_etiqueta))
+  cat(sprintf("[GBIF] Consultando registros dentro del poligono de '%s' (limite: %s)...\n", nombre_distrito, limite_etiqueta))
   
   parametros <- list(
     geometry = wkt,
@@ -81,19 +74,19 @@ buscar_gbif_por_poligono <- function(poligono_sf,
     parametros$kingdomKey <- kingdom_key
   }
   
-  # Si no hay taxonKey pero hay nombre científico en texto libre
+  # Si no hay taxonKey pero hay nombre cientifico en texto libre
   if (is.null(taxon_key) && !is.null(nombre_cientifico) && nombre_cientifico != "") {
     parametros$scientificName <- nombre_cientifico
   }
 
-  # GBIF exige paginación. rgbif la gestiona internamente al indicar `limit`,
-  # pero el endpoint de búsqueda no puede superar 100 000 registros.
+  # GBIF exige paginacion. rgbif la gestiona internamente al indicar `limit`,
+  # pero el endpoint de busqueda no puede superar 100 000 registros.
   total_api <- NA_integer_
   if (is.null(limite)) {
     conteo <- tryCatch(do.call(rgbif::occ_search, c(parametros, list(limit = 0))), error = function(e) NULL)
     total_api <- if (!is.null(conteo$meta$count)) as.integer(conteo$meta$count) else NA_integer_
-    if (is.na(total_api)) stop("GBIF no devolvió el conteo de la consulta; no es posible verificar una descarga completa.")
-    if (total_api > 100000L) stop(sprintf("GBIF reporta %s registros. occ_search sólo permite 100000; solicite una descarga masiva citable con rgbif::occ_download() usando los mismos filtros.", format(total_api, big.mark = ",")))
+    if (is.na(total_api)) stop("GBIF no devolvio el conteo de la consulta; no es posible verificar una descarga completa.")
+    if (total_api > 100000L) stop(sprintf("GBIF reporta %s registros. occ_search solo permite 100000; solicite una descarga masiva citable con rgbif::occ_download() usando los mismos filtros.", format(total_api, big.mark = ",")))
     parametros$limit <- total_api
   } else {
     parametros$limit <- limite
@@ -107,11 +100,11 @@ buscar_gbif_por_poligono <- function(poligono_sf,
     return(NULL)
   })
   
-  # Dataframe vacío de retorno estandarizado
+  # Dataframe vacio de retorno estandarizado
   df_vacio <- schema_ocurrencias()
   
   if (is.null(res) || is.null(res$data) || (is.data.frame(res$data) && nrow(res$data) == 0)) {
-    cat("[GBIF] No se encontraron ocurrencias para esta búsqueda.\n")
+    cat("[GBIF] No se encontraron ocurrencias para esta busqueda.\n")
     attr(df_vacio, "api_total") <- if (is.na(total_api)) 0L else total_api
     attr(df_vacio, "api_complete") <- is.null(limite) && !is.na(total_api)
     return(df_vacio)
@@ -169,7 +162,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
   datos_procesados$source <- "GBIF"
   datos_procesados$district <- nombre_distrito
   
-  # 5. Filtrar espacialmente con el polígono exacto (poligono_sf) en R
+  # 5. Filtrar espacialmente con el poligono exacto (poligono_sf) en R
   # Esto garantiza que las ocurrencias obtenidas caen estrictamente dentro del distrito oficial.
   if (nrow(datos_procesados) > 0) {
     ocurrencias_sf <- tryCatch({
@@ -186,7 +179,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
     }
   }
   
-  cat(sprintf("[GBIF] Búsqueda finalizada. Se filtraron %d registros que caen dentro del polígono del distrito.\n", nrow(datos_procesados)))
+  cat(sprintf("[GBIF] Busqueda finalizada. Se filtraron %d registros que caen dentro del poligono del distrito.\n", nrow(datos_procesados)))
   attr(datos_procesados, "api_total") <- if (is.na(total_api)) res$meta$count else total_api
   attr(datos_procesados, "api_complete") <- is.null(limite) && !is.na(total_api) && nrow(res$data) == total_api
   
