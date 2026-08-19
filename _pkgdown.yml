@@ -40,10 +40,25 @@ navbar:
   structure:
     left:
       - home
+      - intro
       - reference
+      - articles
     right:
       - search
       - github
+  components:
+    intro:
+      text: Primeros Pasos
+      href: articles/getting_started.html
+    articles:
+      text: Artículos
+      menu:
+        - text: "1. Primeros pasos con peruocc"
+          href: articles/getting_started.html
+        - text: "2. Flujo espacial y filtrado topológico"
+          href: articles/flujo_espacial.html
+        - text: "3. Visualización cartográfica y exportación"
+          href: articles/visualizacion_y_exportacion.html
 
 reference:
   - title: "Consultas e Integración de Biodiversidad"
@@ -65,12 +80,24 @@ reference:
     contents:
       - graficar_ocurrencias
 
-  - title: "Configuración y Directorios"
-    desc: "Gestión del entorno de trabajo, almacenamiento en caché y trazabilidad."
+  - title: "Exportación, Configuración y Directorios"
+    desc: "Exportación de artefactos (CSV, GeoJSON, manifiesto), gestión del entorno de trabajo y almacenamiento en caché."
     contents:
+      - exportar_resultados
       - verificar_y_configurar_entorno
       - peruocc_data_dir
       - peruspecies_data_dir
+
+  - title: "Funciones Auxiliares y Topología Espacial"
+    desc: "Procesamiento geométrico interno, WKT, orientación CCW y consultas modulares."
+    contents:
+      - asegurar_orientacion_antihoraria
+      - corregir_poligono_ccw
+      - poligono_a_wkt
+      - simplificar_poligono
+      - simplificar_para_api
+      - buscar_gbif_por_poligono
+      - buscar_inat_por_poligono
 
 development:
   mode: auto

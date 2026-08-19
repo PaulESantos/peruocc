@@ -16,7 +16,8 @@ peruspecies_data_dir(path = NULL)
 The normalized path, invisibly.
 }
 \description{
-Sets the root directory used for cached boundaries, processed data, and
-figures. By default this is a \code{peruocc} subdirectory in the current
-working directory.
+Sets the root directory used for processed data and exported artifacts.
+By default, boundaries are cached in a standard user cache directory
+(\code{tools::R_user_dir("peruocc", which = "cache")}) and exported files in a
+\code{peruocc} subdirectory in the current working directory.
 }

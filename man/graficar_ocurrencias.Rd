@@ -7,7 +7,7 @@
 graficar_ocurrencias(
   resultado_lista,
   color_por = "source",
-  guardar_mapa = TRUE
+  guardar_mapa = FALSE
 )
 }
 \arguments{
@@ -15,7 +15,7 @@ graficar_ocurrencias(
 
 \item{color_por}{Columna para clasificar los colores ("source" por defecto, o "kingdom").}
 
-\item{guardar_mapa}{Logico; si es TRUE guarda el grafico en results/ como PNG (def: TRUE).}
+\item{guardar_mapa}{Logico; si es TRUE guarda el grafico en results/ como PNG (def: FALSE).}
 }
 \value{
 El objeto de grafico ggplot.

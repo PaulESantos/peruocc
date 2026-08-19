@@ -24,10 +24,9 @@ departamentos_oficiales <- function() {
 
 # Helper interno para cargar geometrias departamentales con cache
 cargar_mapa_departamental <- function(departamento = NULL) {
+  loadNamespace("sf")
   deps_oficiales <- departamentos_oficiales()
   departamento_norm <- normalizar_texto(departamento)
-  
-  dir.create(ruta_peruocc("cache"), recursive = TRUE, showWarnings = FALSE)
   
   if (!is.null(departamento_norm)) {
     deps_norm <- sapply(deps_oficiales, normalizar_texto)
@@ -39,7 +38,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
     
     dep_oficial <- deps_oficiales[indice_dep]
     dep_clean <- gsub(" ", "_", tolower(departamento_norm))
-    rds_path <- ruta_peruocc("cache", sprintf("distritos_%s.rds", dep_clean))
+    rds_path <- ruta_cache(sprintf("distritos_%s.rds", dep_clean))
     
     if (file.exists(rds_path)) {
       cat(sprintf("[SPATIAL] Cargando limites de %s desde el cache local...\n", dep_oficial))
@@ -53,31 +52,36 @@ cargar_mapa_departamental <- function(departamento = NULL) {
       })
       saveRDS(mapa, rds_path)
     }
+    if (!inherits(mapa, "sf")) mapa <- sf::st_as_sf(mapa)
     return(mapa)
   }
   
   # Si no se especifica departamento, buscar primero en cache
-  archivos_cache <- list.files(ruta_peruocc("cache"), pattern = "^distritos_.*\\.rds$", full.names = TRUE)
+  dir_c <- ruta_cache()
+  archivos_cache <- list.files(dir_c, pattern = "^distritos_.*\\.rds$", full.names = TRUE)
   archivos_cache <- archivos_cache[!grepl("distritos_peru_completo.rds$", archivos_cache)]
   
   if (length(archivos_cache) > 0) {
     cat("[SPATIAL] Cargando datos disponibles desde cache local...\n")
     lista_mapas <- lapply(archivos_cache, readRDS)
     mapa_acumulado <- do.call(rbind, lista_mapas)
+    if (!inherits(mapa_acumulado, "sf")) mapa_acumulado <- sf::st_as_sf(mapa_acumulado)
     return(mapa_acumulado)
   }
   
-  rds_completo <- ruta_peruocc("cache", "distritos_peru_completo.rds")
+  rds_completo <- ruta_cache("distritos_peru_completo.rds")
   if (file.exists(rds_completo)) {
     cat("[SPATIAL] Cargando base de datos completa desde cache local...\n")
-    return(readRDS(rds_completo))
+    mapa <- readRDS(rds_completo)
+    if (!inherits(mapa, "sf")) mapa <- sf::st_as_sf(mapa)
+    return(mapa)
   }
   
   cat("[SPATIAL] Departamento no especificado. Descargando limites distritales del Peru via geoperu...\n")
   lista_todos <- list()
   for (dep in deps_oficiales) {
     dep_clean <- gsub(" ", "_", tolower(normalizar_texto(dep)))
-    rds_path <- ruta_peruocc("cache", sprintf("distritos_%s.rds", dep_clean))
+    rds_path <- ruta_cache(sprintf("distritos_%s.rds", dep_clean))
     
     if (file.exists(rds_path)) {
       lista_todos[[dep]] <- readRDS(rds_path)
@@ -98,6 +102,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
   mapa <- do.call(rbind, lista_todos)
   saveRDS(mapa, rds_completo)
   cat("[SPATIAL] Cache local completo creado con exito.\n")
+  if (!inherits(mapa, "sf")) mapa <- sf::st_as_sf(mapa)
   return(mapa)
 }
 
@@ -109,6 +114,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
 #' @return Un objeto sf con el poligono del distrito.
 #' @export
 obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia = NULL) {
+  loadNamespace("sf")
   if (missing(distrito) || is.null(distrito)) {
     stop("Error: Debe proporcionar el nombre de un distrito.")
   }
@@ -119,24 +125,24 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
   
   mapa <- cargar_mapa_departamental(departamento = departamento)
   
-  mapa$distrito_norm <- sapply(mapa$distrito, normalizar_texto)
-  mapa$provincia_norm <- sapply(mapa$provincia, normalizar_texto)
-  mapa$departamento_norm <- sapply(mapa$departamento, normalizar_texto)
+  distritos_mapa_norm <- sapply(mapa$distrito, normalizar_texto)
+  provincias_mapa_norm <- sapply(mapa$provincia, normalizar_texto)
+  departamentos_mapa_norm <- sapply(mapa$departamento, normalizar_texto)
   
-  coincidencias <- mapa[mapa$distrito_norm == distrito_norm, ]
+  idx <- which(distritos_mapa_norm == distrito_norm)
   
   # Si no hubo coincidencia y buscamos en cache parcial, descargar completo
-  if (nrow(coincidencias) == 0 && is.null(departamento_norm)) {
+  if (length(idx) == 0 && is.null(departamento_norm)) {
     mapa_completo <- cargar_mapa_departamental(departamento = NULL)
-    mapa_completo$distrito_norm <- sapply(mapa_completo$distrito, normalizar_texto)
-    mapa_completo$provincia_norm <- sapply(mapa_completo$provincia, normalizar_texto)
-    mapa_completo$departamento_norm <- sapply(mapa_completo$departamento, normalizar_texto)
-    coincidencias <- mapa_completo[mapa_completo$distrito_norm == distrito_norm, ]
+    distritos_mapa_norm <- sapply(mapa_completo$distrito, normalizar_texto)
+    provincias_mapa_norm <- sapply(mapa_completo$provincia, normalizar_texto)
+    departamentos_mapa_norm <- sapply(mapa_completo$departamento, normalizar_texto)
+    idx <- which(distritos_mapa_norm == distrito_norm)
     mapa <- mapa_completo
   }
   
-  if (nrow(coincidencias) == 0) {
-    sugerencias <- unique(utils::head(mapa$distrito[agrep(distrito_norm, mapa$distrito_norm, max.distance = 0.1)], 5))
+  if (length(idx) == 0) {
+    sugerencias <- unique(utils::head(mapa$distrito[agrep(distrito_norm, distritos_mapa_norm, max.distance = 0.1)], 5))
     mensaje_error <- paste0("Error: No se encontro el distrito '", distrito, "'.")
     if (length(sugerencias) > 0) {
       mensaje_error <- paste0(mensaje_error, " Quiso decir uno de estos?: ",
@@ -146,29 +152,43 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
   }
   
   if (!is.null(provincia_norm)) {
-    coincidencias <- coincidencias[coincidencias$provincia_norm == provincia_norm, ]
+    idx <- idx[provincias_mapa_norm[idx] == provincia_norm]
   }
   
   if (!is.null(departamento_norm)) {
-    coincidencias <- coincidencias[coincidencias$departamento_norm == departamento_norm, ]
+    idx <- idx[departamentos_mapa_norm[idx] == departamento_norm]
   }
   
-  if (nrow(coincidencias) > 1) {
+  if (length(idx) > 1) {
     cat("\nSe encontraron multiples distritos con el nombre '", distrito, "':\n")
-    for (i in 1:nrow(coincidencias)) {
+    for (i in idx) {
       cat(sprintf("  - Departamento: %s | Provincia: %s | Distrito: %s\n", 
-                  coincidencias$departamento[i], 
-                  coincidencias$provincia[i], 
-                  coincidencias$distrito[i]))
+                  mapa$departamento[i], 
+                  mapa$provincia[i], 
+                  mapa$distrito[i]))
     }
     stop("Ambiguedad detectada. Por favor especifique el parametro 'departamento' o 'provincia' para afinar la busqueda.")
   }
   
-  coincidencias$distrito_norm <- NULL
-  coincidencias$provincia_norm <- NULL
-  coincidencias$departamento_norm <- NULL
+  if (length(idx) == 0) {
+    stop(sprintf("Error: No se encontro el distrito '%s' con los filtros especificados.", distrito))
+  }
   
-  coincidencias <- sf::st_as_sf(coincidencias)
+  col_geom <- attr(mapa, "sf_column")
+  geoms <- mapa[[col_geom]][idx]
+  if (!inherits(geoms, "sfc")) {
+    geoms <- sf::st_sfc(geoms, crs = sf::st_crs(mapa))
+  }
+  
+  coincidencias <- sf::st_sf(
+    departamento = mapa$departamento[idx],
+    provincia = mapa$provincia[idx],
+    distrito = mapa$distrito[idx],
+    capital = if ("capital" %in% names(mapa)) mapa$capital[idx] else NA_character_,
+    geometry = geoms,
+    crs = sf::st_crs(mapa)
+  )
+  
   coincidencias <- sf::st_make_valid(coincidencias)
   coincidencias <- asegurar_orientacion_antihoraria(coincidencias)
   
@@ -182,6 +202,7 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
 #' @return Un objeto sf con el poligono unificado de la provincia.
 #' @export
 obtener_poligono_provincia <- function(provincia, departamento = NULL) {
+  loadNamespace("sf")
   if (missing(provincia) || is.null(provincia)) {
     stop("Error: Debe proporcionar el nombre de una provincia.")
   }
@@ -191,21 +212,21 @@ obtener_poligono_provincia <- function(provincia, departamento = NULL) {
   
   mapa <- cargar_mapa_departamental(departamento = departamento)
   
-  mapa$provincia_norm <- sapply(mapa$provincia, normalizar_texto)
-  mapa$departamento_norm <- sapply(mapa$departamento, normalizar_texto)
+  provincias_mapa_norm <- sapply(mapa$provincia, normalizar_texto)
+  departamentos_mapa_norm <- sapply(mapa$departamento, normalizar_texto)
   
-  coincidencias <- mapa[mapa$provincia_norm == provincia_norm, ]
+  idx <- which(provincias_mapa_norm == provincia_norm)
   
-  if (nrow(coincidencias) == 0 && is.null(departamento_norm)) {
+  if (length(idx) == 0 && is.null(departamento_norm)) {
     mapa_completo <- cargar_mapa_departamental(departamento = NULL)
-    mapa_completo$provincia_norm <- sapply(mapa_completo$provincia, normalizar_texto)
-    mapa_completo$departamento_norm <- sapply(mapa_completo$departamento, normalizar_texto)
-    coincidencias <- mapa_completo[mapa_completo$provincia_norm == provincia_norm, ]
+    provincias_mapa_norm <- sapply(mapa_completo$provincia, normalizar_texto)
+    departamentos_mapa_norm <- sapply(mapa_completo$departamento, normalizar_texto)
+    idx <- which(provincias_mapa_norm == provincia_norm)
     mapa <- mapa_completo
   }
   
-  if (nrow(coincidencias) == 0) {
-    sugerencias <- unique(utils::head(mapa$provincia[agrep(provincia_norm, mapa$provincia_norm, max.distance = 0.1)], 5))
+  if (length(idx) == 0) {
+    sugerencias <- unique(utils::head(mapa$provincia[agrep(provincia_norm, provincias_mapa_norm, max.distance = 0.1)], 5))
     mensaje_error <- paste0("Error: No se encontro la provincia '", provincia, "'.")
     if (length(sugerencias) > 0) {
       mensaje_error <- paste0(mensaje_error, " Quiso decir una de estas?: ",
@@ -215,10 +236,10 @@ obtener_poligono_provincia <- function(provincia, departamento = NULL) {
   }
   
   if (!is.null(departamento_norm)) {
-    coincidencias <- coincidencias[coincidencias$departamento_norm == departamento_norm, ]
+    idx <- idx[departamentos_mapa_norm[idx] == departamento_norm]
   }
   
-  deps_encontrados <- unique(coincidencias$departamento)
+  deps_encontrados <- unique(mapa$departamento[idx])
   if (length(deps_encontrados) > 1) {
     cat("\nSe encontraron provincias con el mismo nombre en multiples departamentos:\n")
     for (dep in deps_encontrados) {
@@ -227,7 +248,20 @@ obtener_poligono_provincia <- function(provincia, departamento = NULL) {
     stop("Ambiguedad detectada. Por favor especifique el parametro 'departamento' para afinar la busqueda.")
   }
   
-  # Disolver distritos para obtener el poligono de la provincia completa
+  col_geom <- attr(mapa, "sf_column")
+  geoms <- mapa[[col_geom]][idx]
+  if (!inherits(geoms, "sfc")) {
+    geoms <- sf::st_sfc(geoms, crs = sf::st_crs(mapa))
+  }
+  
+  coincidencias <- sf::st_sf(
+    departamento = mapa$departamento[idx],
+    provincia = mapa$provincia[idx],
+    distrito = mapa$distrito[idx],
+    geometry = geoms,
+    crs = sf::st_crs(mapa)
+  )
+  
   dep_nombre <- coincidencias$departamento[1]
   prov_nombre <- coincidencias$provincia[1]
   

@@ -112,3 +112,101 @@ escribir_manifiesto <- function(run_id, parametros, unidad_sf, resumen, archivos
     null = "null"
   )
 }
+
+#' Exporta los resultados de una busqueda de biodiversidad a disco
+#'
+#' Guarda los registros consolidados de ocurrencias en formatos CSV, capas
+#' espaciales GeoJSON y un archivo de manifiesto JSON para trazabilidad y reproducibilidad.
+#'
+#' @param resultado Lista devuelta por `buscar_especies_peru()`, `buscar_especies_distrito()` o `buscar_especies_provincia()`.
+#' @param dir_salida Directorio de destino donde se guardaran los archivos (por defecto el subdirectorio `processed/` de `peruocc_data_dir()`).
+#' @param prefijo Prefijo opcional para nombrar los archivos. Si es NULL, se genera automaticamente.
+#' @param formatos Vector con los formatos a generar: "csv", "geojson", "manifiesto".
+#' @return Una lista invisible con las rutas de los archivos generados.
+#' @export
+exportar_resultados <- function(resultado, dir_salida = NULL, prefijo = NULL, formatos = c("csv", "geojson", "manifiesto")) {
+  if (missing(resultado) || is.null(resultado) || !is.list(resultado)) {
+    stop("Error: 'resultado' debe ser una lista valida generada por buscar_especies_*().")
+  }
+  
+  ocurrencias <- resultado$ocurrencias
+  unidad_sf <- if (!is.null(resultado$unidad_sf)) resultado$unidad_sf else resultado$distrito_sf
+  resumen <- resultado$resumen
+  parametros <- resultado$parametros
+  
+  if (is.null(ocurrencias) || nrow(ocurrencias) == 0) {
+    message("[EXPORTAR] No hay ocurrencias para exportar.")
+    return(invisible(list()))
+  }
+  
+  if (is.null(dir_salida)) {
+    dir_salida <- ruta_peruocc("processed")
+  }
+  dir.create(dir_salida, recursive = TRUE, showWarnings = FALSE)
+  
+  if (is.null(prefijo)) {
+    nombre_u <- if (!is.null(resumen$unidad)) resumen$unidad else if (!is.null(resumen$distrito) && !is.na(resumen$distrito)) resumen$distrito else resumen$provincia
+    u_clean <- gsub(" ", "_", tolower(normalizar_texto(nombre_u)))
+    grupo_clean <- if (!is.null(parametros$grupo)) tolower(parametros$grupo) else "biodiversidad"
+    nivel_clean <- if (!is.null(parametros$nivel)) parametros$nivel else "unidad"
+    run_id <- sprintf("%s_%s_%s_%s", format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ"), nivel_clean, u_clean, grupo_clean)
+  } else {
+    run_id <- prefijo
+  }
+  
+  archivos_creados <- list()
+  
+  # 1. CSV
+  if ("csv" %in% formatos) {
+    ruta_csv <- file.path(dir_salida, sprintf("ocurrencias_%s.csv", run_id))
+    tryCatch({
+      readr::write_csv(ocurrencias, ruta_csv)
+      cat(sprintf("[ARCHIVO] Registros tabulares guardados en: '%s'\n", ruta_csv))
+      archivos_creados$csv <- ruta_csv
+    }, error = function(e) {
+      warning("[ARCHIVO] Error al exportar CSV: ", e$message)
+    })
+  }
+  
+  # 2. GeoJSON
+  if ("geojson" %in% formatos) {
+    ruta_geojson <- file.path(dir_salida, sprintf("ocurrencias_%s.geojson", run_id))
+    tryCatch({
+      ocurrencias_geo <- dplyr::filter(ocurrencias, is.finite(decimalLongitude), is.finite(decimalLatitude))
+      if (nrow(ocurrencias_geo) > 0) {
+        sf_guardar <- sf::st_as_sf(
+          ocurrencias_geo,
+          coords = c("decimalLongitude", "decimalLatitude"),
+          crs = 4326,
+          remove = FALSE
+        )
+        sf::st_write(sf_guardar, ruta_geojson, quiet = TRUE, delete_dsn = TRUE)
+        cat(sprintf("[ARCHIVO] Capa espacial GeoJSON guardada en: '%s'\n", ruta_geojson))
+        archivos_creados$geojson <- ruta_geojson
+      }
+    }, error = function(e) {
+      warning("[SIG] Error al exportar GeoJSON: ", e$message)
+    })
+  }
+  
+  # 3. Manifiesto JSON
+  if ("manifiesto" %in% formatos && !is.null(unidad_sf)) {
+    ruta_manifiesto <- file.path(dir_salida, sprintf("manifiesto_%s.json", run_id))
+    tryCatch({
+      escribir_manifiesto(
+        run_id = run_id,
+        parametros = parametros,
+        unidad_sf = unidad_sf,
+        resumen = resumen,
+        archivos = archivos_creados,
+        ruta = ruta_manifiesto
+      )
+      cat(sprintf("[ARCHIVO] Manifiesto guardado en: '%s'\n", ruta_manifiesto))
+      archivos_creados$manifiesto <- ruta_manifiesto
+    }, error = function(e) {
+      warning("[ARCHIVO] Error al exportar manifiesto: ", e$message)
+    })
+  }
+  
+  invisible(archivos_creados)
+}

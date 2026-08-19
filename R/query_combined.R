@@ -10,7 +10,7 @@
 #' @param nombre_cientifico Nombre de la especie o grupo taxonomico a filtrar (opcional).
 #' @param grupo Grupo taxonomico a filtrar: "flora", "fauna" o NULL.
 #' @param limite_por_api Numero maximo de registros a solicitar por API (def: 500).
-#' @param guardar_resultados Logico; si es TRUE guarda los resultados en processed/ (def: TRUE).
+#' @param guardar_resultados Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).
 #' @param tolerancia_simplificacion Tolerancia en metros para simplificar el poligono en GBIF (def: 100).
 #' @return Una lista con el poligono de la unidad, el dataframe de ocurrencias consolidado y estadisticas de resumen.
 #' @export
@@ -21,11 +21,10 @@ buscar_especies_peru <- function(nombre,
                                  nombre_cientifico = NULL,
                                  grupo = NULL,
                                  limite_por_api = configuracion_predeterminada()$limite_por_api,
-                                 guardar_resultados = TRUE,
+                                 guardar_resultados = FALSE,
                                  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m) {
   nivel <- match.arg(nivel)
   validar_entrada_busqueda(unidad = nombre, grupo = grupo, limite = limite_por_api, nivel = nivel)
-  crear_directorios_proyecto()
   
   cat("=====================================================================\n")
   cat(sprintf("BUSQUEDA INTEGRADA EN %s: %s\n", toupper(nivel), toupper(nombre)))
@@ -121,60 +120,7 @@ buscar_especies_peru <- function(nombre,
     Registros = c(n_gbif, n_inat, nrow(ocurrencias_combinadas))
   ))
   
-  # 6. Guardar Resultados en Archivos (CSV, GeoJSON, Manifiesto JSON)
-  if (guardar_resultados && nrow(ocurrencias_combinadas) > 0) {
-    unidad_clean <- gsub(" ", "_", tolower(normalizar_texto(etiqueta_unidad)))
-    grupo_clean <- ifelse(is.null(grupo), "biodiversidad", tolower(grupo))
-    run_id <- sprintf("%s_p%s_%s_%s_%s", format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ"), Sys.getpid(), nivel, unidad_clean, grupo_clean)
-    
-    dir.create(ruta_peruocc("processed"), recursive = TRUE, showWarnings = FALSE)
-    nombre_archivo <- ruta_peruocc("processed", sprintf("ocurrencias_%s.csv", run_id))
-    nombre_geojson <- NA_character_
-    
-    tryCatch({
-      readr::write_csv(ocurrencias_combinadas, nombre_archivo)
-      cat(sprintf("\n[ARCHIVO] Resultados guardados en: '%s'\n", nombre_archivo))
-    }, error = function(e) {
-      cat("[ARCHIVO] No se pudieron guardar los resultados en CSV: ", e$message, "\n")
-    })
-    
-    tryCatch({
-      ocurrencias_geo <- dplyr::filter(ocurrencias_combinadas, is.finite(decimalLongitude), is.finite(decimalLatitude))
-      sf_guardar <- sf::st_as_sf(
-        ocurrencias_geo,
-        coords = c("decimalLongitude", "decimalLatitude"), 
-        crs = 4326, 
-        remove = FALSE
-      )
-      nombre_geojson <- ruta_peruocc("processed", sprintf("ocurrencias_%s.geojson", run_id))
-      sf::st_write(sf_guardar, nombre_geojson, quiet = TRUE)
-      cat(sprintf("[ARCHIVO] Capa espacial guardada en GeoJSON: '%s'\n", nombre_geojson))
-    }, error = function(e) {
-      cat("[SIG] Nota: No se pudo exportar a GeoJSON (compruebe si hay filas con coordenadas nulas).\n")
-    })
-    
-    nombre_manifiesto <- ruta_peruocc("processed", sprintf("manifiesto_%s.json", run_id))
-    escribir_manifiesto(
-      run_id = run_id,
-      parametros = list(
-        nombre = nombre,
-        nivel = nivel,
-        departamento = departamento,
-        provincia = provincia,
-        nombre_cientifico = nombre_cientifico,
-        grupo = grupo,
-        limite_por_api = limite_por_api,
-        tolerancia_simplificacion_m = tolerancia_simplificacion
-      ),
-      unidad_sf = unidad_sf,
-      resumen = resumen,
-      archivos = list(csv = nombre_archivo, geojson = nombre_geojson),
-      ruta = nombre_manifiesto
-    )
-    cat(sprintf("[ARCHIVO] Manifiesto de reproducibilidad guardado en: '%s'\n", nombre_manifiesto))
-  }
-  
-  return(list(
+  resultado_obj <- list(
     unidad_sf = unidad_sf,
     distrito_sf = unidad_sf, # Alias para compatibilidad
     ocurrencias = ocurrencias_combinadas,
@@ -189,7 +135,14 @@ buscar_especies_peru <- function(nombre,
       limite_por_api = limite_por_api,
       tolerancia_simplificacion_m = tolerancia_simplificacion
     )
-  ))
+  )
+  
+  # 6. Guardar Resultados en Archivos si se solicita explicitamente
+  if (isTRUE(guardar_resultados) && nrow(ocurrencias_combinadas) > 0) {
+    exportar_resultados(resultado_obj)
+  }
+  
+  return(resultado_obj)
 }
 
 #' Realiza una busqueda combinada de especies en un distrito usando GBIF e iNaturalist
@@ -200,7 +153,7 @@ buscar_especies_peru <- function(nombre,
 #' @param nombre_cientifico Nombre de la especie o grupo taxonomico a filtrar (opcional).
 #' @param grupo Grupo taxonomico a filtrar: "flora", "fauna" o NULL.
 #' @param limite_por_api Numero maximo de registros a solicitar por API (def: 500).
-#' @param guardar_resultados Logico; si es TRUE guarda los resultados en processed/ (def: TRUE).
+#' @param guardar_resultados Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).
 #' @param tolerancia_simplificacion Tolerancia en metros para simplificar el poligono en GBIF (def: 100).
 #' @return Una lista con el poligono del distrito, el dataframe de ocurrencias y estadisticas de resumen.
 #' @export
@@ -210,7 +163,7 @@ buscar_especies_distrito <- function(distrito,
                                      nombre_cientifico = NULL, 
                                      grupo = NULL, 
                                      limite_por_api = configuracion_predeterminada()$limite_por_api,
-                                     guardar_resultados = TRUE,
+                                     guardar_resultados = FALSE,
                                      tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m) {
   buscar_especies_peru(
     nombre = distrito,
@@ -232,7 +185,7 @@ buscar_especies_distrito <- function(distrito,
 #' @param nombre_cientifico Nombre de la especie o grupo taxonomico a filtrar (opcional).
 #' @param grupo Grupo taxonomico a filtrar: "flora", "fauna" o NULL.
 #' @param limite_por_api Numero maximo de registros a solicitar por API (def: 500).
-#' @param guardar_resultados Logico; si es TRUE guarda los resultados en processed/ (def: TRUE).
+#' @param guardar_resultados Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).
 #' @param tolerancia_simplificacion Tolerancia en metros para simplificar el poligono en GBIF (def: 100).
 #' @return Una lista con el poligono de la provincia, el dataframe de ocurrencias consolidado y estadisticas de resumen.
 #' @export
@@ -241,7 +194,7 @@ buscar_especies_provincia <- function(provincia,
                                       nombre_cientifico = NULL, 
                                       grupo = NULL, 
                                       limite_por_api = configuracion_predeterminada()$limite_por_api,
-                                      guardar_resultados = TRUE,
+                                      guardar_resultados = FALSE,
                                       tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m) {
   buscar_especies_peru(
     nombre = provincia,

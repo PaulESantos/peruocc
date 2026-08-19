@@ -3,6 +3,7 @@
 export(buscar_especies_distrito)
 export(buscar_especies_peru)
 export(buscar_especies_provincia)
+export(exportar_resultados)
 export(graficar_ocurrencias)
 export(obtener_poligono_distrito)
 export(obtener_poligono_provincia)

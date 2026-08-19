@@ -14,3 +14,7 @@
 ^pkgdown$
 ^\.github$
 ^LICENSE\.md$
+^README\.Rmd$
+^README\.html$
+^peruocc-output$
+^peruocc$

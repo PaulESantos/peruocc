@@ -1,11 +1,10 @@
 Package: peruocc
-Title: Standardized Biodiversity Occurrence Queries across Administrative Units of Peru
+Title: Standardized Biodiversity Occurrence Queries Across Administrative Units of Peru
 Version: 0.1.0
-Authors@R: c(
+Authors@R: 
     person("Paul Efren", "Santos Andrade",
-    email = "paulfrenes@gmail.com",
-    role = c("aut", "cre", "cph"))
-  )
+           email = "paulefrens@gmail.com",
+           role = c("aut", "cre", "cph"))
 Description: Facilitates the retrieval, spatial validation, and integration of
     flora and fauna occurrence records across administrative scales (districts
     and provinces) in Peru. Retrieves official boundary geometries via
@@ -28,7 +27,10 @@ Imports:
     rinat,
     sf
 Suggests:
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://paulesantos.github.io/peruocc/
 BugReports: https://github.com/PaulESantos/peruocc/issues

@@ -5,10 +5,10 @@
 #'
 #' @param resultado_lista Lista de resultados devuelta por buscar_especies_peru(), buscar_especies_distrito() o buscar_especies_provincia().
 #' @param color_por Columna para clasificar los colores ("source" por defecto, o "kingdom").
-#' @param guardar_mapa Logico; si es TRUE guarda el grafico en results/ como PNG (def: TRUE).
+#' @param guardar_mapa Logico; si es TRUE guarda el grafico en results/ como PNG (def: FALSE).
 #' @return El objeto de grafico ggplot.
 #' @export
-graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_mapa = TRUE) {
+graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_mapa = FALSE) {
   unidad_sf <- if (!is.null(resultado_lista$unidad_sf)) resultado_lista$unidad_sf else resultado_lista$distrito_sf
   ocurrencias <- resultado_lista$ocurrencias
   resumen <- resultado_lista$resumen

@@ -6,18 +6,20 @@
 
 :root {
   --bunker: #1f2421;
-  --forest-dark: #16382b;
+  --forest-dark: #14362d;
   --forest-primary: #1e6f5c;
   --gbif-green: #509e2f;
   --inat-green: #74ac00;
   --inat-light: #eef7de;
-  --ziggurat: #cce3d8;
+  --ziggurat: #d3e7dc;
   --wedgewood: #286b59;
   --bg-parchment: #fefdf9;
   --card-bg: #ffffff;
-  --border-subtle: #e3ebe5;
-  --code-bg: #f4f7f5;
-  --shadow-subtle: 0 4px 16px rgba(30, 111, 92, 0.06);
+  --border-subtle: #e2e8e3;
+  --code-bg: #edf3ef;
+  --pre-bg: #f7faf8;
+  --pre-border: #dbe4dd;
+  --shadow-subtle: 0 4px 14px rgba(30, 111, 92, 0.05);
 }
 
 /* Base Body & Spacing ------------------------------------------------------ */
@@ -25,7 +27,7 @@
 body {
   background-color: var(--bg-parchment);
   color: var(--bunker);
-  line-height: 1.65;
+  line-height: 1.68;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -92,7 +94,7 @@ body {
   border-radius: 4px;
 }
 
-/* Links & Code Styling ----------------------------------------------------- */
+/* Links ------------------------------------------------------------------- */
 
 a {
   color: var(--wedgewood);
@@ -105,39 +107,102 @@ a:hover {
   text-decoration: underline;
 }
 
-code {
+/* Inline Code (only text within paragraphs, lists, tables) ------------------ */
+
+:not(pre) > code,
+p > code,
+li > code,
+td > code,
+th > code,
+span:not(.sourceCode span) > code {
   font-family: var(--bs-font-monospace, 'Overpass Mono', monospace);
   font-size: 0.88em;
-  background-color: var(--code-bg);
-  color: var(--forest-dark);
-  padding: 0.18em 0.4em;
-  border-radius: 4px;
-  border: 1px solid var(--border-subtle);
+  background-color: var(--code-bg) !important;
+  color: var(--forest-dark) !important;
+  padding: 0.15em 0.45em !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: none !important;
 }
 
-code a {
+:not(pre) > code a {
   color: var(--wedgewood);
   font-weight: 600;
 }
 
-code a:hover {
+:not(pre) > code a:hover {
   color: var(--inat-green);
 }
 
-pre {
-  background-color: #1a221f !important;
-  color: #e6f0eb !important;
-  border-radius: 8px;
-  padding: 1.25rem !important;
-  border: 1px solid #283630;
-  box-shadow: var(--shadow-subtle);
+/* Code Blocks Container & Wrapper Reset ------------------------------------- */
+
+div.sourceCode,
+.sourceCode {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 1rem 0 1.5rem 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
-pre code {
+/* Single Unified Code Block Box */
+pre,
+pre.sourceCode,
+div.sourceCode pre {
+  background-color: var(--pre-bg) !important;
+  color: var(--bunker) !important;
+  border: 1px solid var(--pre-border) !important;
+  border-radius: 8px !important;
+  padding: 1rem 1.25rem !important;
+  margin: 0 !important;
+  font-size: 0.88em;
+  line-height: 1.6;
+  box-shadow: none !important;
+  overflow-x: auto;
+}
+
+/* Clear all inner elements inside pre so lines/spans never form extra boxes */
+pre code,
+pre.sourceCode code,
+div.sourceCode pre code,
+pre code span,
+pre span,
+.sourceCode span {
+  background: transparent !important;
   background-color: transparent !important;
-  border: none;
-  padding: 0;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   color: inherit;
+  font-family: var(--bs-font-monospace, 'Overpass Mono', monospace);
+}
+
+/* Syntax Highlighting Light Palette */
+.sourceCode .co, pre .co { color: #64746d !important; font-style: italic; } /* Comments */
+.sourceCode .kw, pre .kw { color: #1e6f5c !important; font-weight: 600; }   /* Keywords */
+.sourceCode .fu, pre .fu { color: #286b59 !important; font-weight: 600; }   /* Functions */
+.sourceCode .st, pre .st { color: #2e7d32 !important; }                     /* Strings */
+.sourceCode .dv, pre .dv, 
+.sourceCode .fl, pre .fl { color: #c25e00 !important; }                     /* Numbers */
+.sourceCode .va, pre .va { color: #1f2421 !important; }                     /* Variables */
+.sourceCode .op, pre .op { color: #435b52 !important; }                     /* Operators */
+
+/* Copy button aesthetic */
+.btn-copy-ex {
+  background-color: #ffffff !important;
+  border: 1px solid var(--border-subtle) !important;
+  color: var(--forest-primary) !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-copy-ex:hover {
+  background-color: var(--inat-light) !important;
+  border-color: var(--inat-green) !important;
+  color: var(--inat-green) !important;
 }
 
 /* Card & Sidebar Polish ---------------------------------------------------- */
