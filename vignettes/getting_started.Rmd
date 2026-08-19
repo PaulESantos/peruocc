@@ -1,0 +1,144 @@
+---
+title: "Primeros Pasos con peruocc"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Primeros Pasos con peruocc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+## Introducción
+
+`peruocc` es un paquete en R diseñado para facilitar la búsqueda, descarga, validación espacial y consolidación de registros de ocurrencias de biodiversidad (**flora y fauna**) en el territorio peruano, tomando como marco de referencia las delimitaciones político-administrativas oficiales provistas por **`geoperu`** (distritos y provincias).
+
+El paquete integra y estandariza la información proveniente de dos de las plataformas más representativas en biodiversidad:
+* **GBIF** (*Global Biodiversity Information Facility*)
+* **iNaturalist**
+
+---
+
+## Instalación y Configuración
+
+Puedes instalar la versión de desarrollo de `peruocc` directamente desde GitHub:
+
+```r
+# Instalar paquete
+# install.packages("remotes")
+remotes::install_github("PaulESantos/peruocc")
+```
+
+Carga el paquete en tu sesión de R:
+
+```{r}
+library(peruocc)
+```
+
+### Configuración del Directorio de Trabajo (Opcional)
+
+Puedes establecer una ruta personalizada donde se almacenarán las capas en caché y los archivos exportados:
+
+```{r}
+# Configurar carpeta de salida (opcional)
+peruocc_data_dir("peruocc-output")
+```
+
+---
+
+## Consultas de Ocurrencias
+
+Por defecto, las consultas se ejecutan directamente en memoria (`guardar_resultados = FALSE`), lo que agiliza el flujo interactivo y previene la creación de archivos no deseados en el disco.
+
+### 1. Búsqueda a Nivel de Distrito
+
+Para consultar registros en un distrito específico (por ejemplo, el distrito de **Miraflores**, en **Lima**):
+
+```{r}
+resultado_miraflores <- buscar_especies_distrito(
+  distrito = "Miraflores",
+  departamento = "Lima",
+  provincia = "Lima",
+  grupo = "flora",            # "flora", "fauna" o NULL
+  limite_por_api = 150
+)
+```
+
+### 2. Búsqueda a Nivel de Provincia
+
+Para consultar una provincia completa (donde `peruocc` disuelve automáticamente las geometrías distritales):
+
+```{r}
+resultado_urubamba <- buscar_especies_provincia(
+  provincia = "Urubamba",
+  departamento = "Cusco",
+  grupo = "fauna",
+  limite_por_api = 200
+)
+```
+
+### 3. Filtro por Especie o Taxón Específico
+
+También es posible restringir la búsqueda a un taxón en particular utilizando el argumento `nombre_cientifico`:
+
+```{r}
+resultado_jaguar <- buscar_especies_distrito(
+  distrito = "Tambopata",
+  departamento = "Madre de Dios",
+  provincia = "Tambopata",
+  nombre_cientifico = "Panthera onca",
+  limite_por_api = 50
+)
+```
+
+---
+
+## Estructura del Objeto Consolidado
+
+Las funciones de búsqueda retornan un objeto de tipo `list` estructurado con 4 componentes clave:
+
+```{r}
+names(resultado_miraflores)
+#> [1] "unidad_sf"   "ocurrencias" "resumen"     "parametros"
+```
+
+1. **`unidad_sf`**: Objeto espacial (`sf`) con el polígono oficial validado y proyectado en WGS84 (EPSG:4326).
+2. **`ocurrencias`**: Dataframe estandarizado alineado con el estándar **Darwin Core**.
+3. **`resumen`**: Estadísticas de la consulta (total de registros, desglose por fuente, reinos y cobertura).
+4. **`parametros`**: Metadatos de la llamada (fechas, límites y opciones empleadas).
+
+### Inspección de Registros
+
+```{r}
+# Vista previa de las primeras ocurrencias
+head(resultado_miraflores$ocurrencias[, c("scientificName", "source", "eventDate", "decimalLatitude", "decimalLongitude")])
+```
+
+---
+
+## Visualización y Exportación
+
+### Visualización Rápida
+
+Puedes generar inmediatamente un mapa temático con `ggplot2`:
+
+```{r}
+# Visualizar mapa coloreando por repositorio de origen (GBIF vs iNaturalist)
+mapa <- graficar_ocurrencias(resultado_miraflores, color_por = "source")
+print(mapa)
+```
+
+### Exportación a Disco
+
+Para guardar los datos en formatos estándar (`CSV`, `GeoJSON` y `manifiesto JSON` de reproducibilidad):
+
+```{r}
+# Exportar resultados a disco
+exportar_resultados(resultado_miraflores)
+```

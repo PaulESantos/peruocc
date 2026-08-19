@@ -1,0 +1,118 @@
+---
+title: "Flujo Espacial y Filtrado Topológico Riguroso"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Flujo Espacial y Filtrado Topológico Riguroso}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Arquitectura Espacial de peruocc
+
+Uno de los principales retos al consultar APIs globales de biodiversidad mediante límites geográficos es la inconsistencia topológica y los falsos positivos en los bordes perimetrales. `peruocc` implementa un flujo espacial en 5 fases:
+
+```text
+               ┌──────────────────────────────┐
+               │    Unidad Administrativa     │
+               │   (Distrito o Provincia)     │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │  Geometría Oficial geoperu   │
+               │   + Validación / Caché RDS   │
+               └──────────────┬───────────────┘
+                              │
+             ┌────────────────┴────────────────┐
+             │                                 │
+  ┌──────────▼──────────┐           ┌──────────▼──────────┐
+  │  Consulta a GBIF    │           │ Consulta iNaturalist│
+  │  (WKT / Taxonomía)  │           │   (Bounding Box)    │
+  └──────────┬──────────┘           └──────────┬──────────┘
+             │                                 │
+             └────────────────┬────────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Filtrado Espacial en R       │
+               │ (sf::st_intersects exacto)  │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Objeto Consolidado Final     │
+               └─────────────────────────────┘
+```
+
+---
+
+## 1. Extracción de Geometrías y Caché Departamental
+
+Para evitar descargas repetitivas y lentas desde la infraestructura de datos espaciales, `peruocc` descarga los límites departamentales una sola vez y los almacena en archivos locales binarios `.rds`:
+
+```{r}
+library(peruocc)
+# Configurar directorio donde se guardarán caché, resultados y manifiestos
+peruocc_data_dir("peruocc-output")
+
+# Obtener la geometría oficial de un distrito
+distrito_sf <- obtener_poligono_distrito(
+  distrito = "Machupicchu",
+  departamento = "Cusco",
+  provincia = "Urubamba"
+)
+
+distrito_sf
+```
+
+### Disolución Provincial
+
+Al solicitar una provincia, el paquete recupera todos los distritos constituyentes y realiza una unión espacial (`sf::st_union`):
+
+```{r}
+# Obtener polígono provincial unificado
+provincia_sf <- obtener_poligono_provincia(
+  provincia = "Tambopata",
+  departamento = "Madre de Dios"
+)
+
+provincia_sf
+```
+
+---
+
+## 2. Orientación Geométrica Antihoraria (CCW)
+
+Las especificaciones OGC y la API de GBIF exigen que los anillos exteriores de los polígonos sigan una orientación antihoraria (*Counter-Clockwise - CCW*) y los anillos interiores (huecos) sigan orientación horaria.
+
+`peruocc` valida y corrige automáticamente la orientación mediante el cálculo del área con signo (Fórmula de Shoelace):
+
+$$\text{Área} = \frac{1}{2} \sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)$$
+
+---
+
+## 3. Simplificación Métrica Adaptativa para APIs
+
+La API de GBIF impone restricciones estrictas en la longitud de las cadenas WKT (Well-Known Text). Para polígonos administrativos con bordes complejos, `peruocc`:
+
+1. Proyecta temporalmente a la zona UTM correspondiente según la longitud geográfica (Zona 17S, 18S o 19S en el Perú).
+2. Aplica simplificación topológica en metros (`sf::st_simplify(dTolerance = ...)`).
+3. Transforma de vuelta a WGS84 (EPSG:4326) para generar el WKT de consulta.
+
+---
+
+## 4. Filtrado Espacial Exacto en Memoria
+
+Dado que iNaturalist solo admite filtrado por caja delimitadora (*Bounding Box*) y GBIF puede recibir un WKT simplificado, los registros crudos obtenidos pueden contener puntos fuera del perímetro oficial.
+
+`peruocc` resuelve esto convirtiendo todos los registros recuperados a geometrías de punto y ejecutando una intersección topológica estricta con el polígono detallado original:
+
+```r
+# sf::st_intersects(puntos_sf, poligono_original_sf)
+```
+
+Garantizando que el 100% de las ocurrencias retenidas se encuentren verdaderamente dentro de la unidad territorial elegida.
