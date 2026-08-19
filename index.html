@@ -5,14 +5,26 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Reproducible Biodiversity Occurrence Queries for Peru • peruspecies</title>
+<title>peruocc R package • peruocc</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/Jost-0.4.10/font.css" rel="stylesheet">
+<link href="deps/Overpass_Mono-0.4.10/font.css" rel="stylesheet">
+<link href="deps/Abhaya_Libre-0.4.10/font.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Reproducible Biodiversity Occurrence Queries for Peru">
-<meta name="description" content="Downloads, spatially validates, normalizes, and exports GBIF and iNaturalist occurrence records for districts in Peru. Administrative boundaries are retrieved with geoperu and each run generates output artifacts and provenance metadata.">
-<meta property="og:description" content="Downloads, spatially validates, normalizes, and exports GBIF and iNaturalist occurrence records for districts in Peru. Administrative boundaries are retrieved with geoperu and each run generates output artifacts and provenance metadata.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<meta property="og:title" content="peruocc R package">
+<meta name="description" content="Standardized biodiversity occurrence queries (GBIF &amp; iNaturalist) across
+official administrative units (districts and provinces) in Peru. Integrates
+boundary geometries via 'geoperu', performs exact spatial filtering, and
+harmonizes Darwin Core records.
+">
+<meta property="og:description" content="Standardized biodiversity occurrence queries (GBIF &amp; iNaturalist) across
+official administrative units (districts and provinces) in Peru. Integrates
+boundary geometries via 'geoperu', performs exact spatial filtering, and
+harmonizes Darwin Core records.
+">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,9 +32,9 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="index.html">peruspecies</a>
+    <a class="navbar-brand me-2" href="index.html">peruocc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,12 +43,22 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/getting_started.html">Primeros Pasos</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-art-culos" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Artículos</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-art-culos">
+<li><a class="dropdown-item" href="articles/getting_started.html">1. Primeros pasos con peruocc</a></li>
+    <li><a class="dropdown-item" href="articles/flujo_espacial.html">2. Flujo espacial y filtrado topológico</a></li>
+    <li><a class="dropdown-item" href="articles/visualizacion_y_exportacion.html">3. Visualización cartográfica y exportación</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/PaulESantos/peruocc/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -45,134 +67,428 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="consulta-de-ocurrencias-de-especies-en-distritos-del-perú-gbif--inaturalist">Consulta de Ocurrencias de Especies en Distritos del Perú (GBIF &amp; iNaturalist)<a class="anchor" aria-label="anchor" href="#consulta-de-ocurrencias-de-especies-en-distritos-del-per%C3%BA-gbif--inaturalist"></a>
+<div class="page-header"><h1 id="peruocc-recuperación-y-consolidación-de-ocurrencias-de-biodiversidad-en-unidades-administrativas-del-perú">peruocc: Recuperación y Consolidación de Ocurrencias de Biodiversidad en Unidades Administrativas del Perú<a class="anchor" aria-label="anchor" href="#peruocc-recuperaci%C3%B3n-y-consolidaci%C3%B3n-de-ocurrencias-de-biodiversidad-en-unidades-administrativas-del-per%C3%BA"></a>
 </h1></div>
-<p>Este es un proyecto en R diseñado para buscar, descargar, filtrar y mapear registros de ocurrencias de biodiversidad (flora y fauna) en distritos del Perú. Utiliza la geometría de los límites distritales oficiales como argumento espacial de búsqueda para consultar las bases de datos de <strong>GBIF</strong> (Global Biodiversity Information Facility) y <strong>iNaturalist</strong>.</p>
-<p>La delimitación geográfica de los distritos se obtiene dinámicamente utilizando el paquete <strong><code>geoperu</code></strong> (límites oficiales provistos por el INEI).</p>
+<!-- badges: start -->
+
+<p><code>peruocc</code> es un paquete y conjunto de herramientas en R diseñado para buscar, descargar, filtrar, validar y consolidar registros de ocurrencias de biodiversidad (<strong>flora y fauna</strong>) en el territorio peruano, utilizando como marco espacial las delimitaciones administrativas oficiales a escala de <strong>distritos</strong> y <strong>provincias</strong>.</p>
+<p>El paquete integra y estandariza la información disponible de dos de los mayores repositorios globales de biodiversidad: <strong>GBIF</strong> (<em>Global Biodiversity Information Facility</em>) e <strong>iNaturalist</strong>, generando un objeto unificado con atributos estandarizados y trazabilidad completa dentro del área de interés.</p>
+<hr>
 <div class="section level2">
 <h2 id="características-principales">Características Principales<a class="anchor" aria-label="anchor" href="#caracter%C3%ADsticas-principales"></a>
 </h2>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Búsqueda Espacial por Distritos</strong>: Obtiene las divisiones distritales a partir de descargas dinámicas a nivel departamental vía <code><a href="https://paulesantos.github.io/geoperu/reference/get_geo_peru.html" class="external-link">geoperu::get_geo_peru()</a></code>.</li>
-<li>
-<strong>Caché Local Eficiente (<code>.rds</code>)</strong>:
+<strong>Marco Administrativo Oficial (Distritos y Provincias)</strong>:
 <ul>
-<li>
-<code>geoperu</code> descarga archivos GPKG desde internet. Para optimizar el rendimiento y ahorrar ancho de banda, el script implementa un <strong>mecanismo de caché por departamento</strong> en la carpeta <code>data/</code> (ej. <code>data/distritos_lima.rds</code>).</li>
-<li>La primera consulta de un departamento tarda unos segundos debido a la descarga; las siguientes consultas en el mismo departamento se cargan instantáneamente desde el caché local en disco.</li>
+<li>Recupera dinámicamente geometrías oficiales provistas por el INEI a través del paquete <strong><code>geoperu</code></strong>.</li>
+<li>Admite consultas a nivel de <strong>distrito</strong> y consolidación disuelta a nivel de <strong>provincia</strong>.</li>
 </ul>
 </li>
 <li>
-<strong>Normalización de Nombres</strong>: Resuelve nombres de distritos de forma insensible a mayúsculas, minúsculas, tildes e incluye una función de sugerencias de autocompletado en caso de errores tipográficos.</li>
+<strong>Caché Local Inteligente (<code>.rds</code>)</strong>:
+<ul>
+<li>Almacena en disco los límites departamentales descargados, reduciendo drásticamente los tiempos de respuesta en consultas recurrentes.</li>
+</ul>
+</li>
 <li>
-<strong>Mapeo Avanzado de GBIF</strong>: Convierte los polígonos a formato WKT (Well-Known Text) garantizando el sentido antihorario (CCW) requerido por GBIF.</li>
+<strong>Flujo Espacial y Topológico Riguroso</strong>:
+<ul>
+<li>Corrige automáticamente la orientación geométrica a sentido antihorario (<strong>CCW</strong>) según los estándares OGC/GBIF.</li>
+<li>Aplica simplificación métrica adaptativa en proyecciones UTM para polígonos complejos en consultas de API.</li>
+<li>Realiza una <strong>intersección espacial exacta (<code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html" class="external-link">sf::st_intersects</a></code>)</strong> en R con el polígono detallado original, garantizando que sólo se conserven los registros estrictamente dentro de los límites administrativos.</li>
+</ul>
+</li>
 <li>
-<strong>Simplificación Progresiva y Bounding Box</strong>: Si el polígono del distrito es muy complejo (&gt;1500 caracteres), lo simplifica de forma métrica utilizando proyecciones UTM. Si sigue siendo excesivamente grande, utiliza su caja delimitadora (Bounding Box) como fallback para la API.</li>
+<strong>Consolidación y Estandarización de Datos</strong>:
+<ul>
+<li>Homogeneiza atributos de GBIF e iNaturalist hacia un esquema estándar alineado con <strong>Darwin Core</strong>.</li>
+<li>Retorna una estructura consolidada que contiene el polígono espacial (<code>sf</code>), el conjunto de ocurrencias tabulares (<code>data.frame</code>), el resumen analítico y los parámetros de ejecución.</li>
+</ul>
+</li>
 <li>
-<strong>Filtrado Espacial Riguroso en R</strong>: Tanto para GBIF como para iNaturalist, el script realiza una intersección espacial exacta (<code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html" class="external-link">sf::st_intersects</a></code>) de los puntos recuperados con el polígono detallado original del distrito, descartando observaciones fuera de los límites.</li>
-<li>
-<strong>Visualización y Exportación</strong>: Genera mapas de alta resolución (300 DPI) con <code>ggplot2</code> y exporta los resultados tabulares unificados a archivos CSV y capas espaciales GeoJSON.</li>
+<strong>Exportación y Trazabilidad</strong>:
+<ul>
+<li>Exporta automáticamente a formatos <strong>CSV</strong>, capas espaciales <strong>GeoJSON</strong>, mapas de alta resolución (<strong>PNG</strong>) y manifiestos de reproducibilidad (<strong>JSON</strong>).</li>
+</ul>
+</li>
 </ol>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="estructura-del-proyecto">Estructura del Proyecto<a class="anchor" aria-label="anchor" href="#estructura-del-proyecto"></a>
+<h2 id="flujo-de-integración-de-datos">Flujo de Integración de Datos<a class="anchor" aria-label="anchor" href="#flujo-de-integraci%C3%B3n-de-datos"></a>
 </h2>
-<pre class="text"><code>D:\peru_species_project\
-│
-├── peru_species_project.Rproj     # Archivo de configuración del proyecto en RStudio
-├── README.md                      # Esta guía en español
-├── main.R                         # Script principal de prueba y casos de uso prácticos
-│
-├── R/                             # Módulos de funciones específicas
-│   ├── setup.R                    # Instalador y verificador de la librería 'geoperu' y otras dependencias
-│   ├── spatial_utils.R            # Funciones espaciales (descarga de geoperu, caché, CCW, simplificación)
-│   ├── query_gbif.R               # Consultas y normalización para la API de GBIF
-│   ├── query_inat.R               # Consultas y filtrado espacial para la API de iNaturalist
-│   ├── query_combined.R           # Integración y guardado de resultados consolidado
-│   └── visualize.R                # Generador de mapas con ggplot2 y sf
-│
-├── data/                          # raw/, cache/ y processed/; artefactos no versionados por defecto
-├── results/                       # Figuras generadas
-├── config/default.R               # Configuración versionada
-├── tests/run_tests.R              # Pruebas sin acceso a red
-└── scripts/lock_environment.R     # Generación explícita de renv.lock</code></pre>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="instalación-y-configuración">Instalación y Configuración<a class="anchor" aria-label="anchor" href="#instalaci%C3%B3n-y-configuraci%C3%B3n"></a>
-</h2>
-<div class="section level3">
-<h3 id="requisitos-previos">Requisitos Previos<a class="anchor" aria-label="anchor" href="#requisitos-previos"></a>
-</h3>
+<pre class="text"><code>               ┌──────────────────────────────┐
+               │    Unidad Administrativa     │
+               │   (Distrito o Provincia)     │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │  Geometría Oficial geoperu   │
+               │   + Validación / Caché RDS   │
+               └──────────────┬───────────────┘
+                              │
+             ┌────────────────┴────────────────┐
+             │                                 │
+  ┌──────────▼──────────┐           ┌──────────▼──────────┐
+  │  Consulta a GBIF    │           │ Consulta iNaturalist│
+  │  (WKT / Taxonomía)  │           │   (Bounding Box)    │
+  └──────────┬──────────┘           └──────────┬──────────┘
+             │                                 │
+             └────────────────┬────────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Filtrado Espacial en R       │
+               │ (sf::st_intersects exacto)  │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Estandarización Darwin Core │
+               │   + Deduplicación interna   │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Objeto Consolidado Final     │
+               │ (sf + data.frame + Resumen) │
+               └─────────────────────────────┘</code></pre>
 <ol style="list-style-type: decimal">
-<li>Tener instalado R en el sistema (versión 4.0 o superior recomendada).</li>
-<li>RStudio para ejecutar el proyecto cómodamente.</li>
+<li>
+<strong>Obtención y Preparación del Polígono</strong>: Se consulta <code>geoperu</code> para descargar o cargar desde el caché local el departamento correspondiente. Si la consulta es distrital, se extrae el distrito específico; si es provincial, se disuelven espacialmente todos sus distritos componentes (<code><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">sf::st_union</a></code>).</li>
+<li>
+<strong>Consulta a Repositorios Vivos</strong>:
+<ul>
+<li>
+<strong>GBIF</strong>: Se envía el polígono en formato WKT (simplificado si supera límites de caracteres) junto con los filtros taxonómicos (Reino, taxón específico o grupo).</li>
+<li>
+<strong>iNaturalist</strong>: Se utiliza la caja delimitadora (<em>Bounding Box</em>) del polígono junto a los criterios de búsqueda (flora/fauna, taxón o texto libre).</li>
+</ul>
+</li>
+<li>
+<strong>Validación Espacial en Memoria</strong>: Ambos conjuntos de puntos recuperados se transforman a objetos espaciales <code>sf</code> (EPSG:4326) y se intersecan topológicamente con el polígono detallado original, eliminando cualquier falso positivo fuera del perímetro.</li>
+<li>
+<strong>Estandarización</strong>: Se mapean los campos nativos de ambas fuentes a una estructura de columnas común, preservando identificadores de origen, coordenadas, taxonomía, fecha y jerarquía administrativa.</li>
 </ol>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="instalación-y-carga">Instalación y Carga<a class="anchor" aria-label="anchor" href="#instalaci%C3%B3n-y-carga"></a>
+</h2>
+<div class="section level3">
+<h3 id="id_1-desde-github">1. Desde GitHub:<a class="anchor" aria-label="anchor" href="#id_1-desde-github"></a>
+</h3>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Instalar paquete directamente desde el repositorio en GitHub</span></span>
+<span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"PaulESantos/peruocc"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="entorno-reproducible">Entorno reproducible<a class="anchor" aria-label="anchor" href="#entorno-reproducible"></a>
+<h3 id="id_2-configuración-de-directorio-de-trabajo">2. Configuración de directorio de trabajo:<a class="anchor" aria-label="anchor" href="#id_2-configuraci%C3%B3n-de-directorio-de-trabajo"></a>
 </h3>
-<p>Las dependencias no se instalan automáticamente al ejecutar análisis. En un entorno validado, cree el bloqueo de versiones una vez:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"scripts/lock_environment.R"</span><span class="op">)</span></span></code></pre></div>
-<p>Después restaure el entorno antes de ejecutar:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"renv"</span><span class="op">)</span> <span class="co"># sólo si aún no está disponible</span></span>
-<span><span class="fu">renv</span><span class="fu">::</span><span class="fu">restore</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"main.R"</span><span class="op">)</span></span></code></pre></div>
-<p><code>R/setup.R</code> únicamente verifica dependencias; la instalación manual exige <code>verificar_y_configurar_entorno(instalar = TRUE)</code>.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Configurar directorio donde se guardarán caché, resultados y manifiestos</span></span>
+<span><span class="fu"><a href="reference/peruocc_data_dir.html">peruocc_data_dir</a></span><span class="op">(</span><span class="st">"peruocc-output"</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 </div>
 <div class="section level2">
-<h2 id="guía-de-uso-rápido">Guía de Uso Rápido<a class="anchor" aria-label="anchor" href="#gu%C3%ADa-de-uso-r%C3%A1pido"></a>
+<h2 id="guía-de-uso-y-escalabilidad-funcional">Guía de Uso y Escalabilidad Funcional<a class="anchor" aria-label="anchor" href="#gu%C3%ADa-de-uso-y-escalabilidad-funcional"></a>
 </h2>
-<p>Para ejecutar los casos de prueba por defecto, abra R o RStudio en este directorio y ejecute:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"main.R"</span><span class="op">)</span></span></code></pre></div>
-<p>Esto generará tablas de ocurrencias e imágenes de mapas dentro de la carpeta <code>data/</code> para: 1. Miraflores (Lima) - Flora. 2. Tambopata (Madre de Dios) - Fauna. 3. Tarma (Junín) - Cantua buxifolia.</p>
+<p>El paquete proporciona interfaces tanto específicas como unificadas para consultar ocurrencias en diferentes niveles administrativos:</p>
 <div class="section level3">
-<h3 id="uso-de-las-funciones-en-r">Uso de las Funciones en R<a class="anchor" aria-label="anchor" href="#uso-de-las-funciones-en-r"></a>
+<h3 id="id_1-consulta-unificada-buscar_especies_peru">1. Consulta Unificada (<code>buscar_especies_peru</code>)<a class="anchor" aria-label="anchor" href="#id_1-consulta-unificada-buscar_especies_peru"></a>
 </h3>
-<div class="section level4">
-<h4 id="id_1-buscar-ocurrencias-en-un-distrito">1. Buscar Ocurrencias en un Distrito<a class="anchor" aria-label="anchor" href="#id_1-buscar-ocurrencias-en-un-distrito"></a>
-</h4>
-<p>La función principal es <code><a href="reference/buscar_especies_distrito.html">buscar_especies_distrito()</a></code> definida en <code>R/query_combined.R</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"R/setup.R"</span><span class="op">)</span> <span class="co"># Cargar dependencias</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"R/spatial_utils.R"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"R/query_gbif.R"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"R/query_inat.R"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"R/query_combined.R"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"R/visualize.R"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Buscar flora en el distrito de Miraflores, Lima (se descarga y almacena el caché de Lima)</span></span>
-<span><span class="va">resultado</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span></span>
-<span>  distrito <span class="op">=</span> <span class="st">"Miraflores"</span>,</span>
+<p>Permite seleccionar el nivel administrativo mediante el argumento <code>nivel = c("distrito", "provincia")</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Consulta general a nivel distrital en memoria</span></span>
+<span><span class="va">res_distrito</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_peru.html">buscar_especies_peru</a></span><span class="op">(</span></span>
+<span>  nombre <span class="op">=</span> <span class="st">"Miraflores"</span>,</span>
+<span>  nivel <span class="op">=</span> <span class="st">"distrito"</span>,</span>
 <span>  departamento <span class="op">=</span> <span class="st">"Lima"</span>,</span>
 <span>  provincia <span class="op">=</span> <span class="st">"Lima"</span>,</span>
-<span>  grupo <span class="op">=</span> <span class="st">"flora"</span>,            <span class="co"># Filtros disponibles: "flora", "fauna" o NULL (todo)</span></span>
-<span>  limite_por_api <span class="op">=</span> <span class="fl">100</span>,       <span class="co"># Máximo de registros por cada origen; NULL intenta descarga completa</span></span>
-<span>  guardar_resultados <span class="op">=</span> <span class="cn">TRUE</span>   <span class="co"># Exporta un archivo CSV y GeoJSON automáticamente</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span>  grupo <span class="op">=</span> <span class="st">"flora"</span>,            <span class="co"># "flora", "fauna" o NULL</span></span>
+<span>  limite_por_api <span class="op">=</span> <span class="fl">200</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; BUSQUEDA INTEGRADA EN DISTRITO: MIRAFLORES</span></span>
+<span><span class="co">#&gt;   Provincia: Lima</span></span>
+<span><span class="co">#&gt;   Departamento: Lima</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [SPATIAL] Cargando limites de LIMA desde el cache local...</span></span>
+<span><span class="co">#&gt; [GBIF] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [SPATIAL] Poligono simplificado con exito a tolerancia de 100 metros (WKT: 822 caracteres).</span></span>
+<span><span class="co">#&gt; [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; [GBIF] Consultando registros dentro del poligono de 'MIRAFLORES' (limite: 200)...</span></span>
+<span><span class="co">#&gt; [GBIF] Busqueda finalizada. Se filtraron 198 registros que caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; [iNaturalist] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; [iNaturalist] Consultando registros dentro de la caja delimitadora de 'MIRAFLORES' (limite: 200)...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Busqueda finalizada. 167 de 200 registros caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [RESULTADO] Consolidacion exitosa. Total de registros unificados: 365</span></span>
+<span><span class="co">#&gt;        Origen Registros</span></span>
+<span><span class="co">#&gt; 1        GBIF       198</span></span>
+<span><span class="co">#&gt; 2 iNaturalist       167</span></span>
+<span><span class="co">#&gt; 3       Total       365</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [ARCHIVO] Resultados guardados en: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042527Z_p25272_distrito_miraflores_flora.csv'</span></span>
+<span><span class="co">#&gt; [ARCHIVO] Capa espacial guardada en GeoJSON: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042527Z_p25272_distrito_miraflores_flora.geojson'</span></span>
+<span><span class="co">#&gt; [ARCHIVO] Manifiesto de reproducibilidad guardado en: 'D:/peruocc/peruocc-output/processed/manifiesto_20260819T042527Z_p25272_distrito_miraflores_flora.json'</span></span>
+<span></span>
+<span><span class="va">res_distrito</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 365 × 24</span></span>
+<span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;        </span></span>
+<span><span class="co">#&gt;  1 6129981207   6129981207     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  2 6179051389   6179051389     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  3 6147543635   6147543635     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  4 6147566368   6147566368     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  5 6147649969   6147649969     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  6 6159649674   6159649674     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  7 6171247345   6171247345     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  8 6179365614   6179365614     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  9 6431906476   6431906476     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; 10 6178459982   6178459982     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; # ℹ 355 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 18 more variables: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   species &lt;chr&gt;, recordedBy &lt;chr&gt;, coordinateUncertaintyInMeters &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   source &lt;chr&gt;, district &lt;chr&gt;, province &lt;chr&gt;, department &lt;chr&gt;</span></span>
+<span></span>
+<span><span class="co"># Consulta general a nivel provincial en memoria</span></span>
+<span><span class="va">res_provincia</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_peru.html">buscar_especies_peru</a></span><span class="op">(</span></span>
+<span>  nombre <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
+<span>  nivel <span class="op">=</span> <span class="st">"provincia"</span>,</span>
+<span>  departamento <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
+<span>  grupo <span class="op">=</span> <span class="st">"fauna"</span>,</span>
+<span>  limite_por_api <span class="op">=</span> <span class="fl">200</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; BUSQUEDA INTEGRADA EN PROVINCIA: CUSCO</span></span>
+<span><span class="co">#&gt;   Departamento: Cusco</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [SPATIAL] Cargando limites de CUSCO desde el cache local...</span></span>
+<span><span class="co">#&gt; [GBIF] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [SPATIAL] Poligono simplificado con exito a tolerancia de 300 metros (WKT: 1215 caracteres).</span></span>
+<span><span class="co">#&gt; [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; [GBIF] Consultando registros dentro del poligono de 'CUSCO' (limite: 200)...</span></span>
+<span><span class="co">#&gt; [GBIF] Busqueda finalizada. Se filtraron 200 registros que caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; [iNaturalist] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; [iNaturalist] Consultando registros dentro de la caja delimitadora de 'CUSCO' (limite: 200)...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Busqueda finalizada. 181 de 200 registros caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [RESULTADO] Consolidacion exitosa. Total de registros unificados: 381</span></span>
+<span><span class="co">#&gt;        Origen Registros</span></span>
+<span><span class="co">#&gt; 1        GBIF       200</span></span>
+<span><span class="co">#&gt; 2 iNaturalist       181</span></span>
+<span><span class="co">#&gt; 3       Total       381</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [ARCHIVO] Resultados guardados en: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042537Z_p25272_provincia_cusco_fauna.csv'</span></span>
+<span><span class="co">#&gt; [ARCHIVO] Capa espacial guardada en GeoJSON: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042537Z_p25272_provincia_cusco_fauna.geojson'</span></span>
+<span><span class="co">#&gt; [ARCHIVO] Manifiesto de reproducibilidad guardado en: 'D:/peruocc/peruocc-output/processed/manifiesto_20260819T042537Z_p25272_provincia_cusco_fauna.json'</span></span>
+<span></span>
+<span><span class="va">res_provincia</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 381 × 24</span></span>
+<span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;        </span></span>
+<span><span class="co">#&gt;  1 5938271716   5938271716     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  2 5938631678   5938631678     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  3 6129873325   6129873325     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  4 6130064972   6130064972     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  5 6130410898   6130410898     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  6 6130438735   6130438735     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  7 6130955903   6130955903     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  8 6130998009   6130998009     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  9 6131276759   6131276759     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; 10 6131426727   6131426727     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; # ℹ 371 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 18 more variables: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   species &lt;chr&gt;, recordedBy &lt;chr&gt;, coordinateUncertaintyInMeters &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   source &lt;chr&gt;, district &lt;chr&gt;, province &lt;chr&gt;, department &lt;chr&gt;</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="id_2-consultas-específicas-por-nivel">2. Consultas Específicas por Nivel<a class="anchor" aria-label="anchor" href="#id_2-consultas-espec%C3%ADficas-por-nivel"></a>
+</h3>
+<div class="section level4">
+<h4 id="a-a-nivel-de-distrito-buscar_especies_distrito">A. A nivel de Distrito (<code>buscar_especies_distrito</code>)<a class="anchor" aria-label="anchor" href="#a-a-nivel-de-distrito-buscar_especies_distrito"></a>
+</h4>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">resultado_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span></span>
+<span>  distrito <span class="op">=</span> <span class="st">"Tambopata"</span>,</span>
+<span>  departamento <span class="op">=</span> <span class="st">"Madre de Dios"</span>,</span>
+<span>  provincia <span class="op">=</span> <span class="st">"Tambopata"</span>,</span>
+<span>  nombre_cientifico <span class="op">=</span> <span class="st">"Panthera onca"</span>, <span class="co"># Opcional: filtro por especie</span></span>
+<span>  limite_por_api <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  guardar_resultados <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; BUSQUEDA INTEGRADA EN DISTRITO: TAMBOPATA</span></span>
+<span><span class="co">#&gt;   Provincia: Tambopata</span></span>
+<span><span class="co">#&gt;   Departamento: Madre de Dios</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [SPATIAL] Cargando limites de MADRE DE DIOS desde el cache local...</span></span>
+<span><span class="co">#&gt; [GBIF] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [SPATIAL] Poligono simplificado con exito a tolerancia de 8100 metros (WKT: 379 caracteres).</span></span>
+<span><span class="co">#&gt; [GBIF] Resolviendo taxonomia para 'Panthera onca'...</span></span>
+<span><span class="co">#&gt; [GBIF] Taxon resuelto: Panthera onca (Linnaeus, 1758) (Key: 5219426, Rank: SPECIES)</span></span>
+<span><span class="co">#&gt; [GBIF] Consultando registros dentro del poligono de 'TAMBOPATA' (limite: 100)...</span></span>
+<span><span class="co">#&gt; [GBIF] Busqueda finalizada. Se filtraron 21 registros que caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; [iNaturalist] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Consultando registros dentro de la caja delimitadora de 'TAMBOPATA' (limite: 100)...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Se descargaron 100 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Busqueda finalizada. 15 de 100 registros caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [RESULTADO] Consolidacion exitosa. Total de registros unificados: 36</span></span>
+<span><span class="co">#&gt;        Origen Registros</span></span>
+<span><span class="co">#&gt; 1        GBIF        21</span></span>
+<span><span class="co">#&gt; 2 iNaturalist        15</span></span>
+<span><span class="co">#&gt; 3       Total        36</span></span>
+<span></span>
+<span><span class="va">resultado_dist</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 36 × 24</span></span>
+<span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;        </span></span>
+<span><span class="co">#&gt;  1 6334829706   6334829706     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  2 4597092810   4597092810     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  3 4606894492   4606894492     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  4 4022300813   4022300813     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  5 4852820765   4852820765     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  6 1990572488   1990572488     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  7 1571080404   1571080404     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  8 1571080408   1571080408     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  9 6236055510   6236055510     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; 10 3499457688   3499457688     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; # ℹ 26 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 18 more variables: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   species &lt;chr&gt;, recordedBy &lt;chr&gt;, coordinateUncertaintyInMeters &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   source &lt;chr&gt;, district &lt;chr&gt;, province &lt;chr&gt;, department &lt;chr&gt;</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="id_2-generar-el-mapa">2. Generar el Mapa<a class="anchor" aria-label="anchor" href="#id_2-generar-el-mapa"></a>
+<h4 id="b-a-nivel-de-provincia-buscar_especies_provincia">B. A nivel de Provincia (<code>buscar_especies_provincia</code>)<a class="anchor" aria-label="anchor" href="#b-a-nivel-de-provincia-buscar_especies_provincia"></a>
 </h4>
-<p>Use <code><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias()</a></code> del módulo <code>R/visualize.R</code> para crear el mapa y guardarlo como PNG:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Mapear coloreando por la fuente del registro (GBIF vs iNaturalist)</span></span>
-<span><span class="va">mapa</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado</span>, color_por <span class="op">=</span> <span class="st">"source"</span>, guardar_mapa <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">resultado_prov</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_provincia.html">buscar_especies_provincia</a></span><span class="op">(</span></span>
+<span>  provincia <span class="op">=</span> <span class="st">"Urubamba"</span>,</span>
+<span>  departamento <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
+<span>  grupo <span class="op">=</span> <span class="st">"flora"</span>,</span>
+<span>  limite_por_api <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  guardar_resultados <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; BUSQUEDA INTEGRADA EN PROVINCIA: URUBAMBA</span></span>
+<span><span class="co">#&gt;   Departamento: Cusco</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [SPATIAL] Cargando limites de CUSCO desde el cache local...</span></span>
+<span><span class="co">#&gt; [GBIF] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [SPATIAL] Poligono simplificado con exito a tolerancia de 900 metros (WKT: 904 caracteres).</span></span>
+<span><span class="co">#&gt; [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; [GBIF] Consultando registros dentro del poligono de 'URUBAMBA' (limite: 300)...</span></span>
+<span><span class="co">#&gt; [GBIF] Busqueda finalizada. Se filtraron 299 registros que caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; [iNaturalist] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; [iNaturalist] Consultando registros dentro de la caja delimitadora de 'URUBAMBA' (limite: 300)...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Busqueda finalizada. 276 de 300 registros caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [RESULTADO] Consolidacion exitosa. Total de registros unificados: 575</span></span>
+<span><span class="co">#&gt;        Origen Registros</span></span>
+<span><span class="co">#&gt; 1        GBIF       299</span></span>
+<span><span class="co">#&gt; 2 iNaturalist       276</span></span>
+<span><span class="co">#&gt; 3       Total       575</span></span>
+<span><span class="va">resultado_prov</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 575 × 24</span></span>
+<span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;        </span></span>
+<span><span class="co">#&gt;  1 5938503101   5938503101     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  2 6129882199   6129882199     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  3 6129928896   6129928896     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  4 6129994865   6129994865     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  5 6130002986   6130002986     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  6 6130015299   6130015299     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  7 6130027226   6130027226     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  8 6130067924   6130067924     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  9 6130290679   6130290679     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; 10 6130302854   6130302854     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; # ℹ 565 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 18 more variables: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   species &lt;chr&gt;, recordedBy &lt;chr&gt;, coordinateUncertaintyInMeters &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   source &lt;chr&gt;, district &lt;chr&gt;, province &lt;chr&gt;, department &lt;chr&gt;</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="id_3-visualización-cartográfica-graficar_ocurrencias">3. Visualización Cartográfica (<code>graficar_ocurrencias</code>)<a class="anchor" aria-label="anchor" href="#id_3-visualizaci%C3%B3n-cartogr%C3%A1fica-graficar_ocurrencias"></a>
+</h3>
+<p>Genera mapas temáticos con <code>ggplot2</code> coloreando según la base de datos de origen (<code>source</code>) o reino taxonómico (<code>kingdom</code>):</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Mapa clasificado por fuente de datos (GBIF vs iNaturalist)</span></span>
+<span><span class="va">mapa_fuente</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado_prov</span>, </span>
+<span>                                    color_por <span class="op">=</span> <span class="st">"source"</span>, </span>
+<span>                                    guardar_mapa <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mapa_fuente</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-1.png" alt="" width="100%"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Mapa clasificado por Reino (Plantae vs Animalia)</span></span>
+<span><span class="va">mapa_reino</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado_prov</span>,</span>
+<span>                                   color_por <span class="op">=</span> <span class="st">"kingdom"</span>, </span>
+<span>                                   guardar_mapa <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">mapa_reino</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-2.png" alt="" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="id_4-exportación-de-resultados-a-disco-exportar_resultados">4. Exportación de Resultados a Disco (<code>exportar_resultados</code>)<a class="anchor" aria-label="anchor" href="#id_4-exportaci%C3%B3n-de-resultados-a-disco-exportar_resultados"></a>
+</h3>
+<p>Guarda los registros consolidados en formatos CSV, capas vectoriales GeoJSON y manifiestos JSON de reproducibilidad:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Exportar todos los formatos</span></span>
+<span><span class="fu"><a href="reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado_prov</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># O exportar selectivamente a una carpeta personalizada</span></span>
+<span><span class="fu"><a href="reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span></span>
+<span>  resultado <span class="op">=</span> <span class="va">resultado_prov</span>,</span>
+<span>  dir_salida <span class="op">=</span> <span class="st">"mis_datos_biodiversidad"</span>,</span>
+<span>  formatos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"csv"</span>, <span class="st">"geojson"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 </div>
-</div>
 <div class="section level2">
-<h2 id="detalle-técnico-de-los-datos-obtenidos">Detalle Técnico de los Datos Obtenidos<a class="anchor" aria-label="anchor" href="#detalle-t%C3%A9cnico-de-los-datos-obtenidos"></a>
+<h2 id="estructura-del-objeto-consolidado">Estructura del Objeto Consolidado<a class="anchor" aria-label="anchor" href="#estructura-del-objeto-consolidado"></a>
 </h2>
-<p>El dataframe unificado final tiene la siguiente estructura de columnas estandarizada:</p>
+<p>Las funciones de búsqueda devuelven una lista estructurada con los siguientes elementos:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong><code>unidad_sf</code></strong>: Objeto espacial <code>sf</code> con la geometría oficial y válida del distrito o provincia consultada.</li>
+<li>
+<strong><code>ocurrencias</code></strong>: Dataframe estandarizado con los registros consolidados y deduplicados.</li>
+<li>
+<strong><code>resumen</code></strong>: Lista con estadísticas de cobertura, registros por fuente, conteos totales y metadatos de las APIs.</li>
+<li>
+<strong><code>parametros</code></strong>: Registro de los argumentos utilizados para la consulta.</li>
+</ol>
+<div class="section level3">
+<h3 id="columnas-del-dataframe-estandarizado">Columnas del Dataframe Estandarizado<a class="anchor" aria-label="anchor" href="#columnas-del-dataframe-estandarizado"></a>
+</h3>
 <table class="table">
 <colgroup>
 <col width="33%">
@@ -186,119 +502,124 @@
 </tr></thead>
 <tbody>
 <tr>
-<td align="left"><code>scientificName</code></td>
+<td align="left"><code>occurrenceID</code></td>
 <td align="left"><code>character</code></td>
-<td align="left">Nombre científico completo de la especie.</td>
+<td align="left">Identificador único del registro / URI oficial.</td>
 </tr>
 <tr>
-<td align="left">
-<code>occurrenceID</code> / <code>sourceRecordID</code>
-</td>
+<td align="left"><code>sourceRecordID</code></td>
 <td align="left"><code>character</code></td>
-<td align="left">Identificador persistente o identificador nativo del registro.</td>
+<td align="left">Identificador nativo en la base de datos de origen.</td>
 </tr>
 <tr>
 <td align="left"><code>sourceURL</code></td>
 <td align="left"><code>character</code></td>
-<td align="left">Enlace al registro en el proveedor.</td>
-</tr>
-<tr>
-<td align="left">
-<code>datasetKey</code>, <code>license</code>, <code>basisOfRecord</code>
-</td>
-<td align="left"><code>character</code></td>
-<td align="left">Proveniencia y condiciones de reutilización cuando están disponibles.</td>
-</tr>
-<tr>
-<td align="left"><code>decimalLatitude</code></td>
-<td align="left"><code>numeric</code></td>
-<td align="left">Latitud del registro (WGS84).</td>
-</tr>
-<tr>
-<td align="left"><code>decimalLongitude</code></td>
-<td align="left"><code>numeric</code></td>
-<td align="left">Longitud del registro (WGS84).</td>
-</tr>
-<tr>
-<td align="left"><code>eventDate</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Fecha en la que ocurrió el avistamiento.</td>
-</tr>
-<tr>
-<td align="left"><code>taxonRank</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Rango taxonómico (especie, género, etc.).</td>
-</tr>
-<tr>
-<td align="left"><code>kingdom</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Reino (Plantae, Animalia, etc.).</td>
-</tr>
-<tr>
-<td align="left"><code>phylum</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Filo (solo GBIF).</td>
-</tr>
-<tr>
-<td align="left"><code>class</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Clase (solo GBIF).</td>
-</tr>
-<tr>
-<td align="left"><code>order</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Orden (solo GBIF).</td>
-</tr>
-<tr>
-<td align="left"><code>family</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Familia (solo GBIF).</td>
-</tr>
-<tr>
-<td align="left"><code>genus</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Género (solo GBIF).</td>
-</tr>
-<tr>
-<td align="left"><code>species</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Nombre de especie específico (solo GBIF).</td>
-</tr>
-<tr>
-<td align="left"><code>recordedBy</code></td>
-<td align="left"><code>character</code></td>
-<td align="left">Nombre del observador o colector del registro.</td>
-</tr>
-<tr>
-<td align="left"><code>coordinateUncertaintyInMeters</code></td>
-<td align="left"><code>numeric</code></td>
-<td align="left">Margen de error o incertidumbre posicional en metros.</td>
+<td align="left">Enlace directo al registro en el repositorio web.</td>
 </tr>
 <tr>
 <td align="left"><code>source</code></td>
 <td align="left"><code>character</code></td>
-<td align="left">Origen de los datos (<code>GBIF</code> o <code>iNaturalist</code>).</td>
+<td align="left">Proveedor del dato (<code>GBIF</code> o <code>iNaturalist</code>).</td>
+</tr>
+<tr>
+<td align="left"><code>scientificName</code></td>
+<td align="left"><code>character</code></td>
+<td align="left">Nombre científico completo del taxón.</td>
+</tr>
+<tr>
+<td align="left"><code>decimalLatitude</code></td>
+<td align="left"><code>numeric</code></td>
+<td align="left">Latitud en coordenadas geográficas (WGS84).</td>
+</tr>
+<tr>
+<td align="left"><code>decimalLongitude</code></td>
+<td align="left"><code>numeric</code></td>
+<td align="left">Longitud en coordenadas geográficas (WGS84).</td>
+</tr>
+<tr>
+<td align="left"><code>coordinateUncertaintyInMeters</code></td>
+<td align="left"><code>numeric</code></td>
+<td align="left">Incertidumbre posicional de las coordenadas (en metros).</td>
+</tr>
+<tr>
+<td align="left"><code>eventDate</code></td>
+<td align="left"><code>character</code></td>
+<td align="left">Fecha del registro u observación.</td>
+</tr>
+<tr>
+<td align="left"><code>taxonRank</code></td>
+<td align="left"><code>character</code></td>
+<td align="left">Rango taxonómico asignado (especie, género, etc.).</td>
+</tr>
+<tr>
+<td align="left"><code>kingdom</code></td>
+<td align="left"><code>character</code></td>
+<td align="left">Reino biológico (Plantae, Animalia, etc.).</td>
+</tr>
+<tr>
+<td align="left">
+<code>phylum</code>, <code>class</code>, <code>order</code>, <code>family</code>, <code>genus</code>, <code>species</code>
+</td>
+<td align="left"><code>character</code></td>
+<td align="left">Jerarquía taxonómica (disponible según la fuente).</td>
+</tr>
+<tr>
+<td align="left"><code>recordedBy</code></td>
+<td align="left"><code>character</code></td>
+<td align="left">Observador, colector o usuario que registró la ocurrencia.</td>
+</tr>
+<tr>
+<td align="left">
+<code>license</code>, <code>basisOfRecord</code>
+</td>
+<td align="left"><code>character</code></td>
+<td align="left">Licencia de uso y base del registro.</td>
 </tr>
 <tr>
 <td align="left"><code>district</code></td>
 <td align="left"><code>character</code></td>
-<td align="left">Nombre del distrito en el que se ubica.</td>
+<td align="left">Nombre del distrito correspondiente.</td>
+</tr>
+<tr>
+<td align="left"><code>province</code></td>
+<td align="left"><code>character</code></td>
+<td align="left">Nombre de la provincia correspondiente.</td>
+</tr>
+<tr>
+<td align="left"><code>department</code></td>
+<td align="left"><code>character</code></td>
+<td align="left">Nombre del departamento correspondiente.</td>
 </tr>
 </tbody>
 </table>
+<hr>
+</div>
 </div>
 <div class="section level2">
-<h2 id="reproducibilidad-y-trazabilidad">Reproducibilidad y trazabilidad<a class="anchor" aria-label="anchor" href="#reproducibilidad-y-trazabilidad"></a>
+<h2 id="trazabilidad-y-reproducibilidad">Trazabilidad y Reproducibilidad<a class="anchor" aria-label="anchor" href="#trazabilidad-y-reproducibilidad"></a>
 </h2>
-<p>Cada corrida exportada crea nombres únicos basados en fecha/hora UTC y un manifiesto JSON en <code>data/processed/</code>. El manifiesto conserva parámetros, WKT y CRS del polígono, versiones de R/paquetes, conteos y rutas de los artefactos. Los registros incluyen identificadores y procedencia de la fuente cuando la API los entrega.</p>
-<p>GBIF e iNaturalist son fuentes vivas: restaurar el entorno reproduce el método, no necesariamente el resultado de una fecha distinta. Para una reproducción exacta archive las respuestas originales de API junto con el manifiesto. El límite por API puede truncar la cobertura y no debe interpretarse como un inventario exhaustivo.</p>
-<p>Use <code>limite_por_api = NULL</code> para solicitar la descarga completa paginada. GBIF la completará sólo hasta 100 000 resultados de búsqueda; por encima de ese umbral el flujo se detiene y exige una descarga masiva GBIF con DOI. iNaturalist se completa mediante <code>rinat</code> hasta 10 000 observaciones; por encima de ese total el flujo se detiene y exige la exportación oficial o una extracción temporalmente particionada. El manifiesto informa el total reportado por cada API y si la descarga se completó.</p>
-<p>Ejecute las pruebas sin red con:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"tests/run_tests.R"</span><span class="op">)</span></span></code></pre></div>
+<p>Cada ejecución exporta artefactos con identificadores únicos basados en timestamp UTC (<code>YYYYMMDDTHHMMSSZ</code>):</p>
+<ul>
+<li>
+<strong><code>processed/ocurrencias_*.csv</code></strong>: Tabla consolidada en formato CSV.</li>
+<li>
+<strong><code>processed/ocurrencias_*.geojson</code></strong>: Capa vectorial para visualización en QGIS, ArcGIS u otras plataformas SIG.</li>
+<li>
+<strong><code>processed/manifiesto_*.json</code></strong>: Manifiesto con la versión de R, versiones de paquetes (<code>sf</code>, <code>rgbif</code>, <code>rinat</code>, etc.), polígono WKT, CRS, parámetros y metadatos de la corrida.</li>
+<li>
+<strong><code>results/mapa_*.png</code></strong>: Mapa estático generado a 300 DPI.</li>
+</ul>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/PaulESantos/peruocc/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/PaulESantos/peruocc/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -318,14 +639,14 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing peruspecies</a></li>
+<li><a href="authors.html#citation">Citing peruocc</a></li>
 </ul>
 </div>
 
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Peru Species Project Maintainers <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Paul Efren Santos Andrade <br><small class="roles"> Author, maintainer, copyright holder </small>   </li>
 </ul>
 </div>
 
@@ -336,7 +657,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Peru Species Project Maintainers.</p>
+  <p>Developed by Paul Efren Santos Andrade.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -1,0 +1,253 @@
+/* ==========================================================================
+   peruocc pkgdown stylesheet
+   Adapted from Desirée De Leon's tidymodels pkgdown CSS & modernized
+   with GBIF & iNaturalist visual identities for biodiversity informatics.
+   ========================================================================== */
+
+:root {
+  --bunker: #1f2421;
+  --forest-dark: #14362d;
+  --forest-primary: #1e6f5c;
+  --gbif-green: #509e2f;
+  --inat-green: #74ac00;
+  --inat-light: #eef7de;
+  --ziggurat: #d3e7dc;
+  --wedgewood: #286b59;
+  --bg-parchment: #fefdf9;
+  --card-bg: #ffffff;
+  --border-subtle: #e2e8e3;
+  --code-bg: #edf3ef;
+  --pre-bg: #f7faf8;
+  --pre-border: #dbe4dd;
+  --shadow-subtle: 0 4px 14px rgba(30, 111, 92, 0.05);
+}
+
+/* Base Body & Spacing ------------------------------------------------------ */
+
+body {
+  background-color: var(--bg-parchment);
+  color: var(--bunker);
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+}
+
+.contents h1, .contents h2, .contents h3, .contents h4 {
+  color: var(--forest-dark);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.contents h2, .contents h3, .contents h4 {
+  margin-top: 2.2rem;
+  margin-bottom: 1.25rem;
+}
+
+.row {
+  margin-top: 1.5em;
+}
+
+@media (min-width: 768px) {
+  .contents {
+    padding-right: 3.5em;
+  }
+}
+
+/* Navbar ------------------------------------------------------------------- */
+
+.navbar {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-color: var(--bg-parchment) !important;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: var(--forest-primary) !important;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+
+/* Active behavior for navbar */
+.navbar-light .navbar-nav .nav-link:focus,
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .nav-link.active {
+  background: var(--ziggurat);
+  color: var(--forest-dark) !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+/* Hover behavior for navbar */
+.navbar-light .navbar-nav .nav-item > .nav-link {
+  color: var(--forest-primary);
+  transition: all 0.2s ease-in-out;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.navbar-light .navbar-nav .nav-item > .nav-link:hover {
+  color: var(--inat-green) !important;
+  background: rgba(116, 172, 0, 0.08);
+  border-radius: 4px;
+}
+
+/* Links ------------------------------------------------------------------- */
+
+a {
+  color: var(--wedgewood);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--inat-green);
+  text-decoration: underline;
+}
+
+/* Inline Code (only text within paragraphs, lists, tables) ------------------ */
+
+:not(pre) > code,
+p > code,
+li > code,
+td > code,
+th > code,
+span:not(.sourceCode span) > code {
+  font-family: var(--bs-font-monospace, 'Overpass Mono', monospace);
+  font-size: 0.88em;
+  background-color: var(--code-bg) !important;
+  color: var(--forest-dark) !important;
+  padding: 0.15em 0.45em !important;
+  border-radius: 4px !important;
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: none !important;
+}
+
+:not(pre) > code a {
+  color: var(--wedgewood);
+  font-weight: 600;
+}
+
+:not(pre) > code a:hover {
+  color: var(--inat-green);
+}
+
+/* Code Blocks Container & Wrapper Reset ------------------------------------- */
+
+div.sourceCode,
+.sourceCode {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 1rem 0 1.5rem 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Single Unified Code Block Box */
+pre,
+pre.sourceCode,
+div.sourceCode pre {
+  background-color: var(--pre-bg) !important;
+  color: var(--bunker) !important;
+  border: 1px solid var(--pre-border) !important;
+  border-radius: 8px !important;
+  padding: 1rem 1.25rem !important;
+  margin: 0 !important;
+  font-size: 0.88em;
+  line-height: 1.6;
+  box-shadow: none !important;
+  overflow-x: auto;
+}
+
+/* Clear all inner elements inside pre so lines/spans never form extra boxes */
+pre code,
+pre.sourceCode code,
+div.sourceCode pre code,
+pre code span,
+pre span,
+.sourceCode span {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: inherit;
+  font-family: var(--bs-font-monospace, 'Overpass Mono', monospace);
+}
+
+/* Syntax Highlighting Light Palette */
+.sourceCode .co, pre .co { color: #64746d !important; font-style: italic; } /* Comments */
+.sourceCode .kw, pre .kw { color: #1e6f5c !important; font-weight: 600; }   /* Keywords */
+.sourceCode .fu, pre .fu { color: #286b59 !important; font-weight: 600; }   /* Functions */
+.sourceCode .st, pre .st { color: #2e7d32 !important; }                     /* Strings */
+.sourceCode .dv, pre .dv, 
+.sourceCode .fl, pre .fl { color: #c25e00 !important; }                     /* Numbers */
+.sourceCode .va, pre .va { color: #1f2421 !important; }                     /* Variables */
+.sourceCode .op, pre .op { color: #435b52 !important; }                     /* Operators */
+
+/* Copy button aesthetic */
+.btn-copy-ex {
+  background-color: #ffffff !important;
+  border: 1px solid var(--border-subtle) !important;
+  color: var(--forest-primary) !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-copy-ex:hover {
+  background-color: var(--inat-light) !important;
+  border-color: var(--inat-green) !important;
+  color: var(--inat-green) !important;
+}
+
+/* Card & Sidebar Polish ---------------------------------------------------- */
+
+.sidebar, .pkgdown-sidebar {
+  border-left: 1px solid var(--border-subtle);
+  padding-left: 1.5rem;
+}
+
+.card {
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  box-shadow: var(--shadow-subtle);
+  background-color: var(--card-bg);
+}
+
+/* Badges & Accents (GBIF / iNat Identity) ----------------------------------- */
+
+.badge-gbif {
+  background-color: var(--gbif-green);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.25em 0.6em;
+  border-radius: 4px;
+}
+
+.badge-inat {
+  background-color: var(--inat-green);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.25em 0.6em;
+  border-radius: 4px;
+}
+
+/* Tables ------------------------------------------------------------------- */
+
+.table {
+  margin-top: 1.25rem;
+  margin-bottom: 2rem;
+  border-color: var(--border-subtle);
+}
+
+.table th {
+  background-color: rgba(30, 111, 92, 0.05);
+  color: var(--forest-dark);
+  font-weight: 600;
+  border-bottom: 2px solid var(--ziggurat);
+}

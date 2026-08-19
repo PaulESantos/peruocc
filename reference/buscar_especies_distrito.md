@@ -13,7 +13,7 @@ buscar_especies_distrito(
   nombre_cientifico = NULL,
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
-  guardar_resultados = TRUE,
+  guardar_resultados = FALSE,
   tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m
 )
 ```
@@ -46,7 +46,7 @@ buscar_especies_distrito(
 
 - guardar_resultados:
 
-  Logico; si es TRUE guarda los resultados en data/ (def: TRUE).
+  Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).
 
 - tolerancia_simplificacion:
 

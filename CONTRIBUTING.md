@@ -69,5 +69,5 @@ advice.
 
 Please note that the peru_species_project project is released with a
 [Contributor Code of
-Conduct](https://paulesantos.github.io/peru_species_project/CODE_OF_CONDUCT.md).
-By contributing to this project you agree to abide by its terms.
+Conduct](https://paulesantos.github.io/peruocc/CODE_OF_CONDUCT.md). By
+contributing to this project you agree to abide by its terms.

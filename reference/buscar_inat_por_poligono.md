@@ -1,7 +1,7 @@
-# Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito
+# Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito o provincia
 
 Busca ocurrencias de especies en iNaturalist dentro de un poligono de
-distrito
+distrito o provincia
 
 ## Usage
 
@@ -20,7 +20,7 @@ buscar_inat_por_poligono(
 
 - poligono_sf:
 
-  Objeto sf que representa el distrito (EPSG:4326).
+  Objeto sf que representa la unidad espacial (EPSG:4326).
 
 - query:
 

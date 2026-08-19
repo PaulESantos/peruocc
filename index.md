@@ -1,219 +1,480 @@
-# Consulta de Ocurrencias de Especies en Distritos del Perú (GBIF & iNaturalist)
+# peruocc: Recuperación y Consolidación de Ocurrencias de Biodiversidad en Unidades Administrativas del Perú
 
-Este es un proyecto en R diseñado para buscar, descargar, filtrar y
-mapear registros de ocurrencias de biodiversidad (flora y fauna) en
-distritos del Perú. Utiliza la geometría de los límites distritales
-oficiales como argumento espacial de búsqueda para consultar las bases
-de datos de **GBIF** (Global Biodiversity Information Facility) y
-**iNaturalist**.
+`peruocc` es un paquete y conjunto de herramientas en R diseñado para
+buscar, descargar, filtrar, validar y consolidar registros de
+ocurrencias de biodiversidad (**flora y fauna**) en el territorio
+peruano, utilizando como marco espacial las delimitaciones
+administrativas oficiales a escala de **distritos** y **provincias**.
 
-La delimitación geográfica de los distritos se obtiene dinámicamente
-utilizando el paquete **`geoperu`** (límites oficiales provistos por el
-INEI).
+El paquete integra y estandariza la información disponible de dos de los
+mayores repositorios globales de biodiversidad: **GBIF** (*Global
+Biodiversity Information Facility*) e **iNaturalist**, generando un
+objeto unificado con atributos estandarizados y trazabilidad completa
+dentro del área de interés.
+
+------------------------------------------------------------------------
 
 ## Características Principales
 
-1.  **Búsqueda Espacial por Distritos**: Obtiene las divisiones
-    distritales a partir de descargas dinámicas a nivel departamental
-    vía
-    [`geoperu::get_geo_peru()`](https://paulesantos.github.io/geoperu/reference/get_geo_peru.html).
-2.  **Caché Local Eficiente (`.rds`)**:
-    - `geoperu` descarga archivos GPKG desde internet. Para optimizar el
-      rendimiento y ahorrar ancho de banda, el script implementa un
-      **mecanismo de caché por departamento** en la carpeta `data/` (ej.
-      `data/distritos_lima.rds`).
-    - La primera consulta de un departamento tarda unos segundos debido
-      a la descarga; las siguientes consultas en el mismo departamento
-      se cargan instantáneamente desde el caché local en disco.
-3.  **Normalización de Nombres**: Resuelve nombres de distritos de forma
-    insensible a mayúsculas, minúsculas, tildes e incluye una función de
-    sugerencias de autocompletado en caso de errores tipográficos.
-4.  **Mapeo Avanzado de GBIF**: Convierte los polígonos a formato WKT
-    (Well-Known Text) garantizando el sentido antihorario (CCW)
-    requerido por GBIF.
-5.  **Simplificación Progresiva y Bounding Box**: Si el polígono del
-    distrito es muy complejo (\>1500 caracteres), lo simplifica de forma
-    métrica utilizando proyecciones UTM. Si sigue siendo excesivamente
-    grande, utiliza su caja delimitadora (Bounding Box) como fallback
-    para la API.
-6.  **Filtrado Espacial Riguroso en R**: Tanto para GBIF como para
-    iNaturalist, el script realiza una intersección espacial exacta
-    ([`sf::st_intersects`](https://r-spatial.github.io/sf/reference/geos_binary_pred.html))
-    de los puntos recuperados con el polígono detallado original del
-    distrito, descartando observaciones fuera de los límites.
-7.  **Visualización y Exportación**: Genera mapas de alta resolución
-    (300 DPI) con `ggplot2` y exporta los resultados tabulares
-    unificados a archivos CSV y capas espaciales GeoJSON.
+1.  **Marco Administrativo Oficial (Distritos y Provincias)**:
+    - Recupera dinámicamente geometrías oficiales provistas por el INEI
+      a través del paquete **`geoperu`**.
+    - Admite consultas a nivel de **distrito** y consolidación disuelta
+      a nivel de **provincia**.
+2.  **Caché Local Inteligente (`.rds`)**:
+    - Almacena en disco los límites departamentales descargados,
+      reduciendo drásticamente los tiempos de respuesta en consultas
+      recurrentes.
+3.  **Flujo Espacial y Topológico Riguroso**:
+    - Corrige automáticamente la orientación geométrica a sentido
+      antihorario (**CCW**) según los estándares OGC/GBIF.
+    - Aplica simplificación métrica adaptativa en proyecciones UTM para
+      polígonos complejos en consultas de API.
+    - Realiza una **intersección espacial exacta
+      ([`sf::st_intersects`](https://r-spatial.github.io/sf/reference/geos_binary_pred.html))**
+      en R con el polígono detallado original, garantizando que sólo se
+      conserven los registros estrictamente dentro de los límites
+      administrativos.
+4.  **Consolidación y Estandarización de Datos**:
+    - Homogeneiza atributos de GBIF e iNaturalist hacia un esquema
+      estándar alineado con **Darwin Core**.
+    - Retorna una estructura consolidada que contiene el polígono
+      espacial (`sf`), el conjunto de ocurrencias tabulares
+      (`data.frame`), el resumen analítico y los parámetros de
+      ejecución.
+5.  **Exportación y Trazabilidad**:
+    - Exporta automáticamente a formatos **CSV**, capas espaciales
+      **GeoJSON**, mapas de alta resolución (**PNG**) y manifiestos de
+      reproducibilidad (**JSON**).
 
 ------------------------------------------------------------------------
 
-## Estructura del Proyecto
+## Flujo de Integración de Datos
 
 ``` text
-D:\peru_species_project\
-│
-├── peru_species_project.Rproj     # Archivo de configuración del proyecto en RStudio
-├── README.md                      # Esta guía en español
-├── main.R                         # Script principal de prueba y casos de uso prácticos
-│
-├── R/                             # Módulos de funciones específicas
-│   ├── setup.R                    # Instalador y verificador de la librería 'geoperu' y otras dependencias
-│   ├── spatial_utils.R            # Funciones espaciales (descarga de geoperu, caché, CCW, simplificación)
-│   ├── query_gbif.R               # Consultas y normalización para la API de GBIF
-│   ├── query_inat.R               # Consultas y filtrado espacial para la API de iNaturalist
-│   ├── query_combined.R           # Integración y guardado de resultados consolidado
-│   └── visualize.R                # Generador de mapas con ggplot2 y sf
-│
-├── data/                          # raw/, cache/ y processed/; artefactos no versionados por defecto
-├── results/                       # Figuras generadas
-├── config/default.R               # Configuración versionada
-├── tests/run_tests.R              # Pruebas sin acceso a red
-└── scripts/lock_environment.R     # Generación explícita de renv.lock
+               ┌──────────────────────────────┐
+               │    Unidad Administrativa     │
+               │   (Distrito o Provincia)     │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │  Geometría Oficial geoperu   │
+               │   + Validación / Caché RDS   │
+               └──────────────┬───────────────┘
+                              │
+             ┌────────────────┴────────────────┐
+             │                                 │
+  ┌──────────▼──────────┐           ┌──────────▼──────────┐
+  │  Consulta a GBIF    │           │ Consulta iNaturalist│
+  │  (WKT / Taxonomía)  │           │   (Bounding Box)    │
+  └──────────┬──────────┘           └──────────┬──────────┘
+             │                                 │
+             └────────────────┬────────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Filtrado Espacial en R       │
+               │ (sf::st_intersects exacto)  │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Estandarización Darwin Core │
+               │   + Deduplicación interna   │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Objeto Consolidado Final     │
+               │ (sf + data.frame + Resumen) │
+               └─────────────────────────────┘
+```
+
+1.  **Obtención y Preparación del Polígono**: Se consulta `geoperu` para
+    descargar o cargar desde el caché local el departamento
+    correspondiente. Si la consulta es distrital, se extrae el distrito
+    específico; si es provincial, se disuelven espacialmente todos sus
+    distritos componentes
+    ([`sf::st_union`](https://r-spatial.github.io/sf/reference/geos_combine.html)).
+2.  **Consulta a Repositorios Vivos**:
+    - **GBIF**: Se envía el polígono en formato WKT (simplificado si
+      supera límites de caracteres) junto con los filtros taxonómicos
+      (Reino, taxón específico o grupo).
+    - **iNaturalist**: Se utiliza la caja delimitadora (*Bounding Box*)
+      del polígono junto a los criterios de búsqueda (flora/fauna, taxón
+      o texto libre).
+3.  **Validación Espacial en Memoria**: Ambos conjuntos de puntos
+    recuperados se transforman a objetos espaciales `sf` (EPSG:4326) y
+    se intersecan topológicamente con el polígono detallado original,
+    eliminando cualquier falso positivo fuera del perímetro.
+4.  **Estandarización**: Se mapean los campos nativos de ambas fuentes a
+    una estructura de columnas común, preservando identificadores de
+    origen, coordenadas, taxonomía, fecha y jerarquía administrativa.
+
+------------------------------------------------------------------------
+
+## Instalación y Carga
+
+### 1. Desde GitHub:
+
+``` r
+
+# Instalar paquete directamente desde el repositorio en GitHub
+# install.packages("remotes")
+remotes::install_github("PaulESantos/peruocc")
+```
+
+### 2. Configuración de directorio de trabajo:
+
+``` r
+
+library(peruocc)
+
+# Configurar directorio donde se guardarán caché, resultados y manifiestos
+peruocc_data_dir("peruocc-output")
 ```
 
 ------------------------------------------------------------------------
 
-## Instalación y Configuración
+## Guía de Uso y Escalabilidad Funcional
 
-### Requisitos Previos
+El paquete proporciona interfaces tanto específicas como unificadas para
+consultar ocurrencias en diferentes niveles administrativos:
 
-1.  Tener instalado R en el sistema (versión 4.0 o superior
-    recomendada).
-2.  RStudio para ejecutar el proyecto cómodamente.
+### 1. Consulta Unificada (`buscar_especies_peru`)
 
-### Entorno reproducible
-
-Las dependencias no se instalan automáticamente al ejecutar análisis. En
-un entorno validado, cree el bloqueo de versiones una vez:
+Permite seleccionar el nivel administrativo mediante el argumento
+`nivel = c("distrito", "provincia")`:
 
 ``` r
 
-source("scripts/lock_environment.R")
-```
 
-Después restaure el entorno antes de ejecutar:
-
-``` r
-
-install.packages("renv") # sólo si aún no está disponible
-renv::restore()
-source("main.R")
-```
-
-`R/setup.R` únicamente verifica dependencias; la instalación manual
-exige `verificar_y_configurar_entorno(instalar = TRUE)`.
-
-------------------------------------------------------------------------
-
-## Guía de Uso Rápido
-
-Para ejecutar los casos de prueba por defecto, abra R o RStudio en este
-directorio y ejecute:
-
-``` r
-
-source("main.R")
-```
-
-Esto generará tablas de ocurrencias e imágenes de mapas dentro de la
-carpeta `data/` para: 1. Miraflores (Lima) - Flora. 2. Tambopata (Madre
-de Dios) - Fauna. 3. Tarma (Junín) - Cantua buxifolia.
-
-### Uso de las Funciones en R
-
-#### 1. Buscar Ocurrencias en un Distrito
-
-La función principal es
-[`buscar_especies_distrito()`](https://paulesantos.github.io/peru_species_project/reference/buscar_especies_distrito.md)
-definida en `R/query_combined.R`:
-
-``` r
-
-source("R/setup.R") # Cargar dependencias
-source("R/spatial_utils.R")
-source("R/query_gbif.R")
-source("R/query_inat.R")
-source("R/query_combined.R")
-source("R/visualize.R")
-
-# Buscar flora en el distrito de Miraflores, Lima (se descarga y almacena el caché de Lima)
-resultado <- buscar_especies_distrito(
-  distrito = "Miraflores",
+# Consulta general a nivel distrital en memoria
+res_distrito <- buscar_especies_peru(
+  nombre = "Miraflores",
+  nivel = "distrito",
   departamento = "Lima",
   provincia = "Lima",
-  grupo = "flora",            # Filtros disponibles: "flora", "fauna" o NULL (todo)
-  limite_por_api = 100,       # Máximo de registros por cada origen; NULL intenta descarga completa
-  guardar_resultados = TRUE   # Exporta un archivo CSV y GeoJSON automáticamente
+  grupo = "flora",            # "flora", "fauna" o NULL
+  limite_por_api = 200
+)
+#> =====================================================================
+#> BUSQUEDA INTEGRADA EN DISTRITO: MIRAFLORES
+#>   Provincia: Lima
+#>   Departamento: Lima
+#> =====================================================================
+#> 
+#> [SPATIAL] Cargando limites de LIMA desde el cache local...
+#> [GBIF] Iniciando busqueda de ocurrencias...
+#> [SPATIAL] Poligono simplificado con exito a tolerancia de 100 metros (WKT: 822 caracteres).
+#> [GBIF] Filtrando por reino Plantae (Flora).
+#> [GBIF] Consultando registros dentro del poligono de 'MIRAFLORES' (limite: 200)...
+#> [GBIF] Busqueda finalizada. Se filtraron 198 registros que caen dentro del poligono seleccionado.
+#> [iNaturalist] Iniciando busqueda de ocurrencias...
+#> [iNaturalist] Filtrando por reino Plantae (Flora).
+#> [iNaturalist] Consultando registros dentro de la caja delimitadora de 'MIRAFLORES' (limite: 200)...
+#> [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...
+#> [iNaturalist] Busqueda finalizada. 167 de 200 registros caen dentro del poligono seleccionado.
+#> 
+#> [RESULTADO] Consolidacion exitosa. Total de registros unificados: 365
+#>        Origen Registros
+#> 1        GBIF       198
+#> 2 iNaturalist       167
+#> 3       Total       365
+#> 
+#> [ARCHIVO] Resultados guardados en: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042527Z_p25272_distrito_miraflores_flora.csv'
+#> [ARCHIVO] Capa espacial guardada en GeoJSON: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042527Z_p25272_distrito_miraflores_flora.geojson'
+#> [ARCHIVO] Manifiesto de reproducibilidad guardado en: 'D:/peruocc/peruocc-output/processed/manifiesto_20260819T042527Z_p25272_distrito_miraflores_flora.json'
+
+res_distrito$ocurrencias |> 
+  dplyr::as_tibble()
+#> # A tibble: 365 × 24
+#>    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord
+#>    <chr>        <chr>          <chr>            <chr>      <chr>   <chr>        
+#>  1 6129981207   6129981207     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  2 6179051389   6179051389     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  3 6147543635   6147543635     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  4 6147566368   6147566368     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  5 6147649969   6147649969     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  6 6159649674   6159649674     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  7 6171247345   6171247345     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  8 6179365614   6179365614     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  9 6431906476   6431906476     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#> 10 6178459982   6178459982     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#> # ℹ 355 more rows
+#> # ℹ 18 more variables: scientificName <chr>, decimalLatitude <dbl>,
+#> #   decimalLongitude <dbl>, eventDate <chr>, taxonRank <chr>, kingdom <chr>,
+#> #   phylum <chr>, class <chr>, order <chr>, family <chr>, genus <chr>,
+#> #   species <chr>, recordedBy <chr>, coordinateUncertaintyInMeters <dbl>,
+#> #   source <chr>, district <chr>, province <chr>, department <chr>
+
+# Consulta general a nivel provincial en memoria
+res_provincia <- buscar_especies_peru(
+  nombre = "Cusco",
+  nivel = "provincia",
+  departamento = "Cusco",
+  grupo = "fauna",
+  limite_por_api = 200
+)
+#> =====================================================================
+#> BUSQUEDA INTEGRADA EN PROVINCIA: CUSCO
+#>   Departamento: Cusco
+#> =====================================================================
+#> 
+#> [SPATIAL] Cargando limites de CUSCO desde el cache local...
+#> [GBIF] Iniciando busqueda de ocurrencias...
+#> [SPATIAL] Poligono simplificado con exito a tolerancia de 300 metros (WKT: 1215 caracteres).
+#> [GBIF] Filtrando por reino Animalia (Fauna).
+#> [GBIF] Consultando registros dentro del poligono de 'CUSCO' (limite: 200)...
+#> [GBIF] Busqueda finalizada. Se filtraron 200 registros que caen dentro del poligono seleccionado.
+#> [iNaturalist] Iniciando busqueda de ocurrencias...
+#> [iNaturalist] Filtrando por reino Animalia (Fauna).
+#> [iNaturalist] Consultando registros dentro de la caja delimitadora de 'CUSCO' (limite: 200)...
+#> [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...
+#> [iNaturalist] Busqueda finalizada. 181 de 200 registros caen dentro del poligono seleccionado.
+#> 
+#> [RESULTADO] Consolidacion exitosa. Total de registros unificados: 381
+#>        Origen Registros
+#> 1        GBIF       200
+#> 2 iNaturalist       181
+#> 3       Total       381
+#> 
+#> [ARCHIVO] Resultados guardados en: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042537Z_p25272_provincia_cusco_fauna.csv'
+#> [ARCHIVO] Capa espacial guardada en GeoJSON: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042537Z_p25272_provincia_cusco_fauna.geojson'
+#> [ARCHIVO] Manifiesto de reproducibilidad guardado en: 'D:/peruocc/peruocc-output/processed/manifiesto_20260819T042537Z_p25272_provincia_cusco_fauna.json'
+
+res_provincia$ocurrencias |> 
+  dplyr::as_tibble()
+#> # A tibble: 381 × 24
+#>    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord
+#>    <chr>        <chr>          <chr>            <chr>      <chr>   <chr>        
+#>  1 5938271716   5938271716     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  2 5938631678   5938631678     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  3 6129873325   6129873325     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  4 6130064972   6130064972     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  5 6130410898   6130410898     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  6 6130438735   6130438735     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  7 6130955903   6130955903     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  8 6130998009   6130998009     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  9 6131276759   6131276759     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#> 10 6131426727   6131426727     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#> # ℹ 371 more rows
+#> # ℹ 18 more variables: scientificName <chr>, decimalLatitude <dbl>,
+#> #   decimalLongitude <dbl>, eventDate <chr>, taxonRank <chr>, kingdom <chr>,
+#> #   phylum <chr>, class <chr>, order <chr>, family <chr>, genus <chr>,
+#> #   species <chr>, recordedBy <chr>, coordinateUncertaintyInMeters <dbl>,
+#> #   source <chr>, district <chr>, province <chr>, department <chr>
+```
+
+### 2. Consultas Específicas por Nivel
+
+#### A. A nivel de Distrito (`buscar_especies_distrito`)
+
+``` r
+
+resultado_dist <- buscar_especies_distrito(
+  distrito = "Tambopata",
+  departamento = "Madre de Dios",
+  provincia = "Tambopata",
+  nombre_cientifico = "Panthera onca", # Opcional: filtro por especie
+  limite_por_api = 100,
+  guardar_resultados = FALSE
+)
+#> =====================================================================
+#> BUSQUEDA INTEGRADA EN DISTRITO: TAMBOPATA
+#>   Provincia: Tambopata
+#>   Departamento: Madre de Dios
+#> =====================================================================
+#> 
+#> [SPATIAL] Cargando limites de MADRE DE DIOS desde el cache local...
+#> [GBIF] Iniciando busqueda de ocurrencias...
+#> [SPATIAL] Poligono simplificado con exito a tolerancia de 8100 metros (WKT: 379 caracteres).
+#> [GBIF] Resolviendo taxonomia para 'Panthera onca'...
+#> [GBIF] Taxon resuelto: Panthera onca (Linnaeus, 1758) (Key: 5219426, Rank: SPECIES)
+#> [GBIF] Consultando registros dentro del poligono de 'TAMBOPATA' (limite: 100)...
+#> [GBIF] Busqueda finalizada. Se filtraron 21 registros que caen dentro del poligono seleccionado.
+#> [iNaturalist] Iniciando busqueda de ocurrencias...
+#> [iNaturalist] Consultando registros dentro de la caja delimitadora de 'TAMBOPATA' (limite: 100)...
+#> [iNaturalist] Se descargaron 100 registros en la caja delimitadora. Aplicando filtro espacial...
+#> [iNaturalist] Busqueda finalizada. 15 de 100 registros caen dentro del poligono seleccionado.
+#> 
+#> [RESULTADO] Consolidacion exitosa. Total de registros unificados: 36
+#>        Origen Registros
+#> 1        GBIF        21
+#> 2 iNaturalist        15
+#> 3       Total        36
+
+resultado_dist$ocurrencias |> 
+  dplyr::as_tibble()
+#> # A tibble: 36 × 24
+#>    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord
+#>    <chr>        <chr>          <chr>            <chr>      <chr>   <chr>        
+#>  1 6334829706   6334829706     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  2 4597092810   4597092810     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  3 4606894492   4606894492     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  4 4022300813   4022300813     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  5 4852820765   4852820765     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  6 1990572488   1990572488     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  7 1571080404   1571080404     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  8 1571080408   1571080408     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  9 6236055510   6236055510     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#> 10 3499457688   3499457688     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#> # ℹ 26 more rows
+#> # ℹ 18 more variables: scientificName <chr>, decimalLatitude <dbl>,
+#> #   decimalLongitude <dbl>, eventDate <chr>, taxonRank <chr>, kingdom <chr>,
+#> #   phylum <chr>, class <chr>, order <chr>, family <chr>, genus <chr>,
+#> #   species <chr>, recordedBy <chr>, coordinateUncertaintyInMeters <dbl>,
+#> #   source <chr>, district <chr>, province <chr>, department <chr>
+```
+
+#### B. A nivel de Provincia (`buscar_especies_provincia`)
+
+``` r
+
+resultado_prov <- buscar_especies_provincia(
+  provincia = "Urubamba",
+  departamento = "Cusco",
+  grupo = "flora",
+  limite_por_api = 300,
+  guardar_resultados = FALSE
+)
+#> =====================================================================
+#> BUSQUEDA INTEGRADA EN PROVINCIA: URUBAMBA
+#>   Departamento: Cusco
+#> =====================================================================
+#> 
+#> [SPATIAL] Cargando limites de CUSCO desde el cache local...
+#> [GBIF] Iniciando busqueda de ocurrencias...
+#> [SPATIAL] Poligono simplificado con exito a tolerancia de 900 metros (WKT: 904 caracteres).
+#> [GBIF] Filtrando por reino Plantae (Flora).
+#> [GBIF] Consultando registros dentro del poligono de 'URUBAMBA' (limite: 300)...
+#> [GBIF] Busqueda finalizada. Se filtraron 299 registros que caen dentro del poligono seleccionado.
+#> [iNaturalist] Iniciando busqueda de ocurrencias...
+#> [iNaturalist] Filtrando por reino Plantae (Flora).
+#> [iNaturalist] Consultando registros dentro de la caja delimitadora de 'URUBAMBA' (limite: 300)...
+#> [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...
+#> [iNaturalist] Busqueda finalizada. 276 de 300 registros caen dentro del poligono seleccionado.
+#> 
+#> [RESULTADO] Consolidacion exitosa. Total de registros unificados: 575
+#>        Origen Registros
+#> 1        GBIF       299
+#> 2 iNaturalist       276
+#> 3       Total       575
+resultado_prov$ocurrencias |> 
+  dplyr::as_tibble()
+#> # A tibble: 575 × 24
+#>    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord
+#>    <chr>        <chr>          <chr>            <chr>      <chr>   <chr>        
+#>  1 5938503101   5938503101     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  2 6129882199   6129882199     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  3 6129928896   6129928896     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  4 6129994865   6129994865     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  5 6130002986   6130002986     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  6 6130015299   6130015299     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  7 6130027226   6130027226     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  8 6130067924   6130067924     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#>  9 6130290679   6130290679     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#> 10 6130302854   6130302854     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…
+#> # ℹ 565 more rows
+#> # ℹ 18 more variables: scientificName <chr>, decimalLatitude <dbl>,
+#> #   decimalLongitude <dbl>, eventDate <chr>, taxonRank <chr>, kingdom <chr>,
+#> #   phylum <chr>, class <chr>, order <chr>, family <chr>, genus <chr>,
+#> #   species <chr>, recordedBy <chr>, coordinateUncertaintyInMeters <dbl>,
+#> #   source <chr>, district <chr>, province <chr>, department <chr>
+```
+
+### 3. Visualización Cartográfica (`graficar_ocurrencias`)
+
+Genera mapas temáticos con `ggplot2` coloreando según la base de datos
+de origen (`source`) o reino taxonómico (`kingdom`):
+
+``` r
+
+# Mapa clasificado por fuente de datos (GBIF vs iNaturalist)
+mapa_fuente <- graficar_ocurrencias(resultado_prov, 
+                                    color_por = "source", 
+                                    guardar_mapa = FALSE)
+
+mapa_fuente
+```
+
+![](reference/figures/README-unnamed-chunk-6-1.png)
+
+``` r
+
+# Mapa clasificado por Reino (Plantae vs Animalia)
+mapa_reino <- graficar_ocurrencias(resultado_prov,
+                                   color_por = "kingdom", 
+                                   guardar_mapa = FALSE)
+mapa_reino
+```
+
+![](reference/figures/README-unnamed-chunk-6-2.png)
+
+### 4. Exportación de Resultados a Disco (`exportar_resultados`)
+
+Guarda los registros consolidados en formatos CSV, capas vectoriales
+GeoJSON y manifiestos JSON de reproducibilidad:
+
+``` r
+
+# Exportar todos los formatos
+exportar_resultados(resultado_prov)
+
+# O exportar selectivamente a una carpeta personalizada
+exportar_resultados(
+  resultado = resultado_prov,
+  dir_salida = "mis_datos_biodiversidad",
+  formatos = c("csv", "geojson")
 )
 ```
 
-#### 2. Generar el Mapa
-
-Use
-[`graficar_ocurrencias()`](https://paulesantos.github.io/peru_species_project/reference/graficar_ocurrencias.md)
-del módulo `R/visualize.R` para crear el mapa y guardarlo como PNG:
-
-``` r
-
-# Mapear coloreando por la fuente del registro (GBIF vs iNaturalist)
-mapa <- graficar_ocurrencias(resultado, color_por = "source", guardar_mapa = TRUE)
-```
-
 ------------------------------------------------------------------------
 
-## Detalle Técnico de los Datos Obtenidos
+## Estructura del Objeto Consolidado
 
-El dataframe unificado final tiene la siguiente estructura de columnas
-estandarizada:
+Las funciones de búsqueda devuelven una lista estructurada con los
+siguientes elementos:
+
+1.  **`unidad_sf`**: Objeto espacial `sf` con la geometría oficial y
+    válida del distrito o provincia consultada.
+2.  **`ocurrencias`**: Dataframe estandarizado con los registros
+    consolidados y deduplicados.
+3.  **`resumen`**: Lista con estadísticas de cobertura, registros por
+    fuente, conteos totales y metadatos de las APIs.
+4.  **`parametros`**: Registro de los argumentos utilizados para la
+    consulta.
+
+### Columnas del Dataframe Estandarizado
 
 | Columna | Tipo | Descripción |
 |:---|:---|:---|
-| `scientificName` | `character` | Nombre científico completo de la especie. |
-| `occurrenceID` / `sourceRecordID` | `character` | Identificador persistente o identificador nativo del registro. |
-| `sourceURL` | `character` | Enlace al registro en el proveedor. |
-| `datasetKey`, `license`, `basisOfRecord` | `character` | Proveniencia y condiciones de reutilización cuando están disponibles. |
-| `decimalLatitude` | `numeric` | Latitud del registro (WGS84). |
-| `decimalLongitude` | `numeric` | Longitud del registro (WGS84). |
-| `eventDate` | `character` | Fecha en la que ocurrió el avistamiento. |
-| `taxonRank` | `character` | Rango taxonómico (especie, género, etc.). |
-| `kingdom` | `character` | Reino (Plantae, Animalia, etc.). |
-| `phylum` | `character` | Filo (solo GBIF). |
-| `class` | `character` | Clase (solo GBIF). |
-| `order` | `character` | Orden (solo GBIF). |
-| `family` | `character` | Familia (solo GBIF). |
-| `genus` | `character` | Género (solo GBIF). |
-| `species` | `character` | Nombre de especie específico (solo GBIF). |
-| `recordedBy` | `character` | Nombre del observador o colector del registro. |
-| `coordinateUncertaintyInMeters` | `numeric` | Margen de error o incertidumbre posicional en metros. |
-| `source` | `character` | Origen de los datos (`GBIF` o `iNaturalist`). |
-| `district` | `character` | Nombre del distrito en el que se ubica. |
+| `occurrenceID` | `character` | Identificador único del registro / URI oficial. |
+| `sourceRecordID` | `character` | Identificador nativo en la base de datos de origen. |
+| `sourceURL` | `character` | Enlace directo al registro en el repositorio web. |
+| `source` | `character` | Proveedor del dato (`GBIF` o `iNaturalist`). |
+| `scientificName` | `character` | Nombre científico completo del taxón. |
+| `decimalLatitude` | `numeric` | Latitud en coordenadas geográficas (WGS84). |
+| `decimalLongitude` | `numeric` | Longitud en coordenadas geográficas (WGS84). |
+| `coordinateUncertaintyInMeters` | `numeric` | Incertidumbre posicional de las coordenadas (en metros). |
+| `eventDate` | `character` | Fecha del registro u observación. |
+| `taxonRank` | `character` | Rango taxonómico asignado (especie, género, etc.). |
+| `kingdom` | `character` | Reino biológico (Plantae, Animalia, etc.). |
+| `phylum`, `class`, `order`, `family`, `genus`, `species` | `character` | Jerarquía taxonómica (disponible según la fuente). |
+| `recordedBy` | `character` | Observador, colector o usuario que registró la ocurrencia. |
+| `license`, `basisOfRecord` | `character` | Licencia de uso y base del registro. |
+| `district` | `character` | Nombre del distrito correspondiente. |
+| `province` | `character` | Nombre de la provincia correspondiente. |
+| `department` | `character` | Nombre del departamento correspondiente. |
 
-## Reproducibilidad y trazabilidad
+------------------------------------------------------------------------
 
-Cada corrida exportada crea nombres únicos basados en fecha/hora UTC y
-un manifiesto JSON en `data/processed/`. El manifiesto conserva
-parámetros, WKT y CRS del polígono, versiones de R/paquetes, conteos y
-rutas de los artefactos. Los registros incluyen identificadores y
-procedencia de la fuente cuando la API los entrega.
+## Trazabilidad y Reproducibilidad
 
-GBIF e iNaturalist son fuentes vivas: restaurar el entorno reproduce el
-método, no necesariamente el resultado de una fecha distinta. Para una
-reproducción exacta archive las respuestas originales de API junto con
-el manifiesto. El límite por API puede truncar la cobertura y no debe
-interpretarse como un inventario exhaustivo.
+Cada ejecución exporta artefactos con identificadores únicos basados en
+timestamp UTC (`YYYYMMDDTHHMMSSZ`):
 
-Use `limite_por_api = NULL` para solicitar la descarga completa
-paginada. GBIF la completará sólo hasta 100 000 resultados de búsqueda;
-por encima de ese umbral el flujo se detiene y exige una descarga masiva
-GBIF con DOI. iNaturalist se completa mediante `rinat` hasta 10 000
-observaciones; por encima de ese total el flujo se detiene y exige la
-exportación oficial o una extracción temporalmente particionada. El
-manifiesto informa el total reportado por cada API y si la descarga se
-completó.
-
-Ejecute las pruebas sin red con:
-
-``` r
-
-source("tests/run_tests.R")
-```
+- **`processed/ocurrencias_*.csv`**: Tabla consolidada en formato CSV.
+- **`processed/ocurrencias_*.geojson`**: Capa vectorial para
+  visualización en QGIS, ArcGIS u otras plataformas SIG.
+- **`processed/manifiesto_*.json`**: Manifiesto con la versión de R,
+  versiones de paquetes (`sf`, `rgbif`, `rinat`, etc.), polígono WKT,
+  CRS, parámetros y metadatos de la corrida.
+- **`results/mapa_*.png`**: Mapa estático generado a 300 DPI.

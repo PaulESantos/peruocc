@@ -1,6 +1,7 @@
-# Grafica el mapa de ocurrencias sobre el poligono del distrito
+# Grafica el mapa de ocurrencias sobre el poligono de la unidad administrativa
 
-Grafica el mapa de ocurrencias sobre el poligono del distrito
+Grafica el mapa de ocurrencias sobre el poligono de la unidad
+administrativa
 
 ## Usage
 
@@ -8,7 +9,7 @@ Grafica el mapa de ocurrencias sobre el poligono del distrito
 graficar_ocurrencias(
   resultado_lista,
   color_por = "source",
-  guardar_mapa = TRUE
+  guardar_mapa = FALSE
 )
 ```
 
@@ -16,7 +17,8 @@ graficar_ocurrencias(
 
 - resultado_lista:
 
-  Lista de resultados devuelta por buscar_especies_distrito().
+  Lista de resultados devuelta por buscar_especies_peru(),
+  buscar_especies_distrito() o buscar_especies_provincia().
 
 - color_por:
 
@@ -25,7 +27,8 @@ graficar_ocurrencias(
 
 - guardar_mapa:
 
-  Logico; si es TRUE guarda el grafico en data/ como PNG (def: TRUE).
+  Logico; si es TRUE guarda el grafico en results/ como PNG (def:
+  FALSE).
 
 ## Value
 

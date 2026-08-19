@@ -1,6 +1,7 @@
-# Busca ocurrencias de especies en GBIF dentro de un poligono de distrito
+# Busca ocurrencias de especies en GBIF dentro de un poligono de distrito o provincia
 
 Busca ocurrencias de especies en GBIF dentro de un poligono de distrito
+o provincia
 
 ## Usage
 
@@ -18,7 +19,7 @@ buscar_gbif_por_poligono(
 
 - poligono_sf:
 
-  Objeto sf que representa el distrito (EPSG:4326).
+  Objeto sf que representa la unidad espacial (EPSG:4326).
 
 - nombre_cientifico:
 
