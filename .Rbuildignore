@@ -1,0 +1,16 @@
+^\.Rproj\.user$
+^data$
+^results$
+^config$
+^scripts$
+^main\.R$
+^peruocc\.Rproj$
+^renv$
+^renv\.lock$
+^\.gitignore$
+^codecov\.yml$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
+^LICENSE\.md$

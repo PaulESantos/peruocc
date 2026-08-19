@@ -24,6 +24,8 @@ schema_ocurrencias <- function() {
     coordinateUncertaintyInMeters = numeric(),
     source = character(),
     district = character(),
+    province = character(),
+    department = character(),
     stringsAsFactors = FALSE
   )
 }
@@ -40,9 +42,9 @@ valor_columna <- function(datos, nombre, tipo = "character") {
   }
 }
 
-validar_entrada_busqueda <- function(distrito, grupo, limite) {
-  if (!is.character(distrito) || length(distrito) != 1L || !nzchar(trimws(distrito))) {
-    stop("'distrito' debe ser un texto no vacio.")
+validar_entrada_busqueda <- function(unidad, grupo = NULL, limite = NULL, nivel = "distrito") {
+  if (!is.character(unidad) || length(unidad) != 1L || !nzchar(trimws(unidad))) {
+    stop(sprintf("'%s' debe ser un texto no vacio.", nivel))
   }
 
   if (!is.null(grupo) && !tolower(grupo) %in% c("flora", "fauna")) {
@@ -63,7 +65,7 @@ validar_entrada_busqueda <- function(distrito, grupo, limite) {
 
 crear_directorios_proyecto <- function() {
   for (ruta in c("raw", "cache", "processed", "results")) {
-    dir.create(ruta_peruspecies(ruta), recursive = TRUE, showWarnings = FALSE)
+    dir.create(ruta_peruocc(ruta), recursive = TRUE, showWarnings = FALSE)
   }
 }
 
@@ -84,15 +86,15 @@ versiones_paquetes <- function(paquetes = c(
   stats::setNames(versiones, paquetes)
 }
 
-escribir_manifiesto <- function(run_id, parametros, distrito_sf, resumen, archivos, ruta) {
+escribir_manifiesto <- function(run_id, parametros, unidad_sf, resumen, archivos, ruta) {
   manifiesto <- list(
     schema_version = "1.0",
     run_id = run_id,
     executed_at_utc = format(Sys.time(), tz = "UTC", usetz = TRUE),
     parameters = parametros,
     spatial = list(
-      crs = sf::st_crs(distrito_sf)$input,
-      polygon_wkt = sf::st_as_text(sf::st_geometry(distrito_sf)[[1]])
+      crs = sf::st_crs(unidad_sf)$input,
+      polygon_wkt = sf::st_as_text(sf::st_geometry(unidad_sf)[[1]])
     ),
     result_summary = resumen,
     files = archivos,

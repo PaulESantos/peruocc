@@ -1,158 +1,255 @@
-# Consulta de Ocurrencias de Especies en Distritos del Perú (GBIF & iNaturalist)
+# Herramienta de Recuperación y Consolidación de Ocurrencias de Biodiversidad en Unidades Administrativas del Perú (Distritos y Provincias)
 
-Este es un proyecto en R diseñado para buscar, descargar, filtrar y mapear registros de ocurrencias de biodiversidad (flora y fauna) en distritos del Perú. Utiliza la geometría de los límites distritales oficiales como argumento espacial de búsqueda para consultar las bases de datos de **GBIF** (Global Biodiversity Information Facility) y **iNaturalist**.
+`peruocc` es un paquete y conjunto de herramientas en R diseñado para buscar, descargar, filtrar, validar y consolidar registros de ocurrencias de biodiversidad (**flora y fauna**) en el territorio peruano, utilizando como marco espacial las delimitaciones administrativas oficiales a escala de **distritos** y **provincias**.
 
-La delimitación geográfica de los distritos se obtiene dinámicamente utilizando el paquete **`geoperu`** (límites oficiales provistos por el INEI).
+El paquete integra y estandariza la información disponible de dos de los mayores repositorios globales de biodiversidad: **GBIF** (*Global Biodiversity Information Facility*) e **iNaturalist**, generando un objeto unificado con atributos estandarizados y trazabilidad completa dentro del área de interés.
+
+---
 
 ## Características Principales
 
-1. **Búsqueda Espacial por Distritos**: Obtiene las divisiones distritales a partir de descargas dinámicas a nivel departamental vía `geoperu::get_geo_peru()`.
-2. **Caché Local Eficiente (`.rds`)**:
-   - `geoperu` descarga archivos GPKG desde internet. Para optimizar el rendimiento y ahorrar ancho de banda, el script implementa un **mecanismo de caché por departamento** en la carpeta `data/` (ej. `data/distritos_lima.rds`).
-   - La primera consulta de un departamento tarda unos segundos debido a la descarga; las siguientes consultas en el mismo departamento se cargan instantáneamente desde el caché local en disco.
-3. **Normalización de Nombres**: Resuelve nombres de distritos de forma insensible a mayúsculas, minúsculas, tildes e incluye una función de sugerencias de autocompletado en caso de errores tipográficos.
-4. **Mapeo Avanzado de GBIF**: Convierte los polígonos a formato WKT (Well-Known Text) garantizando el sentido antihorario (CCW) requerido por GBIF.
-5. **Simplificación Progresiva y Bounding Box**: Si el polígono del distrito es muy complejo (>1500 caracteres), lo simplifica de forma métrica utilizando proyecciones UTM. Si sigue siendo excesivamente grande, utiliza su caja delimitadora (Bounding Box) como fallback para la API.
-6. **Filtrado Espacial Riguroso en R**: Tanto para GBIF como para iNaturalist, el script realiza una intersección espacial exacta (`sf::st_intersects`) de los puntos recuperados con el polígono detallado original del distrito, descartando observaciones fuera de los límites.
-7. **Visualización y Exportación**: Genera mapas de alta resolución (300 DPI) con `ggplot2` y exporta los resultados tabulares unificados a archivos CSV y capas espaciales GeoJSON.
+1. **Marco Administrativo Oficial (Distritos y Provincias)**:
+   - Recupera dinámicamente geometrías oficiales provistas por el INEI a través del paquete **`geoperu`**.
+   - Admite consultas a nivel de **distrito** y consolidación disuelta a nivel de **provincia**.
+2. **Caché Local Inteligente (`.rds`)**:
+   - Almacena en disco los límites departamentales descargados, reduciendo drásticamente los tiempos de respuesta en consultas recurrentes.
+3. **Flujo Espacial y Topológico Riguroso**:
+   - Corrige automáticamente la orientación geométrica a sentido antihorario (**CCW**) según los estándares OGC/GBIF.
+   - Aplica simplificación métrica adaptativa en proyecciones UTM para polígonos complejos en consultas de API.
+   - Realiza una **intersección espacial exacta (`sf::st_intersects`)** en R con el polígono detallado original, garantizando que sólo se conserven los registros estrictamente dentro de los límites administrativos.
+4. **Consolidación y Estandarización de Datos**:
+   - Homogeneiza atributos de GBIF e iNaturalist hacia un esquema estándar alineado con **Darwin Core**.
+   - Retorna una estructura consolidada que contiene el polígono espacial (`sf`), el conjunto de ocurrencias tabulares (`data.frame`), el resumen analítico y los parámetros de ejecución.
+5. **Exportación y Trazabilidad**:
+   - Exporta automáticamente a formatos **CSV**, capas espaciales **GeoJSON**, mapas de alta resolución (**PNG**) y manifiestos de reproducibilidad (**JSON**).
+
+---
+
+## Flujo de Integración de Datos
+
+```text
+               ┌──────────────────────────────┐
+               │    Unidad Administrativa     │
+               │   (Distrito o Provincia)     │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │  Geometría Oficial geoperu   │
+               │   + Validación / Caché RDS   │
+               └──────────────┬───────────────┘
+                              │
+             ┌────────────────┴────────────────┐
+             │                                 │
+  ┌──────────▼──────────┐           ┌──────────▼──────────┐
+  │  Consulta a GBIF    │           │ Consulta iNaturalist│
+  │  (WKT / Taxonomía)  │           │   (Bounding Box)    │
+  └──────────┬──────────┘           └──────────┬──────────┘
+             │                                 │
+             └────────────────┬────────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Filtrado Espacial en R       │
+               │ (sf::st_intersects exacto)  │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Estandarización Darwin Core │
+               │   + Deduplicación interna   │
+               └──────────────┬───────────────┘
+                              │
+               ┌──────────────▼──────────────┐
+               │ Objeto Consolidado Final     │
+               │ (sf + data.frame + Resumen) │
+               └─────────────────────────────┘
+```
+
+1. **Obtención y Preparación del Polígono**: Se consulta `geoperu` para descargar o cargar desde el caché local el departamento correspondiente. Si la consulta es distrital, se extrae el distrito específico; si es provincial, se disuelven espacialmente todos sus distritos componentes (`sf::st_union`).
+2. **Consulta a Repositorios Vivos**:
+   - **GBIF**: Se envía el polígono en formato WKT (simplificado si supera límites de caracteres) junto con los filtros taxonómicos (Reino, taxón específico o grupo).
+   - **iNaturalist**: Se utiliza la caja delimitadora (*Bounding Box*) del polígono junto a los criterios de búsqueda (flora/fauna, taxón o texto libre).
+3. **Validación Espacial en Memoria**: Ambos conjuntos de puntos recuperados se transforman a objetos espaciales `sf` (EPSG:4326) y se intersecan topológicamente con el polígono detallado original, eliminando cualquier falso positivo fuera del perímetro.
+4. **Estandarización**: Se mapean los campos nativos de ambas fuentes a una estructura de columnas común, preservando identificadores de origen, coordenadas, taxonomía, fecha y jerarquía administrativa.
 
 ---
 
 ## Estructura del Proyecto
 
 ```text
-D:\peru_species_project\
+D:\peruocc\
 │
-├── peru_species_project.Rproj     # Archivo de configuración del proyecto en RStudio
-├── README.md                      # Esta guía en español
-├── main.R                         # Script principal de prueba y casos de uso prácticos
+├── DESCRIPTION                    # Metadatos del paquete peruocc y dependencias
+├── NAMESPACE                      # Funciones públicas exportadas
+├── README.md                      # Documentación principal del paquete
 │
-├── R/                             # Módulos de funciones específicas
-│   ├── setup.R                    # Instalador y verificador de la librería 'geoperu' y otras dependencias
-│   ├── spatial_utils.R            # Funciones espaciales (descarga de geoperu, caché, CCW, simplificación)
+├── R/                             # Código fuente modular
+│   ├── config.R                   # Gestión de directorios y configuración de artefactos
+│   ├── globals.R                  # Declaración de variables globales
+│   ├── project_utils.R            # Esquema de ocurrencias, validaciones y manifiesto
+│   ├── spatial_utils.R            # Descarga de geoperu, caché, CCW y simplificación
 │   ├── query_gbif.R               # Consultas y normalización para la API de GBIF
-│   ├── query_inat.R               # Consultas y filtrado espacial para la API de iNaturalist
-│   ├── query_combined.R           # Integración y guardado de resultados consolidado
-│   └── visualize.R                # Generador de mapas con ggplot2 y sf
+│   ├── query_inat.R               # Consultas y filtrado espacial para iNaturalist
+│   ├── query_combined.R           # Integración unificada (distrito, provincia y general)
+│   ├── visualize.R                # Generador de mapas cartográficos con ggplot2
+│   └── setup.R                    # Verificación y configuración del entorno
 │
-├── data/                          # raw/, cache/ y processed/; artefactos no versionados por defecto
-├── results/                       # Figuras generadas
-├── config/default.R               # Configuración versionada
-├── tests/run_tests.R              # Pruebas sin acceso a red
-└── scripts/lock_environment.R     # Generación explícita de renv.lock
+├── inst/examples/                 # Scripts de ejemplo ejecutables
+├── tests/testthat/                # Pruebas unitarias automatizadas
+└── scripts/lock_environment.R     # Script de bloqueo de entorno renv
 ```
 
 ---
 
-## Instalación y Configuración
+## Instalación y Carga
 
-### Requisitos Previos
-1. Tener instalado R en el sistema (versión 4.0 o superior recomendada).
-2. RStudio para ejecutar el proyecto cómodamente.
-
-### Entorno reproducible
-
-Las dependencias no se instalan automáticamente al ejecutar análisis. En un entorno validado, cree el bloqueo de versiones una vez:
+### 1. Desde GitHub:
 
 ```r
-source("scripts/lock_environment.R")
+# Instalar paquete directamente desde el repositorio en GitHub
+# install.packages("remotes")
+remotes::install_github("PaulESantos/peruocc")
 ```
 
-Después restaure el entorno antes de ejecutar:
+### 2. Desde el código fuente local:
 
 ```r
-install.packages("renv") # sólo si aún no está disponible
-renv::restore()
-source("main.R")
+# Instalar paquete localmente
+devtools::install()
+
+# O cargar durante el desarrollo
+devtools::load_all()
 ```
 
-`R/setup.R` únicamente verifica dependencias; la instalación manual exige `verificar_y_configurar_entorno(instalar = TRUE)`.
+### 3. Configuración de directorio de trabajo:
+
+```r
+library(peruocc)
+
+# Configurar directorio donde se guardarán caché, resultados y manifiestos
+peruocc_data_dir("peruocc-output")
+```
 
 ---
 
-## Guía de Uso Rápido
+## Guía de Uso y Escalabilidad Funcional
 
-Para ejecutar los casos de prueba por defecto, abra R o RStudio en este directorio y ejecute:
+El paquete proporciona interfaces tanto específicas como unificadas para consultar ocurrencias en diferentes niveles administrativos:
 
-```R
-source("main.R")
-```
+### 1. Consulta Unificada (`buscar_especies_peru`)
 
-Esto generará tablas de ocurrencias e imágenes de mapas dentro de la carpeta `data/` para:
-1. Miraflores (Lima) - Flora.
-2. Tambopata (Madre de Dios) - Fauna.
-3. Tarma (Junín) - Cantua buxifolia.
+Permite seleccionar el nivel administrativo mediante el argumento `nivel = c("distrito", "provincia")`:
 
-### Uso de las Funciones en R
-
-#### 1. Buscar Ocurrencias en un Distrito
-La función principal es `buscar_especies_distrito()` definida en `R/query_combined.R`:
-
-```R
-source("R/setup.R") # Cargar dependencias
-source("R/spatial_utils.R")
-source("R/query_gbif.R")
-source("R/query_inat.R")
-source("R/query_combined.R")
-source("R/visualize.R")
-
-# Buscar flora en el distrito de Miraflores, Lima (se descarga y almacena el caché de Lima)
-resultado <- buscar_especies_distrito(
-  distrito = "Miraflores",
+```r
+# Consulta general a nivel distrital
+res_distrito <- buscar_especies_peru(
+  nombre = "Miraflores",
+  nivel = "distrito",
   departamento = "Lima",
   provincia = "Lima",
-  grupo = "flora",            # Filtros disponibles: "flora", "fauna" o NULL (todo)
-  limite_por_api = 100,       # Máximo de registros por cada origen; NULL intenta descarga completa
-  guardar_resultados = TRUE   # Exporta un archivo CSV y GeoJSON automáticamente
+  grupo = "flora",            # "flora", "fauna" o NULL
+  limite_por_api = 200,
+  guardar_resultados = TRUE
+)
+
+# Consulta general a nivel provincial
+res_provincia <- buscar_especies_peru(
+  nombre = "Cusco",
+  nivel = "provincia",
+  departamento = "Cusco",
+  grupo = "fauna",
+  limite_por_api = 200,
+  guardar_resultados = TRUE
 )
 ```
 
-#### 2. Generar el Mapa
-Use `graficar_ocurrencias()` del módulo `R/visualize.R` para crear el mapa y guardarlo como PNG:
+### 2. Consultas Específicas por Nivel
 
-```R
-# Mapear coloreando por la fuente del registro (GBIF vs iNaturalist)
-mapa <- graficar_ocurrencias(resultado, color_por = "source", guardar_mapa = TRUE)
+#### A. A nivel de Distrito (`buscar_especies_distrito`)
+
+```r
+resultado_dist <- buscar_especies_distrito(
+  distrito = "Tambopata",
+  departamento = "Madre de Dios",
+  provincia = "Tambopata",
+  nombre_cientifico = "Panthera onca", # Opcional: filtro por especie
+  limite_por_api = 100,
+  guardar_resultados = TRUE
+)
+```
+
+#### B. A nivel de Provincia (`buscar_especies_provincia`)
+
+```r
+resultado_prov <- buscar_especies_provincia(
+  provincia = "Urubamba",
+  departamento = "Cusco",
+  grupo = "flora",
+  limite_por_api = 300,
+  guardar_resultados = TRUE
+)
+```
+
+### 3. Visualización Cartográfica (`graficar_ocurrencias`)
+
+Genera mapas temáticos con `ggplot2` coloreando según la base de datos de origen (`source`) o reino taxonómico (`kingdom`):
+
+```r
+# Mapa clasificado por fuente de datos (GBIF vs iNaturalist)
+mapa_fuente <- graficar_ocurrencias(resultado_prov, color_por = "source", guardar_mapa = TRUE)
+
+# Mapa clasificado por Reino (Plantae vs Animalia)
+mapa_reino <- graficar_ocurrencias(resultado_prov, color_por = "kingdom", guardar_mapa = TRUE)
 ```
 
 ---
 
-## Detalle Técnico de los Datos Obtenidos
+## Estructura del Objeto Consolidado
 
-El dataframe unificado final tiene la siguiente estructura de columnas estandarizada:
+Las funciones de búsqueda devuelven una lista estructurada con los siguientes elementos:
+
+1. **`unidad_sf`**: Objeto espacial `sf` con la geometría oficial y válida del distrito o provincia consultada.
+2. **`ocurrencias`**: Dataframe estandarizado con los registros consolidados y deduplicados.
+3. **`resumen`**: Lista con estadísticas de cobertura, registros por fuente, conteos totales y metadatos de las APIs.
+4. **`parametros`**: Registro de los argumentos utilizados para la consulta.
+
+### Columnas del Dataframe Estandarizado
 
 | Columna | Tipo | Descripción |
 | :--- | :--- | :--- |
-| `scientificName` | `character` | Nombre científico completo de la especie. |
-| `occurrenceID` / `sourceRecordID` | `character` | Identificador persistente o identificador nativo del registro. |
-| `sourceURL` | `character` | Enlace al registro en el proveedor. |
-| `datasetKey`, `license`, `basisOfRecord` | `character` | Proveniencia y condiciones de reutilización cuando están disponibles. |
-| `decimalLatitude` | `numeric` | Latitud del registro (WGS84). |
-| `decimalLongitude` | `numeric` | Longitud del registro (WGS84). |
-| `eventDate` | `character` | Fecha en la que ocurrió el avistamiento. |
-| `taxonRank` | `character` | Rango taxonómico (especie, género, etc.). |
-| `kingdom` | `character` | Reino (Plantae, Animalia, etc.). |
-| `phylum` | `character` | Filo (solo GBIF). |
-| `class` | `character` | Clase (solo GBIF). |
-| `order` | `character` | Orden (solo GBIF). |
-| `family` | `character` | Familia (solo GBIF). |
-| `genus` | `character` | Género (solo GBIF). |
-| `species` | `character` | Nombre de especie específico (solo GBIF). |
-| `recordedBy` | `character` | Nombre del observador o colector del registro. |
-| `coordinateUncertaintyInMeters` | `numeric` | Margen de error o incertidumbre posicional en metros. |
-| `source` | `character` | Origen de los datos (`GBIF` o `iNaturalist`). |
-| `district` | `character` | Nombre del distrito en el que se ubica. |
+| `occurrenceID` | `character` | Identificador único del registro / URI oficial. |
+| `sourceRecordID` | `character` | Identificador nativo en la base de datos de origen. |
+| `sourceURL` | `character` | Enlace directo al registro en el repositorio web. |
+| `source` | `character` | Proveedor del dato (`GBIF` o `iNaturalist`). |
+| `scientificName` | `character` | Nombre científico completo del taxón. |
+| `decimalLatitude` | `numeric` | Latitud en coordenadas geográficas (WGS84). |
+| `decimalLongitude` | `numeric` | Longitud en coordenadas geográficas (WGS84). |
+| `coordinateUncertaintyInMeters` | `numeric` | Incertidumbre posicional de las coordenadas (en metros). |
+| `eventDate` | `character` | Fecha del registro u observación. |
+| `taxonRank` | `character` | Rango taxonómico asignado (especie, género, etc.). |
+| `kingdom` | `character` | Reino biológico (Plantae, Animalia, etc.). |
+| `phylum`, `class`, `order`, `family`, `genus`, `species` | `character` | Jerarquía taxonómica (disponible según la fuente). |
+| `recordedBy` | `character` | Observador, colector o usuario que registró la ocurrencia. |
+| `license`, `basisOfRecord` | `character` | Licencia de uso y base del registro. |
+| `district` | `character` | Nombre del distrito correspondiente. |
+| `province` | `character` | Nombre de la provincia correspondiente. |
+| `department` | `character` | Nombre del departamento correspondiente. |
 
-## Reproducibilidad y trazabilidad
+---
 
-Cada corrida exportada crea nombres únicos basados en fecha/hora UTC y un manifiesto JSON en `data/processed/`. El manifiesto conserva parámetros, WKT y CRS del polígono, versiones de R/paquetes, conteos y rutas de los artefactos. Los registros incluyen identificadores y procedencia de la fuente cuando la API los entrega.
+## Trazabilidad y Reproducibilidad
 
-GBIF e iNaturalist son fuentes vivas: restaurar el entorno reproduce el método, no necesariamente el resultado de una fecha distinta. Para una reproducción exacta archive las respuestas originales de API junto con el manifiesto. El límite por API puede truncar la cobertura y no debe interpretarse como un inventario exhaustivo.
+Cada ejecución exporta artefactos con identificadores únicos basados en timestamp UTC (`YYYYMMDDTHHMMSSZ`):
 
-Use `limite_por_api = NULL` para solicitar la descarga completa paginada. GBIF la completará sólo hasta 100 000 resultados de búsqueda; por encima de ese umbral el flujo se detiene y exige una descarga masiva GBIF con DOI. iNaturalist se completa mediante `rinat` hasta 10 000 observaciones; por encima de ese total el flujo se detiene y exige la exportación oficial o una extracción temporalmente particionada. El manifiesto informa el total reportado por cada API y si la descarga se completó.
+- **`processed/ocurrencias_*.csv`**: Tabla consolidada en formato CSV.
+- **`processed/ocurrencias_*.geojson`**: Capa vectorial para visualización en QGIS, ArcGIS u otras plataformas SIG.
+- **`processed/manifiesto_*.json`**: Manifiesto con la versión de R, versiones de paquetes (`sf`, `rgbif`, `rinat`, etc.), polígono WKT, CRS, parámetros y metadatos de la corrida.
+- **`results/mapa_*.png`**: Mapa estático generado a 300 DPI.
 
-Ejecute las pruebas sin red con:
+---
+
+## Ejecución de Pruebas Automatizadas
+
+Para validar la integridad de las funciones sin requerir conexión a internet:
 
 ```r
-source("tests/run_tests.R")
+devtools::test()
 ```

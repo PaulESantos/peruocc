@@ -2,7 +2,7 @@
 % Please edit documentation in R/query_gbif.R
 \name{buscar_gbif_por_poligono}
 \alias{buscar_gbif_por_poligono}
-\title{Busca ocurrencias de especies en GBIF dentro de un poligono de distrito}
+\title{Busca ocurrencias de especies en GBIF dentro de un poligono de distrito o provincia}
 \usage{
 buscar_gbif_por_poligono(
   poligono_sf,
@@ -13,7 +13,7 @@ buscar_gbif_por_poligono(
 )
 }
 \arguments{
-\item{poligono_sf}{Objeto sf que representa el distrito (EPSG:4326).}
+\item{poligono_sf}{Objeto sf que representa la unidad espacial (EPSG:4326).}
 
 \item{nombre_cientifico}{Nombre de la especie o grupo taxonomico (opcional).}
 
@@ -27,5 +27,5 @@ buscar_gbif_por_poligono(
 Un dataframe estandarizado con los registros encontrados.
 }
 \description{
-Busca ocurrencias de especies en GBIF dentro de un poligono de distrito
+Busca ocurrencias de especies en GBIF dentro de un poligono de distrito o provincia
 }

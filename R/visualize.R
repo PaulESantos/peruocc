@@ -1,20 +1,21 @@
 # visualize.R
 # Funciones para graficar los resultados espaciales del proyecto.
 
-#' Grafica el mapa de ocurrencias sobre el poligono del distrito
+#' Grafica el mapa de ocurrencias sobre el poligono de la unidad administrativa
 #'
-#' @param resultado_lista Lista de resultados devuelta por buscar_especies_distrito().
+#' @param resultado_lista Lista de resultados devuelta por buscar_especies_peru(), buscar_especies_distrito() o buscar_especies_provincia().
 #' @param color_por Columna para clasificar los colores ("source" por defecto, o "kingdom").
-#' @param guardar_mapa Logico; si es TRUE guarda el grafico en data/ como PNG (def: TRUE).
+#' @param guardar_mapa Logico; si es TRUE guarda el grafico en results/ como PNG (def: TRUE).
 #' @return El objeto de grafico ggplot.
 #' @export
 graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_mapa = TRUE) {
-  distrito_sf <- resultado_lista$distrito_sf
+  unidad_sf <- if (!is.null(resultado_lista$unidad_sf)) resultado_lista$unidad_sf else resultado_lista$distrito_sf
   ocurrencias <- resultado_lista$ocurrencias
   resumen <- resultado_lista$resumen
   
-  nombre_distrito <- resumen$distrito
-  nombre_dep <- resumen$departamento
+  nombre_unidad <- if (!is.null(resumen$unidad)) resumen$unidad else if (!is.null(resumen$distrito) && !is.na(resumen$distrito)) resumen$distrito else resumen$provincia
+  nivel_unidad <- if (!is.null(resumen$nivel)) tools::toTitleCase(resumen$nivel) else "Distrito"
+  nombre_dep <- if (!is.null(resumen$departamento) && !is.na(resumen$departamento)) resumen$departamento else "No especificado"
   
   # Paleta de colores esteticos
   colores_origen <- c("GBIF" = "#1f78b4", "iNaturalist" = "#33a02c")
@@ -22,16 +23,14 @@ graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_
   
   # Crear grafico basico
   g <- ggplot2::ggplot() +
-    # Capa del poligono del distrito
-    ggplot2::geom_sf(data = distrito_sf, fill = "#f9f6f0", color = "#3e2723", linewidth = 0.8)
+    # Capa del poligono de la unidad
+    ggplot2::geom_sf(data = unidad_sf, fill = "#f9f6f0", color = "#3e2723", linewidth = 0.8)
   
   # Si hay ocurrencias, superponer los puntos
   if (!is.null(ocurrencias) && nrow(ocurrencias) > 0) {
-    # Eliminar registros con coordenadas NA
     ocurrencias_clean <- dplyr::filter(ocurrencias, !is.na(decimalLongitude) & !is.na(decimalLatitude))
     
     if (nrow(ocurrencias_clean) > 0) {
-      # Convertir a objeto espacial sf
       ocurrencias_sf <- sf::st_as_sf(
         ocurrencias_clean, 
         coords = c("decimalLongitude", "decimalLatitude"), 
@@ -39,16 +38,13 @@ graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_
         remove = FALSE
       )
       
-      # Si clasificamos por reino, rellenar NAs
       if (color_por == "kingdom") {
         ocurrencias_sf <- dplyr::mutate(ocurrencias_sf, kingdom = ifelse(is.na(kingdom), "Otros / Desconocido", kingdom))
       }
       
-      # Anadir puntos de ocurrencias al grafico
       g <- g + 
         ggplot2::geom_sf(data = ocurrencias_sf, ggplot2::aes(color = .data[[color_por]]), size = 2.2, alpha = 0.75)
       
-      # Asignar escalas de colores apropiadas
       if (color_por == "source") {
         g <- g + 
           ggplot2::scale_color_manual(values = colores_origen, name = "Base de Datos")
@@ -66,7 +62,7 @@ graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_
   # Formatear el diseno y leyendas
   g <- g +
     ggplot2::labs(
-      title = sprintf("Ocurrencias de Biodiversidad: Distrito de %s", nombre_distrito),
+      title = sprintf("Ocurrencias de Biodiversidad: %s de %s", nivel_unidad, nombre_unidad),
       subtitle = sprintf("Departamento: %s | Total: %d registros (GBIF: %d, iNaturalist: %d)", 
                          nombre_dep, resumen$total_registros, resumen$registros_gbif, resumen$registros_inat),
       x = "Longitud",
@@ -90,10 +86,10 @@ graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_
   
   # Guardar el grafico si esta solicitado y hay datos
   if (guardar_mapa) {
-    dir.create(ruta_peruspecies("results"), recursive = TRUE, showWarnings = FALSE)
+    dir.create(ruta_peruocc("results"), recursive = TRUE, showWarnings = FALSE)
     
-    dist_clean <- gsub(" ", "_", tolower(normalizar_texto(nombre_distrito)))
-    nombre_img <- ruta_peruspecies("results", sprintf("mapa_%s_%s_%s.png", dist_clean, color_por, format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")))
+    unidad_clean <- gsub(" ", "_", tolower(normalizar_texto(nombre_unidad)))
+    nombre_img <- ruta_peruocc("results", sprintf("mapa_%s_%s_%s.png", unidad_clean, color_por, format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")))
     
     tryCatch({
       ggplot2::ggsave(nombre_img, plot = g, width = 8, height = 7, dpi = 300, bg = "white")

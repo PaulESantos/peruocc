@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualize.R
 \name{graficar_ocurrencias}
 \alias{graficar_ocurrencias}
-\title{Grafica el mapa de ocurrencias sobre el poligono del distrito}
+\title{Grafica el mapa de ocurrencias sobre el poligono de la unidad administrativa}
 \usage{
 graficar_ocurrencias(
   resultado_lista,
@@ -11,15 +11,15 @@ graficar_ocurrencias(
 )
 }
 \arguments{
-\item{resultado_lista}{Lista de resultados devuelta por buscar_especies_distrito().}
+\item{resultado_lista}{Lista de resultados devuelta por buscar_especies_peru(), buscar_especies_distrito() o buscar_especies_provincia().}
 
 \item{color_por}{Columna para clasificar los colores ("source" por defecto, o "kingdom").}
 
-\item{guardar_mapa}{Logico; si es TRUE guarda el grafico en data/ como PNG (def: TRUE).}
+\item{guardar_mapa}{Logico; si es TRUE guarda el grafico en results/ como PNG (def: TRUE).}
 }
 \value{
 El objeto de grafico ggplot.
 }
 \description{
-Grafica el mapa de ocurrencias sobre el poligono del distrito
+Grafica el mapa de ocurrencias sobre el poligono de la unidad administrativa
 }

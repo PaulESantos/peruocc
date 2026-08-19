@@ -1,9 +1,9 @@
 # query_inat.R
 # Funciones para consultar ocurrencias de especies en la base de datos de iNaturalist con filtro espacial.
 
-#' Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito
+#' Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito o provincia
 #'
-#' @param poligono_sf Objeto sf que representa el distrito (EPSG:4326).
+#' @param poligono_sf Objeto sf que representa la unidad espacial (EPSG:4326).
 #' @param query Texto libre de busqueda (opcional).
 #' @param taxon_name Nombre de la especie o grupo taxonomico (opcional).
 #' @param grupo Grupo taxonomico: "flora", "fauna" o NULL.
@@ -19,20 +19,19 @@ buscar_inat_por_poligono <- function(poligono_sf,
   
   cat("[iNaturalist] Iniciando busqueda de ocurrencias...\n")
   
-  # Obtener nombre del distrito para registrar en el dataset
-  nombre_distrito <- ifelse(!is.null(poligono_sf$distrito), poligono_sf$distrito[1], "Desconocido")
+  # Obtener nombres administrativos para registrar en el dataset
+  nombre_distrito <- if (!is.null(poligono_sf$distrito) && !is.na(poligono_sf$distrito[1])) poligono_sf$distrito[1] else NA_character_
+  nombre_provincia <- if (!is.null(poligono_sf$provincia) && !is.na(poligono_sf$provincia[1])) poligono_sf$provincia[1] else NA_character_
+  nombre_departamento <- if (!is.null(poligono_sf$departamento) && !is.na(poligono_sf$departamento[1])) poligono_sf$departamento[1] else NA_character_
+  etiqueta_unidad <- if (!is.na(nombre_distrito)) nombre_distrito else if (!is.na(nombre_provincia)) nombre_provincia else "Unidad seleccionada"
   
   # 1. Obtener el Bounding Box del poligono
   bbox <- sf::st_bbox(poligono_sf)
-  
-  # El formato para rinat es: c(min_lat, min_lon, max_lat, max_lon)
-  # que corresponde a: c(ymin, xmin, ymax, xmax)
   bbox_vector <- c(bbox["ymin"], bbox["xmin"], bbox["ymax"], bbox["xmax"])
   
   # 2. Configurar filtros de taxon y grupo
   taxon_query <- taxon_name
   
-  # Si el usuario especifica grupo pero no taxon_name, usamos los reinos de iNaturalist
   if (is.null(taxon_query) && !is.null(grupo)) {
     grupo_clean <- tolower(trimws(grupo))
     if (grupo_clean == "flora") {
@@ -46,11 +45,11 @@ buscar_inat_por_poligono <- function(poligono_sf,
   
   # 3. Consultar a iNaturalist usando el Bounding Box
   limite_etiqueta <- if (is.null(limite)) "completo" else as.character(limite)
-  cat(sprintf("[iNaturalist] Consultando registros dentro de la caja delimitadora de '%s' (limite: %s)...\n", nombre_distrito, limite_etiqueta))
+  cat(sprintf("[iNaturalist] Consultando registros dentro de la caja delimitadora de '%s' (limite: %s)...\n", etiqueta_unidad, limite_etiqueta))
   
   parametros <- list(
     bounds = bbox_vector,
-    geo = TRUE # Solo registros georreferenciados
+    geo = TRUE
   )
   
   if (!is.null(query) && query != "") {
@@ -63,9 +62,6 @@ buscar_inat_por_poligono <- function(poligono_sf,
     parametros$quality <- calidad
   }
   
-  # rinat pagina internamente hasta 10 000 registros. Para descarga completa
-  # verificamos primero el total del servidor y fallamos explicitamente si el
-  # endpoint no puede entregarlo completo.
   total_api <- NA_integer_
   if (is.null(limite)) {
     metadatos <- tryCatch(do.call(rinat::get_inat_obs, c(parametros, list(maxresults = 1, meta = TRUE))), error = function(e) NULL)
@@ -76,7 +72,7 @@ buscar_inat_por_poligono <- function(poligono_sf,
   } else {
     parametros$maxresults <- limite
   }
-  # Llamada paginada a la API.
+  
   obs_raw <- tryCatch({
     do.call(rinat::get_inat_obs, parametros)
   }, error = function(e) {
@@ -84,7 +80,6 @@ buscar_inat_por_poligono <- function(poligono_sf,
     return(NULL)
   })
   
-  # Dataframe vacio de retorno estandarizado
   df_vacio <- schema_ocurrencias()
   
   if (is.null(obs_raw) || nrow(obs_raw) == 0) {
@@ -96,47 +91,28 @@ buscar_inat_por_poligono <- function(poligono_sf,
   
   cat(sprintf("[iNaturalist] Se descargaron %d registros en la caja delimitadora. Aplicando filtro espacial...\n", nrow(obs_raw)))
   
-  # 4. Filtro Espacial (Interseccion con el poligono exacto del distrito)
-  # Convertir el dataframe de iNaturalist a un objeto sf espacial (EPSG:4326)
-  obs_sf <- tryCatch({
-    sf::st_as_sf(obs_raw, coords = c("longitude", "latitude"), crs = 4326, remove = FALSE)
-  }, error = function(e) {
-    cat("[iNaturalist] Error al convertir coordenadas a objeto espacial: ", e$message, "\n")
-    return(NULL)
-  })
-  
-  if (is.null(obs_sf)) {
-    return(df_vacio)
-  }
-  
-  # Intersectar espacialmente con el poligono exacto del distrito
-  # Asegurar geometria valida
-  poligono_sf <- sf::st_make_valid(poligono_sf)
+  # 4. Filtro Espacial (Interseccion con el poligono exacto)
+  obs_sf <- sf::st_as_sf(obs_raw, coords = c("longitude", "latitude"), crs = 4326, remove = FALSE)
+  poligono_exacto <- sf::st_make_valid(poligono_sf)
   obs_sf <- sf::st_make_valid(obs_sf)
   
-  interseccion <- sf::st_intersects(obs_sf, poligono_sf, sparse = FALSE)
-  
-  # Filtrar los registros que estan dentro
+  interseccion <- sf::st_intersects(obs_sf, poligono_exacto, sparse = FALSE)
   obs_dentro <- obs_sf[interseccion[, 1], ]
   
   if (nrow(obs_dentro) == 0) {
-    cat("[iNaturalist] Ninguno de los registros se encuentra estrictamente dentro del poligono del distrito.\n")
+    cat("[iNaturalist] Ninguno de los registros se encuentra estrictamente dentro del poligono seleccionado.\n")
     return(df_vacio)
   }
   
-  # Descartar la columna de geometria para volver a dataframe plano
   datos_raw <- sf::st_drop_geometry(obs_dentro)
   
   # 5. Estandarizar columnas de salida
   datos_procesados <- schema_ocurrencias()[rep(1, nrow(datos_raw)), ]
   
-  # Mapeo de columnas
-  # iNaturalist a esquema estandar
   datos_procesados$scientificName <- if ("scientific_name" %in% colnames(datos_raw)) datos_raw$scientific_name else as.character(NA)
   datos_procesados$decimalLatitude <- if ("latitude" %in% colnames(datos_raw)) as.numeric(datos_raw$latitude) else as.numeric(NA)
   datos_procesados$decimalLongitude <- if ("longitude" %in% colnames(datos_raw)) as.numeric(datos_raw$longitude) else as.numeric(NA)
   
-  # Fecha: puede venir en observed_on o datetime
   if ("observed_on" %in% colnames(datos_raw)) {
     datos_procesados$eventDate <- as.character(datos_raw$observed_on)
   } else if ("datetime" %in% colnames(datos_raw)) {
@@ -147,12 +123,10 @@ buscar_inat_por_poligono <- function(poligono_sf,
   
   datos_procesados$taxonRank <- if ("rank" %in% colnames(datos_raw)) datos_raw$rank else as.character(NA)
   
-  # Rellenar reinos si usamos filtros implicitos
   if (!is.null(grupo)) {
     grupo_clean <- tolower(trimws(grupo))
     datos_procesados$kingdom <- ifelse(grupo_clean == "flora", "Plantae", ifelse(grupo_clean == "fauna", "Animalia", as.character(NA)))
   } else {
-    # iNaturalist no devuelve reinos directamente en get_inat_obs, pero podemos inferirlo si se busco por Plantae/Animalia
     if (!is.null(taxon_query)) {
       if (taxon_query == "Plantae") datos_procesados$kingdom <- "Plantae"
       else if (taxon_query == "Animalia") datos_procesados$kingdom <- "Animalia"
@@ -162,7 +136,6 @@ buscar_inat_por_poligono <- function(poligono_sf,
     }
   }
   
-  # Rellenar campos de taxonomia detallada con NA ya que iNaturalist no los devuelve en este endpoint
   datos_procesados$phylum <- as.character(NA)
   datos_procesados$class <- as.character(NA)
   datos_procesados$order <- as.character(NA)
@@ -178,11 +151,12 @@ buscar_inat_por_poligono <- function(poligono_sf,
   datos_procesados$license <- as.character(valor_columna(datos_raw, "license"))
   datos_procesados$basisOfRecord <- "HumanObservation"
   
-  # Metadatos del origen
   datos_procesados$source <- "iNaturalist"
   datos_procesados$district <- nombre_distrito
+  datos_procesados$province <- nombre_provincia
+  datos_procesados$department <- nombre_departamento
   
-  cat(sprintf("[iNaturalist] Busqueda finalizada. %d de %d registros caen dentro del poligono del distrito.\n",
+  cat(sprintf("[iNaturalist] Busqueda finalizada. %d de %d registros caen dentro del poligono seleccionado.\n",
               nrow(datos_procesados), nrow(obs_raw)))
   attr(datos_procesados, "api_total") <- total_api
   attr(datos_procesados, "api_complete") <- is.null(limite) && !is.na(total_api) && nrow(obs_raw) == total_api

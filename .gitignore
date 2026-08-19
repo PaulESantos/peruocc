@@ -5,7 +5,9 @@ data/cache/
 data/raw/
 data/processed/
 results/
+peruocc/
 .Rproj.user
 .httr-oauth
 .DS_Store
 .quarto
+docs

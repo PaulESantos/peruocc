@@ -1,4 +1,4 @@
 library(testthat)
-library(peruspecies)
+library(peruocc)
 
-test_check("peruspecies")
+test_check("peruocc")

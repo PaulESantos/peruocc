@@ -1,4 +1,76 @@
-url: https://paulesantos.github.io/peru_species_project/
+url: https://paulesantos.github.io/peruocc/
+
+home:
+  title: peruocc R package
+  description: |
+    Standardized biodiversity occurrence queries (GBIF & iNaturalist) across
+    official administrative units (districts and provinces) in Peru. Integrates
+    boundary geometries via 'geoperu', performs exact spatial filtering, and
+    harmonizes Darwin Core records.
+
+authors:
+  Paul E. Santos Andrade:
+    href: https://paulefrensa.rbind.io/
+
 template:
   bootstrap: 5
+  package: peruocc
+  assets: pkgdown
+  bslib:
+    font_scale: 1.0
+    base_font:
+      google: Jost
+    code_font:
+      google: Overpass Mono
+    heading_font:
+      google: Abhaya Libre
+    bg: '#FEFDF9'
+    fg: '#1F2421'
+    primary: '#1E6F5C'
+    secondary: '#74AC00'
+    link-color: '#286B59'
+    info: '#509E2F'
+    headings-color: '#16382B'
+    navbar-bg: '#FEFDF9'
+    navbar-light-color: '#1E6F5C'
+    navbar-light-hover-color: '#74AC00'
 
+navbar:
+  type: light
+  structure:
+    left:
+      - home
+      - reference
+    right:
+      - search
+      - github
+
+reference:
+  - title: "Consultas e Integración de Biodiversidad"
+    desc: "Funciones principales para consultar, validar y consolidar ocurrencias de GBIF e iNaturalist."
+    contents:
+      - buscar_especies_distrito
+      - buscar_especies_provincia
+      - buscar_especies_peru
+
+  - title: "Geometrías y Unidades Administrativas"
+    desc: "Extracción y preparación de geometrías espaciales oficiales de geoperu."
+    contents:
+      - obtener_poligono_distrito
+      - obtener_poligono_provincia
+      - obtener_poligono_unidad
+
+  - title: "Visualización Cartográfica"
+    desc: "Generación de mapas espaciales con capas temáticas y distribución de puntos."
+    contents:
+      - graficar_ocurrencias
+
+  - title: "Configuración y Directorios"
+    desc: "Gestión del entorno de trabajo, almacenamiento en caché y trazabilidad."
+    contents:
+      - verificar_y_configurar_entorno
+      - peruocc_data_dir
+      - peruspecies_data_dir
+
+development:
+  mode: auto

@@ -1,12 +1,18 @@
-Package: peruspecies
-Title: Reproducible Biodiversity Occurrence Queries for Peru
+Package: peruocc
+Title: Standardized Biodiversity Occurrence Queries across Administrative Units of Peru
 Version: 0.1.0
-Authors@R: 
-    person(given = "Peru Species Project", family = "Maintainers", role = c("aut", "cre"), email = "TODO@example.com")
-Description: Downloads, spatially validates, normalizes, and exports GBIF and
-    iNaturalist occurrence records for districts in Peru. Administrative
-    boundaries are retrieved with geoperu and each run generates output
-    artifacts and provenance metadata.
+Authors@R: c(
+    person("Paul Efren", "Santos Andrade",
+    email = "paulfrenes@gmail.com",
+    role = c("aut", "cre", "cph"))
+  )
+Description: Facilitates the retrieval, spatial validation, and integration of
+    flora and fauna occurrence records across administrative scales (districts
+    and provinces) in Peru. Retrieves official boundary geometries via
+    'geoperu', queries and consolidates observations from GBIF (Global
+    Biodiversity Information Facility) and iNaturalist, and standardizes Darwin
+    Core attributes into a unified object for biodiversity assessment within
+    user-defined areas of interest.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -24,5 +30,6 @@ Imports:
 Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://paulesantos.github.io/peru_species_project/
+URL: https://paulesantos.github.io/peruocc/
+BugReports: https://github.com/PaulESantos/peruocc/issues
 Config/roxygen2/version: 8.0.0

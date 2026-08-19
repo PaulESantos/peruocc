@@ -1,0 +1,188 @@
+/* ==========================================================================
+   peruocc pkgdown stylesheet
+   Adapted from Desirée De Leon's tidymodels pkgdown CSS & modernized
+   with GBIF & iNaturalist visual identities for biodiversity informatics.
+   ========================================================================== */
+
+:root {
+  --bunker: #1f2421;
+  --forest-dark: #16382b;
+  --forest-primary: #1e6f5c;
+  --gbif-green: #509e2f;
+  --inat-green: #74ac00;
+  --inat-light: #eef7de;
+  --ziggurat: #cce3d8;
+  --wedgewood: #286b59;
+  --bg-parchment: #fefdf9;
+  --card-bg: #ffffff;
+  --border-subtle: #e3ebe5;
+  --code-bg: #f4f7f5;
+  --shadow-subtle: 0 4px 16px rgba(30, 111, 92, 0.06);
+}
+
+/* Base Body & Spacing ------------------------------------------------------ */
+
+body {
+  background-color: var(--bg-parchment);
+  color: var(--bunker);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.contents h1, .contents h2, .contents h3, .contents h4 {
+  color: var(--forest-dark);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.contents h2, .contents h3, .contents h4 {
+  margin-top: 2.2rem;
+  margin-bottom: 1.25rem;
+}
+
+.row {
+  margin-top: 1.5em;
+}
+
+@media (min-width: 768px) {
+  .contents {
+    padding-right: 3.5em;
+  }
+}
+
+/* Navbar ------------------------------------------------------------------- */
+
+.navbar {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-color: var(--bg-parchment) !important;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: var(--forest-primary) !important;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+
+/* Active behavior for navbar */
+.navbar-light .navbar-nav .nav-link:focus,
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .nav-link.active {
+  background: var(--ziggurat);
+  color: var(--forest-dark) !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+/* Hover behavior for navbar */
+.navbar-light .navbar-nav .nav-item > .nav-link {
+  color: var(--forest-primary);
+  transition: all 0.2s ease-in-out;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.navbar-light .navbar-nav .nav-item > .nav-link:hover {
+  color: var(--inat-green) !important;
+  background: rgba(116, 172, 0, 0.08);
+  border-radius: 4px;
+}
+
+/* Links & Code Styling ----------------------------------------------------- */
+
+a {
+  color: var(--wedgewood);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--inat-green);
+  text-decoration: underline;
+}
+
+code {
+  font-family: var(--bs-font-monospace, 'Overpass Mono', monospace);
+  font-size: 0.88em;
+  background-color: var(--code-bg);
+  color: var(--forest-dark);
+  padding: 0.18em 0.4em;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+code a {
+  color: var(--wedgewood);
+  font-weight: 600;
+}
+
+code a:hover {
+  color: var(--inat-green);
+}
+
+pre {
+  background-color: #1a221f !important;
+  color: #e6f0eb !important;
+  border-radius: 8px;
+  padding: 1.25rem !important;
+  border: 1px solid #283630;
+  box-shadow: var(--shadow-subtle);
+}
+
+pre code {
+  background-color: transparent !important;
+  border: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* Card & Sidebar Polish ---------------------------------------------------- */
+
+.sidebar, .pkgdown-sidebar {
+  border-left: 1px solid var(--border-subtle);
+  padding-left: 1.5rem;
+}
+
+.card {
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  box-shadow: var(--shadow-subtle);
+  background-color: var(--card-bg);
+}
+
+/* Badges & Accents (GBIF / iNat Identity) ----------------------------------- */
+
+.badge-gbif {
+  background-color: var(--gbif-green);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.25em 0.6em;
+  border-radius: 4px;
+}
+
+.badge-inat {
+  background-color: var(--inat-green);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.25em 0.6em;
+  border-radius: 4px;
+}
+
+/* Tables ------------------------------------------------------------------- */
+
+.table {
+  margin-top: 1.25rem;
+  margin-bottom: 2rem;
+  border-color: var(--border-subtle);
+}
+
+.table th {
+  background-color: rgba(30, 111, 92, 0.05);
+  color: var(--forest-dark);
+  font-weight: 600;
+  border-bottom: 2px solid var(--ziggurat);
+}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/query_inat.R
 \name{buscar_inat_por_poligono}
 \alias{buscar_inat_por_poligono}
-\title{Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito}
+\title{Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito o provincia}
 \usage{
 buscar_inat_por_poligono(
   poligono_sf,
@@ -14,7 +14,7 @@ buscar_inat_por_poligono(
 )
 }
 \arguments{
-\item{poligono_sf}{Objeto sf que representa el distrito (EPSG:4326).}
+\item{poligono_sf}{Objeto sf que representa la unidad espacial (EPSG:4326).}
 
 \item{query}{Texto libre de busqueda (opcional).}
 
@@ -30,5 +30,5 @@ buscar_inat_por_poligono(
 Un dataframe estandarizado con los registros encontrados que caen dentro del poligono.
 }
 \description{
-Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito
+Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito o provincia
 }
