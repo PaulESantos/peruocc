@@ -380,6 +380,29 @@ resultado_prov$ocurrencias |>
 #> #   source <chr>, district <chr>, province <chr>, department <chr>
 ```
 
+#### C. Con Polígonos Personalizados / Shapefile (`buscar_especies_poligono`)
+
+Permite realizar consultas sobre cualquier delimitación espacial
+provista por el usuario (objeto `sf` o archivo `.shp`, `.geojson`,
+`.gpkg`, `.kml`):
+
+``` r
+
+# Crear un polígono de muestreo en EPSG:4326
+poly_coords <- matrix(c(-77.04, -12.06, -77.00, -12.06, -77.00, -12.02, -77.04, -12.02, -77.04, -12.06), ncol = 2, byrow = TRUE)
+zona_estudio <- sf::st_as_sf(sf::st_sfc(sf::st_polygon(list(poly_coords)), crs = 4326))
+
+resultado_custom <- buscar_especies_poligono(
+  poligono = zona_estudio,
+  nombre = "Zona_Muestreo_1",
+  grupo = "flora",
+  limite_por_api = 100
+)
+
+resultado_custom$ocurrencias |> 
+  dplyr::as_tibble()
+```
+
 ### 3. Visualización Cartográfica (`graficar_ocurrencias`)
 
 Genera mapas temáticos con `ggplot2` coloreando según la base de datos
@@ -495,10 +518,14 @@ de GBIF e iNaturalist.
 - [`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md)
   : Realiza una busqueda combinada de especies en una unidad
   administrativa del Peru
+- [`buscar_especies_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_poligono.md)
+  : Realiza una busqueda combinada de especies en un poligono
+  personalizado provisto por el usuario
 
 ## Geometrías y Unidades Administrativas
 
-Extracción y preparación de geometrías espaciales oficiales de geoperu.
+Extracción y preparación de geometrías espaciales oficiales de geoperu o
+personalizadas.
 
 - [`obtener_poligono_distrito()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_distrito.md)
   : Obtiene el poligono de un distrito especifico en el Peru
@@ -508,6 +535,8 @@ Extracción y preparación de geometrías espaciales oficiales de geoperu.
 - [`obtener_poligono_unidad()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_unidad.md)
   : Obtiene el poligono de una unidad administrativa (distrito o
   provincia)
+- [`preparar_poligono_usuario()`](https://paulesantos.github.io/peruocc/reference/preparar_poligono_usuario.md)
+  : Prepara y estandariza un poligono espacial provisto por el usuario
 
 ## Visualización Cartográfica
 
@@ -561,9 +590,12 @@ modulares.
 
 ### All vignettes
 
+- [Búsqueda de Ocurrencias con Polígonos Personalizados (Shapefile,
+  GeoJSON y
+  sf)](https://paulesantos.github.io/peruocc/articles/busqueda_poligono_usuario.md):
 - [Flujo Espacial y Filtrado Topológico
   Riguroso](https://paulesantos.github.io/peruocc/articles/flujo_espacial.md):
 - [Primeros Pasos con
   peruocc](https://paulesantos.github.io/peruocc/articles/getting_started.md):
-- [Visualización Cartográfica y Exportación de
-  Ocurrencias](https://paulesantos.github.io/peruocc/articles/visualizacion_y_exportacion.md):
+- [Configuración, Exportación y Visualización de
+  Resultados](https://paulesantos.github.io/peruocc/articles/visualizacion_y_exportacion.md):

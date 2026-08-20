@@ -14,10 +14,14 @@ de GBIF e iNaturalist.
 - [`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md)
   : Realiza una busqueda combinada de especies en una unidad
   administrativa del Peru
+- [`buscar_especies_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_poligono.md)
+  : Realiza una busqueda combinada de especies en un poligono
+  personalizado provisto por el usuario
 
 ## Geometrías y Unidades Administrativas
 
-Extracción y preparación de geometrías espaciales oficiales de geoperu.
+Extracción y preparación de geometrías espaciales oficiales de geoperu o
+personalizadas.
 
 - [`obtener_poligono_distrito()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_distrito.md)
   : Obtiene el poligono de un distrito especifico en el Peru
@@ -27,6 +31,8 @@ Extracción y preparación de geometrías espaciales oficiales de geoperu.
 - [`obtener_poligono_unidad()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_unidad.md)
   : Obtiene el poligono de una unidad administrativa (distrito o
   provincia)
+- [`preparar_poligono_usuario()`](https://paulesantos.github.io/peruocc/reference/preparar_poligono_usuario.md)
+  : Prepara y estandariza un poligono espacial provisto por el usuario
 
 ## Visualización Cartográfica
 

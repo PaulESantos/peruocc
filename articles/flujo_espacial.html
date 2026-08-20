@@ -40,7 +40,8 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-art-culos">
 <li><a class="dropdown-item" href="../articles/getting_started.html">1. Primeros pasos con peruocc</a></li>
     <li><a class="dropdown-item" href="../articles/flujo_espacial.html">2. Flujo espacial y filtrado topológico</a></li>
-    <li><a class="dropdown-item" href="../articles/visualizacion_y_exportacion.html">3. Visualización cartográfica y exportación</a></li>
+    <li><a class="dropdown-item" href="../articles/visualizacion_y_exportacion.html">3. Configuración, exportación y visualización</a></li>
+    <li><a class="dropdown-item" href="../articles/busqueda_poligono_usuario.html">4. Búsqueda con polígonos personalizados</a></li>
   </ul>
 </li>
       </ul>
@@ -202,6 +203,49 @@ topológica estricta con el polígono detallado original:</p>
 <code class="sourceCode R"><span><span class="co"># sf::st_intersects(puntos_sf, poligono_original_sf)</span></span></code></pre></div>
 <p>Garantizando que el 100% de las ocurrencias retenidas se encuentren
 verdaderamente dentro de la unidad territorial elegida.</p>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="búsqueda-con-polígonos-personalizados-shapefile-geojson-gpkg">5. Búsqueda con Polígonos Personalizados (Shapefile, GeoJSON,
+GPKG)<a class="anchor" aria-label="anchor" href="#b%C3%BAsqueda-con-pol%C3%ADgonos-personalizados-shapefile-geojson-gpkg"></a>
+</h2>
+<p>Además de los límites administrativos oficiales del Perú,
+<code>peruocc</code> permite suministrar cualquier delimitación espacial
+personalizada mediante <code><a href="../reference/buscar_especies_poligono.html">buscar_especies_poligono()</a></code>:</p>
+<div class="section level3">
+<h3 id="opción-a-cargar-desde-un-archivo-espacial-en-disco">Opción A: Cargar desde un archivo espacial en disco<a class="anchor" aria-label="anchor" href="#opci%C3%B3n-a-cargar-desde-un-archivo-espacial-en-disco"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Consulta usando un archivo Shapefile o GeoJSON (por ejemplo, un Área Natural Protegida)</span></span>
+<span><span class="va">resultado_anp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buscar_especies_poligono.html">buscar_especies_poligono</a></span><span class="op">(</span></span>
+<span>  poligono <span class="op">=</span> <span class="st">"capas/reserva_nacional_pacaya_samiria.geojson"</span>,</span>
+<span>  nombre <span class="op">=</span> <span class="st">"RN Pacaya Samiria"</span>,</span>
+<span>  grupo <span class="op">=</span> <span class="st">"fauna"</span>,</span>
+<span>  limite_por_api <span class="op">=</span> <span class="fl">500</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="opción-b-usar-un-objeto-espacial-sf-creado-en-r">Opción B: Usar un objeto espacial <code>sf</code> creado en R<a class="anchor" aria-label="anchor" href="#opci%C3%B3n-b-usar-un-objeto-espacial-sf-creado-en-r"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Crear un buffer de 5 km alrededor de un punto de muestreo</span></span>
+<span><span class="va">punto</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">77.03</span>, <span class="op">-</span><span class="fl">12.05</span><span class="op">)</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span>
+<span><span class="va">buffer_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">punto</span>, <span class="fl">32718</span><span class="op">)</span>, dist <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span>
+<span><span class="va">buffer_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">buffer_sf</span>, <span class="fl">4326</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Consultar biodiversidad dentro del buffer</span></span>
+<span><span class="va">resultado_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buscar_especies_poligono.html">buscar_especies_poligono</a></span><span class="op">(</span></span>
+<span>  poligono <span class="op">=</span> <span class="va">buffer_sf</span>,</span>
+<span>  nombre <span class="op">=</span> <span class="st">"Buffer 5km Centro Lima"</span>,</span>
+<span>  grupo <span class="op">=</span> <span class="st">"flora"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>La función ejecuta automáticamente la validación del sistema de
+coordenadas (CRS), repara geometrías no válidas y aplica el mismo
+filtrado espacial y consolidación que en las búsquedas distritales y
+provinciales.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

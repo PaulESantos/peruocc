@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Visualización Cartográfica y Exportación de Ocurrencias • peruocc</title>
+<title>Configuración, Exportación y Visualización de Resultados • peruocc</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Jost-0.4.10/font.css" rel="stylesheet">
@@ -14,7 +14,7 @@
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Visualización Cartográfica y Exportación de Ocurrencias">
+<meta property="og:title" content="Configuración, Exportación y Visualización de Resultados">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -40,7 +40,8 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-art-culos">
 <li><a class="dropdown-item" href="../articles/getting_started.html">1. Primeros pasos con peruocc</a></li>
     <li><a class="dropdown-item" href="../articles/flujo_espacial.html">2. Flujo espacial y filtrado topológico</a></li>
-    <li><a class="dropdown-item" href="../articles/visualizacion_y_exportacion.html">3. Visualización cartográfica y exportación</a></li>
+    <li><a class="dropdown-item" href="../articles/visualizacion_y_exportacion.html">3. Configuración, exportación y visualización</a></li>
+    <li><a class="dropdown-item" href="../articles/busqueda_poligono_usuario.html">4. Búsqueda con polígonos personalizados</a></li>
   </ul>
 </li>
       </ul>
@@ -62,7 +63,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Visualización Cartográfica y Exportación de Ocurrencias</h1>
+      <h1>Configuración, Exportación y Visualización de Resultados</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/PaulESantos/peruocc/blob/main/vignettes/visualizacion_y_exportacion.Rmd" class="external-link"><code>vignettes/visualizacion_y_exportacion.Rmd</code></a></small>
@@ -74,41 +75,252 @@
 <div class="section level2">
 <h2 id="introducción">Introducción<a class="anchor" aria-label="anchor" href="#introducci%C3%B3n"></a>
 </h2>
-<p><code>peruocc</code> incluye utilidades especializadas para la
-representación espacial de observaciones biológicas y la exportación
-estructurada de resultados a formatos compatibles con sistemas de
-información geográfica (SIG) y publicaciones científicas.</p>
-<p>Por defecto, todas las funciones de búsqueda y graficado retornan
-objetos en memoria (<code>data.frame</code>, <code>sf</code>,
-<code>ggplot</code>) sin escribir en disco, siguiendo las mejores
-prácticas de R y las políticas de CRAN. Cuando el usuario lo desee, los
-artefactos pueden ser exportados directamente o mediante funciones
-dedicadas.</p>
+<p>El paquete <code>peruocc</code> está diseñado tanto para la
+exploración interactiva y rápida de ocurrencias de biodiversidad en
+memoria, como para flujos de trabajo reproducibles en producción y
+análisis espacial (SIG).</p>
+<p>Esta guía explica: 1. Cómo configurar el directorio de almacenamiento
+y caché (<code><a href="../reference/peruocc_data_dir.html">peruocc_data_dir()</a></code>). 2. La diferencia entre
+consultas interactivas en memoria
+(<code>guardar_resultados = FALSE</code>) y persistencia en disco
+(<code>guardar_resultados = TRUE</code>). 3. La función dedicada
+<code><a href="../reference/exportar_resultados.html">exportar_resultados()</a></code> y los formatos generados (CSV,
+GeoJSON y Manifiesto de reproducibilidad). 4. La visualización
+cartográfica con <code><a href="../reference/graficar_ocurrencias.html">graficar_ocurrencias()</a></code>.</p>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="visualización-cartográfica-con-ggplot2">1. Visualización Cartográfica con ggplot2<a class="anchor" aria-label="anchor" href="#visualizaci%C3%B3n-cartogr%C3%A1fica-con-ggplot2"></a>
+<h2 id="configuración-del-directorio-de-trabajo-peruocc_data_dir">1. Configuración del Directorio de Trabajo:
+<code>peruocc_data_dir()</code><a class="anchor" aria-label="anchor" href="#configuraci%C3%B3n-del-directorio-de-trabajo-peruocc_data_dir"></a>
 </h2>
-<p>La función <code><a href="../reference/graficar_ocurrencias.html">graficar_ocurrencias()</a></code> crea composiciones
-cartográficas limpias que combinan el polígono administrativo oficial de
-fondo con las observaciones superpuestas.</p>
-<div class="section level3">
-<h3 id="clasificación-por-repositorio-de-origen-source">Clasificación por Repositorio de Origen (<code>source</code>)<a class="anchor" aria-label="anchor" href="#clasificaci%C3%B3n-por-repositorio-de-origen-source"></a>
-</h3>
-<p>Permite comparar visualmente el aporte relativo de
-<strong>GBIF</strong> frente a <strong>iNaturalist</strong>:</p>
+<p>La función <code><a href="../reference/peruocc_data_dir.html">peruocc_data_dir()</a></code> centraliza la ubicación en
+el disco donde se almacenarán tanto las capas espaciales descargadas en
+caché como los resultados exportados.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Realizar consulta en memoria (sin escribir en disco)</span></span>
-<span><span class="va">resultado</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buscar_especies_provincia.html">buscar_especies_provincia</a></span><span class="op">(</span></span>
-<span>  provincia <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
-<span>  departamento <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
+<span><span class="co"># Configurar el directorio raíz del proyecto para artefactos</span></span>
+<span><span class="fu"><a href="../reference/peruocc_data_dir.html">peruocc_data_dir</a></span><span class="op">(</span><span class="st">"peruocc-output"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="por-qué-es-útil-y-cómo-funciona">¿Por qué es útil y cómo funciona?<a class="anchor" aria-label="anchor" href="#por-qu%C3%A9-es-%C3%BAtil-y-c%C3%B3mo-funciona"></a>
+</h3>
+<ul>
+<li>
+<strong>Control y Orden del Proyecto</strong>: Mantiene todas las
+salidas y capas auxiliares organizadas en una única carpeta (por
+ejemplo, <code>./peruocc-output/</code>) en lugar de dispersarlas en la
+raíz de trabajo.</li>
+<li>
+<strong>Caché Inteligente de Geometrías</strong>: Al descargar
+límites distritales o departamentales oficiales (vía
+<code>geoperu</code>), el paquete guarda copias <code>.rds</code> en
+<code>peruocc-output/cache/</code>. Las siguientes consultas a esa misma
+zona cargarán la geometría instantáneamente sin volver a descargarla de
+internet.</li>
+<li>
+<strong>Configuración Global Transparente</strong>: Al ejecutar
+<code>peruocc_data_dir("peruocc-output")</code>, la ruta se guarda en
+las opciones de R (<code>options(peruocc.data_dir = ...)</code>). Todas
+las demás funciones del paquete sabrán automáticamente dónde leer y
+escribir.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="qué-ocurre-si-no-ejecuto-peruocc_data_dir">¿Qué ocurre si NO ejecuto <code>peruocc_data_dir()</code>?<a class="anchor" aria-label="anchor" href="#qu%C3%A9-ocurre-si-no-ejecuto-peruocc_data_dir"></a>
+</h3>
+<p><strong>No habrá ningún error y las consultas funcionarán con
+normalidad.</strong> * <strong>Caché</strong>: <code>peruocc</code>
+recurrirá de forma transparente al directorio estándar de caché del
+sistema operativo
+(<code>tools::R_user_dir("peruocc", which = "cache")</code>). *
+<strong>Exportaciones</strong>: Si decides exportar archivos más
+adelante, se creará por defecto la carpeta
+<code>./peruocc/processed/</code> en tu directorio de trabajo.</p>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="ejecución-en-memoria-vs--guardado-en-disco-guardar_resultados">2. Ejecución en Memoria vs. Guardado en Disco
+(<code>guardar_resultados</code>)<a class="anchor" aria-label="anchor" href="#ejecuci%C3%B3n-en-memoria-vs--guardado-en-disco-guardar_resultados"></a>
+</h2>
+<p>Todas las funciones principales de búsqueda
+(<code><a href="../reference/buscar_especies_distrito.html">buscar_especies_distrito()</a></code>,
+<code><a href="../reference/buscar_especies_provincia.html">buscar_especies_provincia()</a></code>,
+<code><a href="../reference/buscar_especies_peru.html">buscar_especies_peru()</a></code>) incluyen el argumento
+<code>guardar_resultados</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Firma de la función</span></span>
+<span><span class="fu"><a href="../reference/buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span></span>
+<span>  <span class="va">distrito</span>,</span>
+<span>  departamento <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  provincia <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  guardar_resultados <span class="op">=</span> <span class="cn">FALSE</span>  <span class="co"># &lt;- FALSE por defecto</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="comparativa-consultas-experimentales-vs--guardado-automático">Comparativa: Consultas Experimentales vs. Guardado Automático<a class="anchor" aria-label="anchor" href="#comparativa-consultas-experimentales-vs--guardado-autom%C3%A1tico"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Característica</th>
+<th align="left">
+<code>guardar_resultados = FALSE</code> (Por defecto /
+Experimental)</th>
+<th align="left">
+<code>guardar_resultados = TRUE</code> (Guardado
+Automático)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Destino de datos</strong></td>
+<td align="left">Solo memoria RAM en la sesión de R.</td>
+<td align="left">Memoria RAM + archivos guardados en disco.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Velocidad de ejecución</strong></td>
+<td align="left">
+<strong>Más rápida.</strong> Evita la sobrecarga de I/O
+y serialización espacial.</td>
+<td align="left">Requiere tiempo adicional para escribir CSV, GeoJSON y
+JSON.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Archivos generados</strong></td>
+<td align="left">Ninguno.</td>
+<td align="left">
+<code>.csv</code>, <code>.geojson</code> y
+<code>manifiesto_*.json</code> en la subcarpeta
+<code>processed/</code>.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Casos de uso</strong></td>
+<td align="left">Análisis exploratorio, filtrado rápido, visualización
+interactiva y pruebas de parámetros.</td>
+<td align="left">Pipelines automatizados, ejecuciones desatendidas o
+procesamiento en lotes (<em>batch</em>).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado<a class="anchor" aria-label="anchor" href="#flujo-de-trabajo-recomendado"></a>
+</h3>
+<p>Para la mayoría de los análisis, la mejor práctica es
+<strong>trabajar primero en memoria</strong> y luego exportar
+selectivamente cuando los datos estén listos:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Paso 1: Consulta rápida en memoria (experimental / interactiva)</span></span>
+<span><span class="va">resultado</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span></span>
+<span>  distrito <span class="op">=</span> <span class="st">"Miraflores"</span>,</span>
+<span>  departamento <span class="op">=</span> <span class="st">"Lima"</span>,</span>
+<span>  provincia <span class="op">=</span> <span class="st">"Lima"</span>,</span>
 <span>  grupo <span class="op">=</span> <span class="st">"flora"</span>,</span>
-<span>  limite_por_api <span class="op">=</span> <span class="fl">200</span></span>
+<span>  limite_por_api <span class="op">=</span> <span class="fl">150</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Generar mapa en pantalla diferenciando proveedores de datos</span></span>
+<span><span class="co"># Paso 2: Inspeccionar resultados o graficar</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">resultado</span><span class="op">$</span><span class="va">ocurrencias</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Paso 3: Si los datos son conformes, exportar a disco</span></span>
+<span><span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="exportación-de-resultados-y-estructura-de-artefactos">3. Exportación de Resultados y Estructura de Artefactos<a class="anchor" aria-label="anchor" href="#exportaci%C3%B3n-de-resultados-y-estructura-de-artefactos"></a>
+</h2>
+<p>La función <code><a href="../reference/exportar_resultados.html">exportar_resultados()</a></code> toma el objeto devuelto
+por cualquier búsqueda y genera artefactos estructurados y listos para
+interoperabilidad:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Exportación completa (por defecto a processed/ de peruocc_data_dir)</span></span>
+<span><span class="va">archivos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Exportación personalizada a otra carpeta y formatos específicos:</span></span>
+<span><span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span></span>
+<span>  resultado <span class="op">=</span> <span class="va">resultado</span>,</span>
+<span>  dir_salida <span class="op">=</span> <span class="st">"mis_analisis/capas"</span>,</span>
+<span>  formatos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"csv"</span>, <span class="st">"geojson"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="estructura-del-directorio-de-salida">Estructura del Directorio de Salida<a class="anchor" aria-label="anchor" href="#estructura-del-directorio-de-salida"></a>
+</h3>
+<p>Cuando se utiliza <code>peruocc_data_dir("peruocc-output")</code>, la
+estructura queda organizada de la siguiente manera:</p>
+<pre class="text"><code>peruocc-output/
+├── cache/
+│   ├── distritos_lima.rds                 # Geometrías oficiales cacheadas
+│   └── distritos_peru_completo.rds
+└── processed/
+    ├── ocurrencias_distrito_miraflores_flora.csv
+    ├── ocurrencias_distrito_miraflores_flora.geojson
+    └── manifiesto_distrito_miraflores_flora.json</code></pre>
+</div>
+<div class="section level3">
+<h3 id="descripción-de-los-formatos-exportados">Descripción de los Formatos Exportados<a class="anchor" aria-label="anchor" href="#descripci%C3%B3n-de-los-formatos-exportados"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li>
+<strong><code>ocurrencias_*.csv</code></strong>:
+<ul>
+<li>Tabla plana estandarizada según el estándar internacional
+<strong>Darwin Core</strong> (<code>scientificName</code>,
+<code>decimalLatitude</code>, <code>decimalLongitude</code>,
+<code>eventDate</code>, <code>source</code>, etc.).</li>
+</ul>
+</li>
+<li>
+<strong><code>ocurrencias_*.geojson</code></strong>:
+<ul>
+<li>Capa espacial vectorial de puntos con proyección geográfica WGS84
+(EPSG:4326). Se puede arrastrar directamente a <strong>QGIS</strong>,
+<strong>ArcGIS</strong> o visores web (<strong>Leaflet</strong>,
+<strong>Mapbox</strong>).</li>
+</ul>
+</li>
+<li>
+<strong><code>manifiesto_*.json</code></strong>:
+<ul>
+<li>Manifiesto de auditoría y reproducibilidad científica. Registra:
+<ul>
+<li>Fecha y hora exacta de la consulta (UTC).</li>
+<li>Versiones de R y paquetes utilizados (<code>sf</code>,
+<code>rgbif</code>, <code>rinat</code>, <code>geoperu</code>).</li>
+<li>Polígono de consulta en formato WKT (<em>Well-Known Text</em>).</li>
+<li>Parámetros y filtros aplicados (fechas, límites por API,
+reinos).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong><code>results/mapa_*.png</code></strong> (opcional):
+<ul>
+<li>Gráficos cartográficos en alta resolución (300 DPI) generados por
+<code>graficar_ocurrencias(..., guardar_mapa = TRUE)</code>.</li>
+</ul>
+</li>
+</ol>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="visualización-cartográfica-con-graficar_ocurrencias">4. Visualización Cartográfica con
+<code>graficar_ocurrencias()</code><a class="anchor" aria-label="anchor" href="#visualizaci%C3%B3n-cartogr%C3%A1fica-con-graficar_ocurrencias"></a>
+</h2>
+<p>La función <code><a href="../reference/graficar_ocurrencias.html">graficar_ocurrencias()</a></code> produce composiciones
+visuales basadas en <code>ggplot2</code>, integrando la delimitación
+poligonal oficial de fondo con las observaciones superpuestas.</p>
+<div class="section level3">
+<h3 id="comparación-por-proveedor-de-datos-source">Comparación por Proveedor de Datos (<code>source</code>)<a class="anchor" aria-label="anchor" href="#comparaci%C3%B3n-por-proveedor-de-datos-source"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Visualizar diferenciando aportes de GBIF vs iNaturalist</span></span>
 <span><span class="va">mapa_fuente</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span></span>
 <span>  resultado_lista <span class="op">=</span> <span class="va">resultado</span>,</span>
 <span>  color_por <span class="op">=</span> <span class="st">"source"</span></span>
@@ -117,22 +329,23 @@ fondo con las observaciones superpuestas.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_fuente</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="clasificación-por-reino-taxonómico-kingdom">Clasificación por Reino Taxonómico (<code>kingdom</code>)<a class="anchor" aria-label="anchor" href="#clasificaci%C3%B3n-por-reino-taxon%C3%B3mico-kingdom"></a>
+<h3 id="comparación-por-reino-biológico-kingdom">Comparación por Reino Biológico (<code>kingdom</code>)<a class="anchor" aria-label="anchor" href="#comparaci%C3%B3n-por-reino-biol%C3%B3gico-kingdom"></a>
 </h3>
-<p>Permite visualizar la distribución espacial segregada por reino (por
-ejemplo, <em>Plantae</em>, <em>Animalia</em>, <em>Fungi</em>):</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Generar mapa diferenciando reinos biológicos</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Visualizar distribución por reinos (Plantae, Animalia, Fungi, etc.)</span></span>
 <span><span class="va">mapa_reino</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span></span>
 <span>  resultado_lista <span class="op">=</span> <span class="va">resultado</span>,</span>
 <span>  color_por <span class="op">=</span> <span class="st">"kingdom"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_reino</span><span class="op">)</span></span></code></pre></div>
-<p>Si deseas exportar el gráfico a disco a 300 DPI, activa
-<code>guardar_mapa = TRUE</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapa_exportado</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span></span>
+</div>
+<div class="section level3">
+<h3 id="exportar-el-mapa-directamente-a-imagen">Exportar el Mapa Directamente a Imagen<a class="anchor" aria-label="anchor" href="#exportar-el-mapa-directamente-a-imagen"></a>
+</h3>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Genera y guarda automáticamente el mapa en results/ en formato PNG a 300 DPI</span></span>
+<span><span class="va">mapa_guardado</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span></span>
 <span>  resultado_lista <span class="op">=</span> <span class="va">resultado</span>,</span>
 <span>  color_por <span class="op">=</span> <span class="st">"source"</span>,</span>
 <span>  guardar_mapa <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -141,88 +354,18 @@ ejemplo, <em>Plantae</em>, <em>Animalia</em>, <em>Fungi</em>):</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="exportación-de-resultados-y-artefactos">2. Exportación de Resultados y Artefactos<a class="anchor" aria-label="anchor" href="#exportaci%C3%B3n-de-resultados-y-artefactos"></a>
+<h2 id="integración-con-sig-y-flujos-espaciales">5. Integración con SIG y Flujos Espaciales<a class="anchor" aria-label="anchor" href="#integraci%C3%B3n-con-sig-y-flujos-espaciales"></a>
 </h2>
-<p>Existen dos maneras de guardar los resultados en disco:</p>
-<div class="section level3">
-<h3 id="opción-a-función-dedicada-exportar_resultados-recomendado">Opción A: Función dedicada <code>exportar_resultados()</code>
-(Recomendado)<a class="anchor" aria-label="anchor" href="#opci%C3%B3n-a-funci%C3%B3n-dedicada-exportar_resultados-recomendado"></a>
-</h3>
-<p>Permite inspeccionar los datos primero y exportar selectivamente:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Exportar todos los formatos (CSV, GeoJSON y Manifiesto JSON)</span></span>
-<span><span class="va">archivos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># O exportar únicamente CSV y GeoJSON a un directorio personalizado:</span></span>
-<span><span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span></span>
-<span>  resultado <span class="op">=</span> <span class="va">resultado</span>,</span>
-<span>  dir_salida <span class="op">=</span> <span class="st">"mis_resultados"</span>,</span>
-<span>  formatos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"csv"</span>, <span class="st">"geojson"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="opción-b-parámetro-directo-guardar_resultados-true">Opción B: Parámetro directo
-<code>guardar_resultados = TRUE</code><a class="anchor" aria-label="anchor" href="#opci%C3%B3n-b-par%C3%A1metro-directo-guardar_resultados-true"></a>
-</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">resultado</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span></span>
-<span>  distrito <span class="op">=</span> <span class="st">"Miraflores"</span>,</span>
-<span>  departamento <span class="op">=</span> <span class="st">"Lima"</span>,</span>
-<span>  guardar_resultados <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<hr>
-</div>
-</div>
-<div class="section level2">
-<h2 id="estructura-de-artefactos-generados">3. Estructura de Artefactos Generados<a class="anchor" aria-label="anchor" href="#estructura-de-artefactos-generados"></a>
-</h2>
-<ol style="list-style-type: decimal">
-<li>
-<strong><code>processed/ocurrencias_*.csv</code></strong>:
-<ul>
-<li>Tabla con todos los registros y atributos Darwin Core
-estandarizados.</li>
-</ul>
-</li>
-<li>
-<strong><code>processed/ocurrencias_*.geojson</code></strong>:
-<ul>
-<li>Capa espacial vectorial de puntos para importar directamente en
-<strong>QGIS</strong>, <strong>ArcGIS</strong> o visores web como
-<strong>Leaflet</strong> / <strong>Mapbox</strong>.</li>
-</ul>
-</li>
-<li>
-<strong><code>processed/manifiesto_*.json</code></strong>:
-<ul>
-<li>Archivo de metadatos con la información completa de
-reproducibilidad: versión de R, versiones de paquetes de dependencias
-(<code>sf</code>, <code>rgbif</code>, <code>rinat</code>), coordenadas
-WKT del polígono y parámetros utilizados.</li>
-</ul>
-</li>
-<li>
-<strong><code>results/mapa_*.png</code></strong>:
-<ul>
-<li>Mapa cartográfico en alta resolución exportado a 300 DPI listo para
-reportes e informes.</li>
-</ul>
-</li>
-</ol>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="integración-con-sig-qgis-r-spatial">4. Integración con SIG (QGIS / R Spatial)<a class="anchor" aria-label="anchor" href="#integraci%C3%B3n-con-sig-qgis-r-spatial"></a>
-</h2>
-<p>Para cargar la capa espacial generada en scripts posteriores o flujos
-de modelado de nicho ecológico (SDM):</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>Las capas GeoJSON generadas pueden volver a cargarse en R para
+análisis espaciales posteriores (como modelos de distribución de
+especies o buffers):</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Leer archivo GeoJSON exportado por peruocc</span></span>
-<span><span class="va">capa_ocurrencias</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="st">"peruocc/processed/ocurrencias_distrito_miraflores_biodiversidad.geojson"</span><span class="op">)</span></span>
+<span><span class="co"># Cargar la capa de ocurrencias exportada</span></span>
+<span><span class="va">capa_ocurrencias</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="st">"peruocc-output/processed/ocurrencias_distrito_miraflores_flora.geojson"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Inspección de geometría y tabla de atributos</span></span>
+<span><span class="co"># Inspección rápida</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">capa_ocurrencias</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

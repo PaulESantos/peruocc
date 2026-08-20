@@ -380,6 +380,29 @@ resultado_prov$ocurrencias |>
 #> #   source <chr>, district <chr>, province <chr>, department <chr>
 ```
 
+#### C. Con Polígonos Personalizados / Shapefile (`buscar_especies_poligono`)
+
+Permite realizar consultas sobre cualquier delimitación espacial
+provista por el usuario (objeto `sf` o archivo `.shp`, `.geojson`,
+`.gpkg`, `.kml`):
+
+``` r
+
+# Crear un polígono de muestreo en EPSG:4326
+poly_coords <- matrix(c(-77.04, -12.06, -77.00, -12.06, -77.00, -12.02, -77.04, -12.02, -77.04, -12.06), ncol = 2, byrow = TRUE)
+zona_estudio <- sf::st_as_sf(sf::st_sfc(sf::st_polygon(list(poly_coords)), crs = 4326))
+
+resultado_custom <- buscar_especies_poligono(
+  poligono = zona_estudio,
+  nombre = "Zona_Muestreo_1",
+  grupo = "flora",
+  limite_por_api = 100
+)
+
+resultado_custom$ocurrencias |> 
+  dplyr::as_tibble()
+```
+
 ### 3. Visualización Cartográfica (`graficar_ocurrencias`)
 
 Genera mapas temáticos con `ggplot2` coloreando según la base de datos

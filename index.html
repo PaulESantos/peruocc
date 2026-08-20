@@ -50,7 +50,8 @@ harmonizes Darwin Core records.
   <ul class="dropdown-menu" aria-labelledby="dropdown-art-culos">
 <li><a class="dropdown-item" href="articles/getting_started.html">1. Primeros pasos con peruocc</a></li>
     <li><a class="dropdown-item" href="articles/flujo_espacial.html">2. Flujo espacial y filtrado topológico</a></li>
-    <li><a class="dropdown-item" href="articles/visualizacion_y_exportacion.html">3. Visualización cartográfica y exportación</a></li>
+    <li><a class="dropdown-item" href="articles/visualizacion_y_exportacion.html">3. Configuración, exportación y visualización</a></li>
+    <li><a class="dropdown-item" href="articles/busqueda_poligono_usuario.html">4. Búsqueda con polígonos personalizados</a></li>
   </ul>
 </li>
       </ul>
@@ -434,12 +435,31 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt; #   species &lt;chr&gt;, recordedBy &lt;chr&gt;, coordinateUncertaintyInMeters &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   source &lt;chr&gt;, district &lt;chr&gt;, province &lt;chr&gt;, department &lt;chr&gt;</span></span></code></pre></div>
 </div>
+<div class="section level4">
+<h4 id="c-con-polígonos-personalizados--shapefile-buscar_especies_poligono">C. Con Polígonos Personalizados / Shapefile (<code>buscar_especies_poligono</code>)<a class="anchor" aria-label="anchor" href="#c-con-pol%C3%ADgonos-personalizados--shapefile-buscar_especies_poligono"></a>
+</h4>
+<p>Permite realizar consultas sobre cualquier delimitación espacial provista por el usuario (objeto <code>sf</code> o archivo <code>.shp</code>, <code>.geojson</code>, <code>.gpkg</code>, <code>.kml</code>):</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Crear un polígono de muestreo en EPSG:4326</span></span>
+<span><span class="va">poly_coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">77.04</span>, <span class="op">-</span><span class="fl">12.06</span>, <span class="op">-</span><span class="fl">77.00</span>, <span class="op">-</span><span class="fl">12.06</span>, <span class="op">-</span><span class="fl">77.00</span>, <span class="op">-</span><span class="fl">12.02</span>, <span class="op">-</span><span class="fl">77.04</span>, <span class="op">-</span><span class="fl">12.02</span>, <span class="op">-</span><span class="fl">77.04</span>, <span class="op">-</span><span class="fl">12.06</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">zona_estudio</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">poly_coords</span><span class="op">)</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">resultado_custom</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_poligono.html">buscar_especies_poligono</a></span><span class="op">(</span></span>
+<span>  poligono <span class="op">=</span> <span class="va">zona_estudio</span>,</span>
+<span>  nombre <span class="op">=</span> <span class="st">"Zona_Muestreo_1"</span>,</span>
+<span>  grupo <span class="op">=</span> <span class="st">"flora"</span>,</span>
+<span>  limite_por_api <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">resultado_custom</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="id_3-visualización-cartográfica-graficar_ocurrencias">3. Visualización Cartográfica (<code>graficar_ocurrencias</code>)<a class="anchor" aria-label="anchor" href="#id_3-visualizaci%C3%B3n-cartogr%C3%A1fica-graficar_ocurrencias"></a>
 </h3>
 <p>Genera mapas temáticos con <code>ggplot2</code> coloreando según la base de datos de origen (<code>source</code>) o reino taxonómico (<code>kingdom</code>):</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Mapa clasificado por fuente de datos (GBIF vs iNaturalist)</span></span>
 <span><span class="va">mapa_fuente</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado_prov</span>, </span>
 <span>                                    color_por <span class="op">=</span> <span class="st">"source"</span>, </span>
@@ -447,7 +467,7 @@ harmonizes Darwin Core records.
 <span></span>
 <span><span class="va">mapa_fuente</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png" alt="" width="100%"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Mapa clasificado por Reino (Plantae vs Animalia)</span></span>
 <span><span class="va">mapa_reino</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado_prov</span>,</span>
 <span>                                   color_por <span class="op">=</span> <span class="st">"kingdom"</span>, </span>
@@ -459,7 +479,7 @@ harmonizes Darwin Core records.
 <h3 id="id_4-exportación-de-resultados-a-disco-exportar_resultados">4. Exportación de Resultados a Disco (<code>exportar_resultados</code>)<a class="anchor" aria-label="anchor" href="#id_4-exportaci%C3%B3n-de-resultados-a-disco-exportar_resultados"></a>
 </h3>
 <p>Guarda los registros consolidados en formatos CSV, capas vectoriales GeoJSON y manifiestos JSON de reproducibilidad:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Exportar todos los formatos</span></span>
 <span><span class="fu"><a href="reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado_prov</span><span class="op">)</span></span>
 <span></span>

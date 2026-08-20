@@ -5,6 +5,7 @@
 <url><loc>https://paulesantos.github.io/peruocc/LICENSE-text.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/LICENSE.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/SUPPORT.html</loc></url>
+<url><loc>https://paulesantos.github.io/peruocc/articles/busqueda_poligono_usuario.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/articles/flujo_espacial.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/articles/getting_started.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/articles/index.html</loc></url>
@@ -14,6 +15,7 @@
 <url><loc>https://paulesantos.github.io/peruocc/reference/asegurar_orientacion_antihoraria.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/buscar_especies_distrito.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.html</loc></url>
+<url><loc>https://paulesantos.github.io/peruocc/reference/buscar_especies_poligono.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/buscar_especies_provincia.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/buscar_gbif_por_poligono.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/buscar_inat_por_poligono.html</loc></url>
@@ -26,6 +28,7 @@
 <url><loc>https://paulesantos.github.io/peruocc/reference/obtener_poligono_unidad.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/poligono_a_wkt.html</loc></url>
+<url><loc>https://paulesantos.github.io/peruocc/reference/preparar_poligono_usuario.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/simplificar_para_api.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/simplificar_poligono.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/verificar_y_configurar_entorno.html</loc></url>
