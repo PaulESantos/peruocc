@@ -116,3 +116,42 @@ Dado que iNaturalist solo admite filtrado por caja delimitadora (*Bounding Box*)
 ```
 
 Garantizando que el 100% de las ocurrencias retenidas se encuentren verdaderamente dentro de la unidad territorial elegida.
+
+---
+
+## 5. Búsqueda con Polígonos Personalizados (Shapefile, GeoJSON, GPKG)
+
+Además de los límites administrativos oficiales del Perú, `peruocc` permite suministrar cualquier delimitación espacial personalizada mediante `buscar_especies_poligono()`:
+
+### Opción A: Cargar desde un archivo espacial en disco
+
+```r
+# Consulta usando un archivo Shapefile o GeoJSON (por ejemplo, un Área Natural Protegida)
+resultado_anp <- buscar_especies_poligono(
+  poligono = "capas/reserva_nacional_pacaya_samiria.geojson",
+  nombre = "RN Pacaya Samiria",
+  grupo = "fauna",
+  limite_por_api = 500
+)
+```
+
+### Opción B: Usar un objeto espacial `sf` creado en R
+
+```r
+library(sf)
+
+# Crear un buffer de 5 km alrededor de un punto de muestreo
+punto <- sf::st_sfc(sf::st_point(c(-77.03, -12.05)), crs = 4326)
+buffer_sf <- sf::st_buffer(sf::st_transform(punto, 32718), dist = 5000)
+buffer_sf <- sf::st_transform(buffer_sf, 4326)
+
+# Consultar biodiversidad dentro del buffer
+resultado_buffer <- buscar_especies_poligono(
+  poligono = buffer_sf,
+  nombre = "Buffer 5km Centro Lima",
+  grupo = "flora"
+)
+```
+
+La función ejecuta automáticamente la validación del sistema de coordenadas (CRS), repara geometrías no válidas y aplica el mismo filtrado espacial y consolidación que en las búsquedas distritales y provinciales.
+

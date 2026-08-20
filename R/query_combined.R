@@ -208,3 +208,138 @@ buscar_especies_provincia <- function(provincia,
     tolerancia_simplificacion = tolerancia_simplificacion
   )
 }
+
+#' Realiza una busqueda combinada de especies en un poligono personalizado provisto por el usuario
+#'
+#' Consulta registros de biodiversidad en GBIF e iNaturalist utilizando una delimitacion
+#' espacial personalizada (archivo Shapefile, GeoJSON, GPKG, KML o un objeto `sf`).
+#'
+#' @param poligono Objeto espacial (`sf` / `sfc`) o ruta a un archivo espacial en disco (`.shp`, `.geojson`, `.gpkg`, `.kml`).
+#' @param nombre Nombre o etiqueta descriptiva para el poligono (opcional; por defecto el nombre del archivo o "Poligono_Personalizado").
+#' @param nombre_cientifico Nombre de la especie o grupo taxonomico a filtrar (opcional).
+#' @param grupo Grupo taxonomico a filtrar: "flora", "fauna" o NULL.
+#' @param limite_por_api Numero maximo de registros a solicitar por API (def: 500).
+#' @param guardar_resultados Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).
+#' @param tolerancia_simplificacion Tolerancia en metros para simplificar el poligono en GBIF (def: 100).
+#' @return Una lista con el poligono de la unidad, el dataframe de ocurrencias consolidado y estadisticas de resumen.
+#' @export
+buscar_especies_poligono <- function(poligono,
+                                     nombre = NULL,
+                                     nombre_cientifico = NULL,
+                                     grupo = NULL,
+                                     limite_por_api = configuracion_predeterminada()$limite_por_api,
+                                     guardar_resultados = FALSE,
+                                     tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m) {
+  
+  # 1. Preparar y validar el poligono provisto
+  unidad_sf <- preparar_poligono_usuario(poligono = poligono, nombre = nombre)
+  etiqueta_unidad <- if (!is.null(unidad_sf$unidad) && !is.na(unidad_sf$unidad[1])) unidad_sf$unidad[1] else "Poligono_Personalizado"
+  
+  validar_entrada_busqueda(unidad = etiqueta_unidad, grupo = grupo, limite = limite_por_api, nivel = "poligono")
+  
+  cat("=====================================================================\n")
+  cat(sprintf("BUSQUEDA INTEGRADA EN POLIGONO PERSONALIZADO: %s\n", toupper(etiqueta_unidad)))
+  if (!is.null(nombre_cientifico)) cat(sprintf("  Taxon: %s\n", nombre_cientifico))
+  if (!is.null(grupo)) cat(sprintf("  Grupo: %s\n", grupo))
+  cat("=====================================================================\n\n")
+  
+  # 2. Consultar GBIF
+  gbif_data <- tryCatch({
+    buscar_gbif_por_poligono(
+      poligono_sf = unidad_sf,
+      nombre_cientifico = nombre_cientifico,
+      grupo = grupo,
+      limite = limite_por_api,
+      tolerancia_simplificacion = tolerancia_simplificacion
+    )
+  }, error = function(e) {
+    if (is.null(limite_por_api)) stop("[GBIF] Descarga completa no realizada: ", e$message)
+    cat("[GBIF] Error durante la ejecucion del modulo: ", e$message, "\n")
+    return(NULL)
+  })
+  
+  # 3. Consultar iNaturalist
+  inat_data <- tryCatch({
+    buscar_inat_por_poligono(
+      poligono_sf = unidad_sf,
+      taxon_name = nombre_cientifico,
+      grupo = grupo,
+      limite = limite_por_api
+    )
+  }, error = function(e) {
+    if (is.null(limite_por_api)) stop("[iNaturalist] Descarga completa no realizada: ", e$message)
+    cat("[iNaturalist] Error durante la ejecucion del modulo: ", e$message, "\n")
+    return(NULL)
+  })
+  
+  # 4. Integrar y estandarizar datos
+  resultados_lista <- list()
+  if (!is.null(gbif_data) && nrow(gbif_data) > 0) {
+    resultados_lista[[length(resultados_lista) + 1]] <- gbif_data
+  }
+  if (!is.null(inat_data) && nrow(inat_data) > 0) {
+    resultados_lista[[length(resultados_lista) + 1]] <- inat_data
+  }
+  
+  if (length(resultados_lista) == 0) {
+    cat("\n[RESULTADO] No se encontraron ocurrencias en ninguna de las bases de datos.\n")
+    ocurrencias_combinadas <- schema_ocurrencias()
+  } else {
+    ocurrencias_combinadas <- dplyr::bind_rows(resultados_lista)
+    # Deduplicacion dentro de la misma fuente
+    con_id <- dplyr::filter(ocurrencias_combinadas, !is.na(sourceRecordID) & nzchar(sourceRecordID))
+    sin_id <- dplyr::filter(ocurrencias_combinadas, is.na(sourceRecordID) | !nzchar(sourceRecordID))
+    ocurrencias_combinadas <- dplyr::bind_rows(dplyr::distinct(con_id, source, sourceRecordID, .keep_all = TRUE), sin_id)
+    cat(sprintf("\n[RESULTADO] Consolidacion exitosa. Total de registros unificados: %d\n", nrow(ocurrencias_combinadas)))
+  }
+  
+  # 5. Generar Estadisticas de Resumen
+  n_gbif <- ifelse(!is.null(gbif_data), nrow(gbif_data), 0)
+  n_inat <- ifelse(!is.null(inat_data), nrow(inat_data), 0)
+  
+  resumen <- list(
+    nivel = "poligono",
+    unidad = etiqueta_unidad,
+    distrito = NA_character_,
+    provincia = NA_character_,
+    departamento = NA_character_,
+    total_registros = nrow(ocurrencias_combinadas),
+    registros_gbif = n_gbif,
+    registros_inat = n_inat,
+    limite_por_api = limite_por_api,
+    gbif_total_reportado_api = if (!is.null(gbif_data)) attr(gbif_data, "api_total") else NA_integer_,
+    inat_total_reportado_api = if (!is.null(inat_data)) attr(inat_data, "api_total") else NA_integer_,
+    gbif_descarga_completa_api = if (!is.null(gbif_data)) attr(gbif_data, "api_complete") else FALSE,
+    inat_descarga_completa_api = if (!is.null(inat_data)) attr(inat_data, "api_complete") else FALSE,
+    nota_cobertura = if (is.null(limite_por_api)) "Se solicito descarga completa dentro de los limites tecnicos de las APIs." else "Se solicito una muestra limitada por API; la cobertura puede estar truncada."
+  )
+  
+  print(data.frame(
+    Origen = c("GBIF", "iNaturalist", "Total"),
+    Registros = c(n_gbif, n_inat, nrow(ocurrencias_combinadas))
+  ))
+  
+  resultado_obj <- list(
+    unidad_sf = unidad_sf,
+    distrito_sf = unidad_sf, # Alias para compatibilidad
+    ocurrencias = ocurrencias_combinadas,
+    resumen = resumen,
+    parametros = list(
+      nombre = etiqueta_unidad,
+      nivel = "poligono",
+      departamento = NULL,
+      provincia = NULL,
+      nombre_cientifico = nombre_cientifico,
+      grupo = grupo,
+      limite_por_api = limite_por_api,
+      tolerancia_simplificacion_m = tolerancia_simplificacion
+    )
+  )
+  
+  # 6. Guardar Resultados en Archivos si se solicita explicitamente
+  if (isTRUE(guardar_resultados) && nrow(ocurrencias_combinadas) > 0) {
+    exportar_resultados(resultado_obj)
+  }
+  
+  return(resultado_obj)
+}

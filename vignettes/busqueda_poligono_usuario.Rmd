@@ -1,0 +1,164 @@
+---
+title: "Búsqueda de Ocurrencias con Polígonos Personalizados (Shapefile, GeoJSON y sf)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Búsqueda de Ocurrencias con Polígonos Personalizados (Shapefile, GeoJSON y sf)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = TRUE,
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Introducción
+
+Además de realizar consultas sobre las delimitaciones político-administrativas oficiales del Perú (distritos y provincias), `peruocc` ofrece la función `buscar_especies_poligono()`.
+
+Esta utilidad permite delimitar áreas de estudio independientes, tales como:
+* Polígonos de muestreo de campo y cuadrantes de inventario.
+* Áreas Naturales Protegidas (ANP), concesiones forestales o zonas de amortiguamiento.
+* Áreas de influencia directa/indirecta (buffers) de proyectos ambientales.
+* Archivos espaciales en formatos estándar (`.shp`, `.geojson`, `.gpkg`, `.kml`).
+
+---
+
+## 1. Carga de Librerías y Configuración
+
+Cargamos `peruocc` y `sf` para el manejo de geometrías vectoriales:
+
+```{r setup}
+library(peruocc)
+library(sf)
+library(ggplot2)
+
+# Configurar el directorio de trabajo para artefactos y caché
+peruocc_data_dir("peruocc-output")
+```
+
+---
+
+## 2. Creación de un Polígono de Estudio Personalizado
+
+Podemos definir cualquier geometría poligonal en R. En este ejemplo, creamos un polígono rectangular de interés biológico en la costa central del Perú (alrededor de los humedales y costa de Lima):
+
+```{r crear_poligono}
+# Coordenadas de los vértices del polígono (WGS84: Longitud, Latitud)
+coordenadas <- matrix(
+  c(
+    -77.04, -12.06,
+    -77.00, -12.06,
+    -77.00, -12.02,
+    -77.04, -12.02,
+    -77.04, -12.06
+  ),
+  ncol = 2,
+  byrow = TRUE
+)
+
+# Construir el objeto sf con proyección geográfica EPSG:4326 (WGS84)
+mi_zona_estudio <- sf::st_as_sf(
+  sf::st_sfc(sf::st_polygon(list(coordenadas)), crs = 4326)
+)
+
+print(mi_zona_estudio)
+```
+
+---
+
+## 3. Consulta Integrada de Biodiversidad: `buscar_especies_poligono()`
+
+Ejecutamos la búsqueda de flora dentro del polígono creado. `peruocc` gestiona automáticamente:
+1. La consulta síncrona a **GBIF** con simplificación adaptativa WKT en UTM.
+2. La consulta a **iNaturalist** por Bounding Box.
+3. El **recorte espacial exacto en memoria (`sf::st_intersects`)** para asegurar que cada punto caiga estrictamente dentro de la geometría.
+4. La estandarización y deduplicación bajo el estándar **Darwin Core**.
+
+```{r consulta_poligono}
+resultado_personalizado <- buscar_especies_poligono(
+  poligono = mi_zona_estudio,
+  nombre = "Area_Estudio_Costa",
+  grupo = "flora",
+  limite_por_api = 25
+)
+```
+
+---
+
+## 4. Inspección de los Resultados Obtenidos
+
+El objeto devuelto contiene la estructura estándar de `peruocc`:
+
+```{r resumen_datos}
+# Resumen de registros por base de datos
+print(resultado_personalizado$resumen)
+
+# Vista previa de las primeras ocurrencias
+head(resultado_personalizado$ocurrencias[, c("scientificName", "source", "eventDate", "decimalLatitude", "decimalLongitude")])
+```
+
+---
+
+## 5. Visualización Cartográfica con `graficar_ocurrencias()`
+
+Podemos generar composiciones en `ggplot2` superponiendo el polígono con las observaciones:
+
+### A. Clasificación por Proveedor de Datos (GBIF vs iNaturalist)
+
+```{r mapa_fuente}
+mapa_fuentes <- graficar_ocurrencias(
+  resultado_lista = resultado_personalizado,
+  color_por = "source"
+)
+
+print(mapa_fuentes)
+```
+
+### B. Clasificación por Reino Taxonómico
+
+```{r mapa_reino}
+mapa_reinos <- graficar_ocurrencias(
+  resultado_lista = resultado_personalizado,
+  color_por = "kingdom"
+)
+
+print(mapa_reinos)
+```
+
+---
+
+## 6. Consulta desde un Archivo en Disco (Shapefile / GeoJSON)
+
+`buscar_especies_poligono()` también acepta directamente una ruta a un archivo espacial en disco (`.shp`, `.geojson`, `.gpkg` o `.kml`).
+
+Para demostrarlo, guardamos el polígono en un archivo `.geojson` y ejecutamos la consulta directamente desde la ruta:
+
+```{r consulta_archivo}
+# 1. Guardar el polígono temporalmente como archivo GeoJSON
+ruta_capa <- file.path(tempdir(), "mi_reserva.geojson")
+sf::st_write(mi_zona_estudio, ruta_capa, quiet = TRUE, delete_dsn = TRUE)
+
+# 2. Consultar directamente pasando la ruta del archivo
+resultado_desde_archivo <- buscar_especies_poligono(
+  poligono = ruta_capa,
+  nombre = "Reserva_Local",
+  grupo = "flora",
+  limite_por_api = 15
+)
+
+# 3. Exportar resultados con manifiesto de reproducibilidad
+exportar_resultados(resultado_desde_archivo)
+```
+
+---
+
+## Conclusión
+
+La función `buscar_especies_poligono()` extiende la versatilidad de `peruocc`, permitiendo integrar inventarios biológicos y análisis de biodiversidad sobre cualquier área geográfica en el Perú sin depender exclusivamente de límites políticos distritales o provinciales.

@@ -6,6 +6,7 @@ test_that("la normalizacion de texto es consistente", {
 test_that("la validacion acepta descarga completa y niveles", {
   expect_invisible(peruocc:::validar_entrada_busqueda("Lima", NULL, NULL, nivel = "distrito"))
   expect_invisible(peruocc:::validar_entrada_busqueda("Cusco", "fauna", 100, nivel = "provincia"))
+  expect_invisible(peruocc:::validar_entrada_busqueda("Mi_Poligono", "flora", 50, nivel = "poligono"))
   expect_error(peruocc:::validar_entrada_busqueda("", NULL, 10))
   expect_error(peruocc:::validar_entrada_busqueda("Lima", "hongos", 10))
 })

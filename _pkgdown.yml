@@ -57,8 +57,10 @@ navbar:
           href: articles/getting_started.html
         - text: "2. Flujo espacial y filtrado topológico"
           href: articles/flujo_espacial.html
-        - text: "3. Visualización cartográfica y exportación"
+        - text: "3. Configuración, exportación y visualización"
           href: articles/visualizacion_y_exportacion.html
+        - text: "4. Búsqueda con polígonos personalizados"
+          href: articles/busqueda_poligono_usuario.html
 
 reference:
   - title: "Consultas e Integración de Biodiversidad"
@@ -67,13 +69,15 @@ reference:
       - buscar_especies_distrito
       - buscar_especies_provincia
       - buscar_especies_peru
+      - buscar_especies_poligono
 
   - title: "Geometrías y Unidades Administrativas"
-    desc: "Extracción y preparación de geometrías espaciales oficiales de geoperu."
+    desc: "Extracción y preparación de geometrías espaciales oficiales de geoperu o personalizadas."
     contents:
       - obtener_poligono_distrito
       - obtener_poligono_provincia
       - obtener_poligono_unidad
+      - preparar_poligono_usuario
 
   - title: "Visualización Cartográfica"
     desc: "Generación de mapas espaciales con capas temáticas y distribución de puntos."

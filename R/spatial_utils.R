@@ -426,3 +426,85 @@ poligono_a_wkt <- function(sf_obj) {
   
   return(wkt)
 }
+
+#' Prepara y estandariza un poligono espacial provisto por el usuario
+#'
+#' Lee archivos espaciales (.shp, .geojson, .gpkg, .kml) o valida objetos `sf`/`sfc`,
+#' asegurando que esten en proyeccion geografica WGS84 (EPSG:4326), con topologia valida
+#' y estructurados para consultas de biodiversidad.
+#'
+#' @param poligono Objeto sf/sfc o ruta a un archivo espacial en disco.
+#' @param nombre Nombre o etiqueta descriptiva para el poligono (opcional).
+#' @return Un objeto sf estandarizado en EPSG:4326 con atributos descriptivos.
+#' @export
+preparar_poligono_usuario <- function(poligono, nombre = NULL) {
+  loadNamespace("sf")
+  
+  if (missing(poligono) || is.null(poligono)) {
+    stop("Error: Debe proporcionar un poligono (objeto sf o ruta a archivo espacial).")
+  }
+  
+  # 1. Leer desde archivo si es character
+  if (is.character(poligono)) {
+    if (length(poligono) != 1L || !nzchar(trimws(poligono))) {
+      stop("Error: La ruta del archivo espacial no es valida.")
+    }
+    if (!file.exists(poligono)) {
+      stop(sprintf("Error: No se encontro el archivo espacial en la ruta: '%s'", poligono))
+    }
+    if (is.null(nombre) || !nzchar(trimws(nombre))) {
+      nombre <- tools::file_path_sans_ext(basename(poligono))
+    }
+    sf_obj <- tryCatch({
+      sf::st_read(poligono, quiet = TRUE)
+    }, error = function(e) {
+      stop(sprintf("Error al leer archivo espacial '%s': %s", poligono, e$message))
+    })
+  } else if (inherits(poligono, c("sf", "sfc", "Spatial"))) {
+    sf_obj <- sf::st_as_sf(poligono)
+    if (is.null(nombre) || !nzchar(trimws(nombre))) {
+      nombre <- "Poligono_Personalizado"
+    }
+  } else {
+    stop("Error: 'poligono' debe ser un objeto sf/sfc o una ruta a un archivo espacial (.shp, .geojson, .gpkg, .kml).")
+  }
+  
+  if (nrow(sf_obj) == 0) {
+    stop("Error: El objeto espacial no contiene registros ni geometrias.")
+  }
+  
+  # 2. Validar y estandarizar CRS a EPSG:4326
+  crs_actual <- sf::st_crs(sf_obj)
+  if (is.na(crs_actual)) {
+    warning("[SPATIAL] El poligono carece de sistema de referencia (CRS). Se asumira EPSG:4326 (WGS84).")
+    sf::st_crs(sf_obj) <- 4326
+  } else if (crs_actual != sf::st_crs(4326)) {
+    cat(sprintf("[SPATIAL] Reproyectando geometria desde %s a EPSG:4326 (WGS84)...\n", crs_actual$input))
+    sf_obj <- sf::st_transform(sf_obj, crs = 4326)
+  }
+  
+  # 3. Validar y corregir topologia
+  sf_obj <- sf::st_make_valid(sf_obj)
+  
+  # 4. Unificar si tiene multiples filas/poligonos
+  if (nrow(sf_obj) > 1) {
+    cat(sprintf("[SPATIAL] El archivo contiene %d elementos. Unificando en una sola entidad...\n", nrow(sf_obj)))
+    geom_union <- sf::st_union(sf_obj)
+    sf_obj <- sf::st_as_sf(sf::st_sfc(geom_union, crs = 4326))
+  }
+  
+  # 5. Asegurar tipo poligonal
+  geom_type <- as.character(sf::st_geometry_type(sf_obj, by_geometry = FALSE))
+  if (!geom_type %in% c("POLYGON", "MULTIPOLYGON", "GEOMETRYCOLLECTION")) {
+    stop(sprintf("Error: La geometria debe ser poligonal (POLYGON o MULTIPOLYGON), se detecto: %s", geom_type))
+  }
+  
+  # 6. Asignar metadatos descriptivos
+  sf_obj$unidad <- nombre
+  sf_obj$distrito <- NA_character_
+  sf_obj$provincia <- NA_character_
+  sf_obj$departamento <- NA_character_
+  
+  return(sf_obj)
+}
+

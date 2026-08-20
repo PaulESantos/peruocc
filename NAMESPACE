@@ -2,6 +2,7 @@
 
 export(buscar_especies_distrito)
 export(buscar_especies_peru)
+export(buscar_especies_poligono)
 export(buscar_especies_provincia)
 export(exportar_resultados)
 export(graficar_ocurrencias)
@@ -10,4 +11,5 @@ export(obtener_poligono_provincia)
 export(obtener_poligono_unidad)
 export(peruocc_data_dir)
 export(peruspecies_data_dir)
+export(preparar_poligono_usuario)
 export(verificar_y_configurar_entorno)
