@@ -1,7 +1,10 @@
-# Busca ocurrencias de especies en GBIF dentro de un poligono de distrito o provincia
+# Busca ocurrencias de GBIF dentro de un polígono
 
-Busca ocurrencias de especies en GBIF dentro de un poligono de distrito
-o provincia
+Función de bajo nivel usada por las búsquedas integradas. Convierte el
+límite a WKT, lo simplifica si es necesario para la API de GBIF y luego
+vuelve a filtrar localmente con el polígono exacto. Para uso habitual
+prefiera las funciones `buscar_especies_*()`, que además integran
+iNaturalist y manejan lotes/checkpoints.
 
 ## Usage
 
@@ -11,7 +14,8 @@ buscar_gbif_por_poligono(
   nombre_cientifico = NULL,
   grupo = NULL,
   limite = 500,
-  tolerancia_simplificacion = 100
+  tolerancia_simplificacion = 100,
+  reintentos = configuracion_predeterminada()$reintentos_api
 )
 ```
 
@@ -19,24 +23,41 @@ buscar_gbif_por_poligono(
 
 - poligono_sf:
 
-  Objeto sf que representa la unidad espacial (EPSG:4326).
+  Objeto `sf` poligonal, preferiblemente en EPSG:4326. Debe contener una
+  geometría válida; atributos administrativos son opcionales y se copian
+  al resultado cuando existen.
 
 - nombre_cientifico:
 
-  Nombre de la especie o grupo taxonomico (opcional).
+  `NULL` o cadena con un taxón. Se intenta resolver mediante el backbone
+  de GBIF; si no hay coincidencia, se aplica como texto libre en
+  `scientificName`.
 
 - grupo:
 
-  Grupo taxonomico: "flora", "fauna" o NULL.
+  `NULL`, `"flora"` o `"fauna"`, que se traduce a los reinos Plantae y
+  Animalia, respectivamente.
 
 - limite:
 
-  Numero maximo de registros a recuperar (max. 100000 para occ_search).
+  Entero positivo de hasta 100000, o `NULL`. Con entero solicita hasta
+  ese número de filas. Con `NULL` consulta primero el conteo y solo
+  continúa si no supera el límite de
+  [`rgbif::occ_search()`](https://docs.ropensci.org/rgbif/reference/occ_search.html)
+  (100000).
 
 - tolerancia_simplificacion:
 
-  Tolerancia de simplificacion en metros (def: 100 metros).
+  Número no negativo de metros. Es la tolerancia inicial de
+  simplificación del WKT; se incrementa internamente cuando la geometría
+  aún es demasiado extensa.
+
+- reintentos:
+
+  Entero positivo con intentos máximos para operaciones remotas
+  transitorias, incluido el resolver taxonómico.
 
 ## Value
 
-Un dataframe estandarizado con los registros encontrados.
+`data.frame` con el esquema estándar de ocurrencias. Los atributos
+`api_total` y `api_complete` describen la respuesta de GBIF.

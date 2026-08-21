@@ -1,6 +1,11 @@
-# Obtiene el poligono de una unidad administrativa (distrito o provincia)
+# Obtiene un límite administrativo mediante una interfaz única
 
-Obtiene el poligono de una unidad administrativa (distrito o provincia)
+Despacha a
+[`obtener_poligono_distrito()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_distrito.md)
+o
+[`obtener_poligono_provincia()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_provincia.md)
+según `nivel`. Facilita crear funciones genéricas cuando el nivel de
+consulta se elige en tiempo de ejecución.
 
 ## Usage
 
@@ -17,20 +22,34 @@ obtener_poligono_unidad(
 
 - nombre:
 
-  Nombre de la unidad administrativa.
+  Cadena no vacía. Es el nombre del distrito cuando `nivel = "distrito"`
+  o el de la provincia cuando `nivel = "provincia"`.
 
 - nivel:
 
-  Nivel administrativo: "distrito" o "provincia" (def: "distrito").
+  Uno de `"distrito"` o `"provincia"`. Si se suministra más de un valor,
+  se usa el primero mediante
+  [`match.arg()`](https://rdrr.io/r/base/match.arg.html).
 
 - departamento:
 
-  Nombre del departamento (opcional).
+  `NULL` o nombre del departamento para limitar la búsqueda y resolver
+  homónimos.
 
 - provincia:
 
-  Nombre de la provincia (opcional, para nivel "distrito").
+  `NULL` o nombre de provincia; solo se usa con `nivel = "distrito"`.
 
 ## Value
 
-Objeto sf con la geometria de la unidad.
+Un objeto `sf` en EPSG:4326. Para provincias la geometría está disuelta;
+para distritos contiene una fila de la capa oficial.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+limite <- obtener_poligono_unidad("Tarapoto", nivel = "distrito",
+                                  departamento = "San Martin")
+} # }
+```

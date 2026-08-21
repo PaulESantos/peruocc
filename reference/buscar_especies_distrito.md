@@ -1,7 +1,9 @@
-# Realiza una busqueda combinada de especies en un distrito usando GBIF e iNaturalist
+# Busca ocurrencias en un distrito peruano
 
-Realiza una busqueda combinada de especies en un distrito usando GBIF e
-iNaturalist
+Atajo legible de
+[`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md)
+con `nivel = "distrito"`. Acepte los mismos filtros y devuelve la misma
+estructura de resultado.
 
 ## Usage
 
@@ -14,7 +16,8 @@ buscar_especies_distrito(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
-  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  ...
 )
 ```
 
@@ -22,37 +25,50 @@ buscar_especies_distrito(
 
 - distrito:
 
-  Nombre del distrito (requerido).
+  Cadena no vacía con el nombre del distrito.
 
 - departamento:
 
-  Nombre del departamento (opcional).
+  `NULL` o departamento que contiene al distrito.
 
 - provincia:
 
-  Nombre de la provincia (opcional).
+  `NULL` o provincia que contiene al distrito; úselo junto a
+  `departamento` para resolver nombres repetidos.
 
 - nombre_cientifico:
 
-  Nombre de la especie o grupo taxonomico a filtrar (opcional).
+  `NULL` o nombre de taxón para filtrar resultados.
 
 - grupo:
 
-  Grupo taxonomico a filtrar: "flora", "fauna" o NULL.
+  `NULL`, `"flora"` o `"fauna"`.
 
 - limite_por_api:
 
-  Numero maximo de registros a solicitar por API (def: 500).
+  Entero entre 1 y 10000, o `NULL`; consulte
+  [`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md)
+  para sus límites y consecuencias.
 
 - guardar_resultados:
 
-  Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).
+  Lógico que exporta CSV, GeoJSON y manifiesto al finalizar cuando es
+  `TRUE`.
 
 - tolerancia_simplificacion:
 
-  Tolerancia en metros para simplificar el poligono en GBIF (def: 100).
+  Tolerancia de simplificación para la llamada a GBIF, expresada en
+  metros.
+
+- ...:
+
+  Controles avanzados reenviados a
+  [`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md):
+  `estrategia_espacial`, `max_area_ha`, `cache_dir`, `reintentos` y
+  `pausa_entre_lotes_s`.
 
 ## Value
 
-Una lista con el poligono del distrito, el dataframe de ocurrencias y
-estadisticas de resumen.
+Lista con límite, ocurrencias, resumen y parámetros. Consulte el valor
+retornado por
+[`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md).

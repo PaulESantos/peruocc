@@ -1,7 +1,9 @@
-# Grafica el mapa de ocurrencias sobre el poligono de la unidad administrativa
+# Grafica ocurrencias sobre su área de consulta
 
-Grafica el mapa de ocurrencias sobre el poligono de la unidad
-administrativa
+Construye un mapa `ggplot2` con el polígono consultado y los registros
+que quedaron después del filtro espacial exacto. Es apropiada para
+inspección exploratoria y control de calidad de coordenadas, no para
+cartografía final.
 
 ## Usage
 
@@ -17,19 +19,36 @@ graficar_ocurrencias(
 
 - resultado_lista:
 
-  Lista de resultados devuelta por buscar_especies_peru(),
-  buscar_especies_distrito() o buscar_especies_provincia().
+  Lista devuelta por
+  [`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md),
+  [`buscar_especies_distrito()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_distrito.md),
+  [`buscar_especies_provincia()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_provincia.md)
+  o
+  [`buscar_especies_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_poligono.md).
+  Debe contener `unidad_sf`, `ocurrencias` y `resumen`.
 
 - color_por:
 
-  Columna para clasificar los colores ("source" por defecto, o
-  "kingdom").
+  Cadena con la columna usada para colorear puntos. Los valores
+  admitidos son `"source"` (GBIF/iNaturalist, predeterminado) y
+  `"kingdom"` (Plantae/Animalia cuando está disponible).
 
 - guardar_mapa:
 
-  Logico; si es TRUE guarda el grafico en results/ como PNG (def:
-  FALSE).
+  Lógico de longitud uno. Si es `TRUE`, además devuelve el gráfico y lo
+  guarda como PNG en `results/` dentro de
+  [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md).
 
 ## Value
 
-El objeto de grafico ggplot.
+Un objeto de clase `ggplot`. Puede añadirse capas o temas de `ggplot2`
+antes de imprimirlo.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+resultado <- buscar_especies_distrito("Miraflores", departamento = "Lima")
+graficar_ocurrencias(resultado, color_por = "source")
+} # }
+```

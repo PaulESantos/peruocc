@@ -6,17 +6,13 @@ Funciones principales para consultar, validar y consolidar ocurrencias
 de GBIF e iNaturalist.
 
 - [`buscar_especies_distrito()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_distrito.md)
-  : Realiza una busqueda combinada de especies en un distrito usando
-  GBIF e iNaturalist
+  : Busca ocurrencias en un distrito peruano
 - [`buscar_especies_provincia()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_provincia.md)
-  : Realiza una busqueda combinada de especies en una provincia usando
-  GBIF e iNaturalist
+  : Busca ocurrencias en una provincia peruana
 - [`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md)
-  : Realiza una busqueda combinada de especies en una unidad
-  administrativa del Peru
+  : Busca y consolida ocurrencias en una unidad administrativa del Perú
 - [`buscar_especies_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_poligono.md)
-  : Realiza una busqueda combinada de especies en un poligono
-  personalizado provisto por el usuario
+  : Busca ocurrencias en un polígono personalizado
 
 ## Geometrías y Unidades Administrativas
 
@@ -24,15 +20,13 @@ Extracción y preparación de geometrías espaciales oficiales de geoperu o
 personalizadas.
 
 - [`obtener_poligono_distrito()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_distrito.md)
-  : Obtiene el poligono de un distrito especifico en el Peru
+  : Obtiene el límite oficial de un distrito peruano
 - [`obtener_poligono_provincia()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_provincia.md)
-  : Obtiene el poligono consolidado de una provincia especifica en el
-  Peru
+  : Obtiene el límite consolidado de una provincia peruana
 - [`obtener_poligono_unidad()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_unidad.md)
-  : Obtiene el poligono de una unidad administrativa (distrito o
-  provincia)
+  : Obtiene un límite administrativo mediante una interfaz única
 - [`preparar_poligono_usuario()`](https://paulesantos.github.io/peruocc/reference/preparar_poligono_usuario.md)
-  : Prepara y estandariza un poligono espacial provisto por el usuario
+  : Valida y normaliza un polígono aportado por el usuario
 
 ## Visualización Cartográfica
 
@@ -40,8 +34,7 @@ Generación de mapas espaciales con capas temáticas y distribución de
 puntos.
 
 - [`graficar_ocurrencias()`](https://paulesantos.github.io/peruocc/reference/graficar_ocurrencias.md)
-  : Grafica el mapa de ocurrencias sobre el poligono de la unidad
-  administrativa
+  : Grafica ocurrencias sobre su área de consulta
 
 ## Exportación, Configuración y Directorios
 
@@ -49,12 +42,18 @@ Exportación de artefactos (CSV, GeoJSON, manifiesto), gestión del
 entorno de trabajo y almacenamiento en caché.
 
 - [`exportar_resultados()`](https://paulesantos.github.io/peruocc/reference/exportar_resultados.md)
-  : Exporta los resultados de una busqueda de biodiversidad a disco
+  : Exporta un resultado de búsqueda a formatos interoperables
+
 - [`verificar_y_configurar_entorno()`](https://paulesantos.github.io/peruocc/reference/verificar_y_configurar_entorno.md)
-  : Verify package dependencies
+  :
+
+  Verifica y, opcionalmente, instala las dependencias de `peruocc`
+
 - [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md)
   [`peruspecies_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md)
-  : Configure the directory used for package artifacts
+  :
+
+  Configura el directorio de trabajo de `peruocc`
 
 ## Funciones Auxiliares y Topología Espacial
 
@@ -76,8 +75,6 @@ modulares.
   : Simplifica un poligono sf o genera su bounding box si es muy
   complejo para cumplir con el limite de longitud de caracteres de WKT.
 - [`buscar_gbif_por_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_gbif_por_poligono.md)
-  : Busca ocurrencias de especies en GBIF dentro de un poligono de
-  distrito o provincia
+  : Busca ocurrencias de GBIF dentro de un polígono
 - [`buscar_inat_por_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_inat_por_poligono.md)
-  : Busca ocurrencias de especies en iNaturalist dentro de un poligono
-  de distrito o provincia
+  : Busca observaciones de iNaturalist dentro de un polígono

@@ -1,7 +1,10 @@
-# Realiza una busqueda combinada de especies en una provincia usando GBIF e iNaturalist
+# Busca ocurrencias en una provincia peruana
 
-Realiza una busqueda combinada de especies en una provincia usando GBIF
-e iNaturalist
+Atajo de
+[`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md)
+con `nivel = "provincia"`. Con la estrategia predeterminada procesa los
+distritos de forma independiente y consolida al final, una opción más
+recuperable que consultar la provincia disuelta en una sola petición.
 
 ## Usage
 
@@ -13,7 +16,8 @@ buscar_especies_provincia(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
-  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  ...
 )
 ```
 
@@ -21,33 +25,41 @@ buscar_especies_provincia(
 
 - provincia:
 
-  Nombre de la provincia (requerido).
+  Cadena no vacía con el nombre de la provincia.
 
 - departamento:
 
-  Nombre del departamento (opcional).
+  `NULL` o el departamento que contiene la provincia. Es necesario
+  cuando el nombre es ambiguo.
 
 - nombre_cientifico:
 
-  Nombre de la especie o grupo taxonomico a filtrar (opcional).
+  `NULL` o nombre de taxón para filtrar.
 
 - grupo:
 
-  Grupo taxonomico a filtrar: "flora", "fauna" o NULL.
+  `NULL`, `"flora"` o `"fauna"`.
 
 - limite_por_api:
 
-  Numero maximo de registros a solicitar por API (def: 500).
+  Entero entre 1 y 10000, o `NULL`; se aplica a cada fuente y lote.
 
 - guardar_resultados:
 
-  Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).
+  Lógico; si es `TRUE` exporta los resultados finales.
 
 - tolerancia_simplificacion:
 
-  Tolerancia en metros para simplificar el poligono en GBIF (def: 100).
+  Tolerancia para simplificación de WKT de GBIF, medida en metros.
+
+- ...:
+
+  Controles avanzados reenviados a
+  [`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md).
+  Destacan `max_area_ha` para ajustar las teselas y `cache_dir` para
+  reanudar.
 
 ## Value
 
-Una lista con el poligono de la provincia, el dataframe de ocurrencias
-consolidado y estadisticas de resumen.
+Lista con límite provincial disuelto, ocurrencias consolidadas, resumen
+de lotes y parámetros de la ejecución.

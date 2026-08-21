@@ -1,8 +1,9 @@
-# Exporta los resultados de una busqueda de biodiversidad a disco
+# Exporta un resultado de búsqueda a formatos interoperables
 
-Guarda los registros consolidados de ocurrencias en formatos CSV, capas
-espaciales GeoJSON y un archivo de manifiesto JSON para trazabilidad y
-reproducibilidad.
+Escribe las ocurrencias consolidadas como tabla CSV, capa GeoJSON y/o un
+manifiesto JSON de reproducibilidad. El manifiesto registra parámetros,
+geometría, versiones de paquetes y las rutas creadas. No se genera
+ningún archivo si `resultado$ocurrencias` no contiene filas.
 
 ## Usage
 
@@ -19,27 +20,37 @@ exportar_resultados(
 
 - resultado:
 
-  Lista devuelta por
-  [`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md),
-  [`buscar_especies_distrito()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_distrito.md)
-  o
-  [`buscar_especies_provincia()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_provincia.md).
+  Lista producida por una función `buscar_especies_*()`. Debe contener
+  al menos `ocurrencias`, `resumen`, `parametros` y `unidad_sf`.
 
 - dir_salida:
 
-  Directorio de destino donde se guardaran los archivos (por defecto el
-  subdirectorio `processed/` de
-  [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md)).
+  Ruta de destino. Si es `NULL`, usa `processed/` dentro de
+  [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md).
+  Se crea junto con sus padres si no existe.
 
 - prefijo:
 
-  Prefijo opcional para nombrar los archivos. Si es NULL, se genera
-  automaticamente.
+  Cadena opcional para el identificador de archivos. Con `NULL` se forma
+  uno con fecha UTC, nivel, unidad y grupo. No incluya extensión: esta
+  función añade `.csv`, `.geojson` o `.json`.
 
 - formatos:
 
-  Vector con los formatos a generar: "csv", "geojson", "manifiesto".
+  Vector no vacío formado por `"csv"`, `"geojson"` y/o `"manifiesto"`.
+  El CSV mantiene todas las filas; el GeoJSON omite filas sin longitud o
+  latitud finitas.
 
 ## Value
 
-Una lista invisible con las rutas de los archivos generados.
+Invisiblemente, una lista nombrada con las rutas creadas. Los nombres
+posibles son `csv`, `geojson` y `manifiesto`.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+resultado <- buscar_especies_distrito("Miraflores", departamento = "Lima")
+exportar_resultados(resultado, formatos = c("csv", "manifiesto"))
+} # }
+```
