@@ -2,18 +2,29 @@
 % Please edit documentation in R/spatial_utils.R
 \name{obtener_poligono_provincia}
 \alias{obtener_poligono_provincia}
-\title{Obtiene el poligono consolidado de una provincia especifica en el Peru}
+\title{Obtiene el límite consolidado de una provincia peruana}
 \usage{
 obtener_poligono_provincia(provincia, departamento = NULL)
 }
 \arguments{
-\item{provincia}{Nombre de la provincia (requerido).}
+\item{provincia}{Cadena no vacía con el nombre de la provincia. La búsqueda
+no distingue tildes ni mayúsculas.}
 
-\item{departamento}{Nombre del departamento (opcional, para resolver ambiguedades).}
+\item{departamento}{\code{NULL} o cadena con el departamento que contiene la
+provincia. Es obligatorio cuando el nombre existe en más de un departamento.}
 }
 \value{
-Un objeto sf con el poligono unificado de la provincia.
+Un objeto \code{sf} de una fila en EPSG:4326, con \code{departamento},
+\code{provincia}, \code{distrito} (\code{NA}) y la geometría disuelta.
 }
 \description{
-Obtiene el poligono consolidado de una provincia especifica en el Peru
+Recupera los distritos de la provincia desde \code{geoperu} y disuelve sus
+geometrías en una sola entidad válida. Para descargar ocurrencias provinciales
+use \code{\link[=buscar_especies_provincia]{buscar_especies_provincia()}}, que internamente conserva los distritos
+separados para hacer consultas más resilientes.
+}
+\examples{
+\dontrun{
+urubamba <- obtener_poligono_provincia("Urubamba", departamento = "Cusco")
+}
 }

@@ -3,21 +3,36 @@
 \name{peruocc_data_dir}
 \alias{peruocc_data_dir}
 \alias{peruspecies_data_dir}
-\title{Configure the directory used for package artifacts}
+\title{Configura el directorio de trabajo de \code{peruocc}}
 \usage{
 peruocc_data_dir(path = NULL)
 
 peruspecies_data_dir(path = NULL)
 }
 \arguments{
-\item{path}{Existing or new writable directory.}
+\item{path}{Cadena de longitud uno con una ruta existente o por crear. Debe
+apuntar a una ubicación con permisos de escritura. Si es \code{NULL}, usa la
+opción ya configurada y, si no existe, crea \verb{peruocc/} bajo el directorio
+de trabajo actual.}
 }
 \value{
-The normalized path, invisibly.
+Invisiblemente, la ruta absoluta normalizada que quedó activa.
 }
 \description{
-Sets the root directory used for processed data and exported artifacts.
-By default, boundaries are cached in a standard user cache directory
-(\code{tools::R_user_dir("peruocc", which = "cache")}) and exported files in a
-\code{peruocc} subdirectory in the current working directory.
+Define el directorio raíz donde el paquete guarda resultados exportados y,
+cuando se configura explícitamente, los límites y checkpoints de consultas.
+La configuración se conserva durante la sesión de R mediante la opción
+\code{peruocc.data_dir}; no modifica archivos de configuración permanentes.
+}
+\details{
+Los resultados se escriben en \verb{processed/} y los límites o
+checkpoints en \verb{cache/} dentro de este directorio. Configure una ruta fuera
+del repositorio cuando ejecute viñetas o análisis reproducibles para evitar
+incorporar artefactos generados al paquete.
+}
+\examples{
+dir_temporal <- file.path(tempdir(), "peruocc-ejemplo")
+peruocc_data_dir(dir_temporal)
+# consultar la ruta activa:
+peruocc_data_dir()
 }

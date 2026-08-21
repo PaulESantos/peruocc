@@ -11,3 +11,7 @@ peruocc/
 .DS_Store
 .quarto
 docs
+Rplots.pdf
+peruocc-output/
+vignettes/peruocc-output/
+

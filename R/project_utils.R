@@ -42,6 +42,27 @@ valor_columna <- function(datos, nombre, tipo = "character") {
   }
 }
 
+# Ejecuta una operación remota con espera exponencial para errores transitorios.
+ejecutar_con_reintentos <- function(operacion, reintentos = 3L, etiqueta = "API", pausa_inicial_s = 0.5) {
+  if (!is.numeric(reintentos) || length(reintentos) != 1L || is.na(reintentos) || reintentos < 1) {
+    stop("'reintentos' debe ser un entero positivo.")
+  }
+  ultimo_error <- NULL
+  for (intento in seq_len(as.integer(reintentos))) {
+    resultado <- tryCatch(operacion(), error = function(e) {
+      ultimo_error <<- e
+      NULL
+    })
+    if (!is.null(resultado)) return(resultado)
+    if (intento < reintentos) {
+      espera <- pausa_inicial_s * 2^(intento - 1)
+      cat(sprintf("[%s] Intento %d/%d fallo; reintentando en %.1f s.\n", etiqueta, intento, reintentos, espera))
+      Sys.sleep(espera)
+    }
+  }
+  stop(ultimo_error)
+}
+
 validar_entrada_busqueda <- function(unidad, grupo = NULL, limite = NULL, nivel = "distrito") {
   if (!is.character(unidad) || length(unidad) != 1L || !nzchar(trimws(unidad))) {
     stop(sprintf("'%s' debe ser un texto no vacio.", nivel))
@@ -113,16 +134,31 @@ escribir_manifiesto <- function(run_id, parametros, unidad_sf, resumen, archivos
   )
 }
 
-#' Exporta los resultados de una busqueda de biodiversidad a disco
+#' Exporta un resultado de búsqueda a formatos interoperables
 #'
-#' Guarda los registros consolidados de ocurrencias en formatos CSV, capas
-#' espaciales GeoJSON y un archivo de manifiesto JSON para trazabilidad y reproducibilidad.
+#' Escribe las ocurrencias consolidadas como tabla CSV, capa GeoJSON y/o un
+#' manifiesto JSON de reproducibilidad. El manifiesto registra parámetros,
+#' geometría, versiones de paquetes y las rutas creadas. No se genera ningún
+#' archivo si `resultado$ocurrencias` no contiene filas.
 #'
-#' @param resultado Lista devuelta por `buscar_especies_peru()`, `buscar_especies_distrito()` o `buscar_especies_provincia()`.
-#' @param dir_salida Directorio de destino donde se guardaran los archivos (por defecto el subdirectorio `processed/` de `peruocc_data_dir()`).
-#' @param prefijo Prefijo opcional para nombrar los archivos. Si es NULL, se genera automaticamente.
-#' @param formatos Vector con los formatos a generar: "csv", "geojson", "manifiesto".
-#' @return Una lista invisible con las rutas de los archivos generados.
+#' @param resultado Lista producida por una función `buscar_especies_*()`. Debe
+#'   contener al menos `ocurrencias`, `resumen`, `parametros` y `unidad_sf`.
+#' @param dir_salida Ruta de destino. Si es `NULL`, usa
+#'   `processed/` dentro de [peruocc_data_dir()]. Se crea junto con sus padres si
+#'   no existe.
+#' @param prefijo Cadena opcional para el identificador de archivos. Con `NULL`
+#'   se forma uno con fecha UTC, nivel, unidad y grupo. No incluya extensión:
+#'   esta función añade `.csv`, `.geojson` o `.json`.
+#' @param formatos Vector no vacío formado por `"csv"`, `"geojson"` y/o
+#'   `"manifiesto"`. El CSV mantiene todas las filas; el GeoJSON omite filas sin
+#'   longitud o latitud finitas.
+#' @return Invisiblemente, una lista nombrada con las rutas creadas. Los nombres
+#'   posibles son `csv`, `geojson` y `manifiesto`.
+#' @examples
+#' \dontrun{
+#' resultado <- buscar_especies_distrito("Miraflores", departamento = "Lima")
+#' exportar_resultados(resultado, formatos = c("csv", "manifiesto"))
+#' }
 #' @export
 exportar_resultados <- function(resultado, dir_salida = NULL, prefijo = NULL, formatos = c("csv", "geojson", "manifiesto")) {
   if (missing(resultado) || is.null(resultado) || !is.list(resultado)) {

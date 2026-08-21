@@ -2,7 +2,7 @@
 % Please edit documentation in R/query_inat.R
 \name{buscar_inat_por_poligono}
 \alias{buscar_inat_por_poligono}
-\title{Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito o provincia}
+\title{Busca observaciones de iNaturalist dentro de un polígono}
 \usage{
 buscar_inat_por_poligono(
   poligono_sf,
@@ -10,25 +10,40 @@ buscar_inat_por_poligono(
   taxon_name = NULL,
   grupo = NULL,
   calidad = "research",
-  limite = 500
+  limite = 500,
+  reintentos = configuracion_predeterminada()$reintentos_api
 )
 }
 \arguments{
-\item{poligono_sf}{Objeto sf que representa la unidad espacial (EPSG:4326).}
+\item{poligono_sf}{Objeto \code{sf} poligonal en EPSG:4326, o transformable a ese
+CRS. Sus atributos administrativos se conservan en la salida si existen.}
 
-\item{query}{Texto libre de busqueda (opcional).}
+\item{query}{\code{NULL} o texto libre que iNaturalist usará como búsqueda general.
+Puede combinarse con \code{taxon_name}, aunque filtros muy restrictivos pueden
+devolver cero observaciones.}
 
-\item{taxon_name}{Nombre de la especie o grupo taxonomico (opcional).}
+\item{taxon_name}{\code{NULL} o nombre de taxón reconocido por iNaturalist, como
+\code{"Panthera onca"} o \code{"Plantae"}.}
 
-\item{grupo}{Grupo taxonomico: "flora", "fauna" o NULL.}
+\item{grupo}{\code{NULL}, \code{"flora"} o \code{"fauna"}. Solo se usa para establecer el
+reino cuando no se proporciona \code{taxon_name}.}
 
-\item{calidad}{Grado de calidad: "research" (por defecto), "casual" o NULL (ambos).}
+\item{calidad}{\code{"research"} (predeterminado), \code{"casual"} o \code{NULL}. \code{NULL}
+no envía filtro de calidad; cualquier otro texto se reenvía a la API.}
 
-\item{limite}{Numero maximo de registros a recuperar (max. 10000 para get_inat_obs).}
+\item{limite}{Entero positivo de hasta 10000, o \code{NULL}. \code{NULL} solicita el
+conteo previo y solo continúa cuando iNaturalist reporta 10000 o menos.}
+
+\item{reintentos}{Entero positivo con el máximo de intentos ante fallos de
+red transitorios.}
 }
 \value{
-Un dataframe estandarizado con los registros encontrados que caen dentro del poligono.
+\code{data.frame} estandarizado con las observaciones dentro del polígono.
+Incluye los atributos \code{api_total} y \code{api_complete} cuando están disponibles.
 }
 \description{
-Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito o provincia
+Función de bajo nivel para iNaturalist. La API recibe la caja delimitadora,
+porque no admite el polígono completo en esta interfaz; el paquete convierte
+las observaciones a \code{sf} y descarta localmente los puntos fuera del límite
+exacto. Para una búsqueda multifuente use \verb{buscar_especies_*()}.
 }

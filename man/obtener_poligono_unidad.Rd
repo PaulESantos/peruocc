@@ -2,7 +2,7 @@
 % Please edit documentation in R/spatial_utils.R
 \name{obtener_poligono_unidad}
 \alias{obtener_poligono_unidad}
-\title{Obtiene el poligono de una unidad administrativa (distrito o provincia)}
+\title{Obtiene un límite administrativo mediante una interfaz única}
 \usage{
 obtener_poligono_unidad(
   nombre,
@@ -12,17 +12,30 @@ obtener_poligono_unidad(
 )
 }
 \arguments{
-\item{nombre}{Nombre de la unidad administrativa.}
+\item{nombre}{Cadena no vacía. Es el nombre del distrito cuando
+\code{nivel = "distrito"} o el de la provincia cuando \code{nivel = "provincia"}.}
 
-\item{nivel}{Nivel administrativo: "distrito" o "provincia" (def: "distrito").}
+\item{nivel}{Uno de \code{"distrito"} o \code{"provincia"}. Si se suministra más de
+un valor, se usa el primero mediante \code{match.arg()}.}
 
-\item{departamento}{Nombre del departamento (opcional).}
+\item{departamento}{\code{NULL} o nombre del departamento para limitar la búsqueda
+y resolver homónimos.}
 
-\item{provincia}{Nombre de la provincia (opcional, para nivel "distrito").}
+\item{provincia}{\code{NULL} o nombre de provincia; solo se usa con
+\code{nivel = "distrito"}.}
 }
 \value{
-Objeto sf con la geometria de la unidad.
+Un objeto \code{sf} en EPSG:4326. Para provincias la geometría está
+disuelta; para distritos contiene una fila de la capa oficial.
 }
 \description{
-Obtiene el poligono de una unidad administrativa (distrito o provincia)
+Despacha a \code{\link[=obtener_poligono_distrito]{obtener_poligono_distrito()}} o \code{\link[=obtener_poligono_provincia]{obtener_poligono_provincia()}}
+según \code{nivel}. Facilita crear funciones genéricas cuando el nivel de consulta
+se elige en tiempo de ejecución.
+}
+\examples{
+\dontrun{
+limite <- obtener_poligono_unidad("Tarapoto", nivel = "distrito",
+                                  departamento = "San Martin")
+}
 }

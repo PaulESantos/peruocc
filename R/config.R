@@ -1,12 +1,24 @@
-#' Configure the directory used for package artifacts
+#' Configura el directorio de trabajo de `peruocc`
 #'
-#' Sets the root directory used for processed data and exported artifacts.
-#' By default, boundaries are cached in a standard user cache directory
-#' (`tools::R_user_dir("peruocc", which = "cache")`) and exported files in a
-#' `peruocc` subdirectory in the current working directory.
+#' Define el directorio raíz donde el paquete guarda resultados exportados y,
+#' cuando se configura explícitamente, los límites y checkpoints de consultas.
+#' La configuración se conserva durante la sesión de R mediante la opción
+#' `peruocc.data_dir`; no modifica archivos de configuración permanentes.
 #'
-#' @param path Existing or new writable directory.
-#' @return The normalized path, invisibly.
+#' @param path Cadena de longitud uno con una ruta existente o por crear. Debe
+#'   apuntar a una ubicación con permisos de escritura. Si es `NULL`, usa la
+#'   opción ya configurada y, si no existe, crea `peruocc/` bajo el directorio
+#'   de trabajo actual.
+#' @return Invisiblemente, la ruta absoluta normalizada que quedó activa.
+#' @details Los resultados se escriben en `processed/` y los límites o
+#' checkpoints en `cache/` dentro de este directorio. Configure una ruta fuera
+#' del repositorio cuando ejecute viñetas o análisis reproducibles para evitar
+#' incorporar artefactos generados al paquete.
+#' @examples
+#' dir_temporal <- file.path(tempdir(), "peruocc-ejemplo")
+#' peruocc_data_dir(dir_temporal)
+#' # consultar la ruta activa:
+#' peruocc_data_dir()
 #' @export
 peruocc_data_dir <- function(path = NULL) {
   if (is.null(path)) {
@@ -50,6 +62,9 @@ ruta_peruspecies <- function(...) {
 configuracion_predeterminada <- function() {
   list(
     limite_por_api = 500L,
-    tolerancia_simplificacion_m = 100
+    tolerancia_simplificacion_m = 100,
+    max_area_ha_por_lote = 1000,
+    reintentos_api = 3L,
+    pausa_entre_lotes_s = 0.2
   )
 }

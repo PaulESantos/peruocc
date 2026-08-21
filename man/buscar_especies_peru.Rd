@@ -2,7 +2,7 @@
 % Please edit documentation in R/query_combined.R
 \name{buscar_especies_peru}
 \alias{buscar_especies_peru}
-\title{Realiza una busqueda combinada de especies en una unidad administrativa del Peru}
+\title{Busca y consolida ocurrencias en una unidad administrativa del Perú}
 \usage{
 buscar_especies_peru(
   nombre,
@@ -13,31 +13,93 @@ buscar_especies_peru(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
-  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  estrategia_espacial = c("auto", "directa", "segmentada"),
+  max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+  cache_dir = ruta_cache("consultas_ocurrencias"),
+  reintentos = configuracion_predeterminada()$reintentos_api,
+  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s
 )
 }
 \arguments{
-\item{nombre}{Nombre de la unidad administrativa (distrito o provincia).}
+\item{nombre}{Cadena no vacía con el distrito o provincia solicitado, según
+\code{nivel}. La coincidencia ignora tildes y mayúsculas.}
 
-\item{nivel}{Nivel administrativo: "distrito" o "provincia" (def: "distrito").}
+\item{nivel}{Uno de \code{"distrito"} o \code{"provincia"}; determina cómo se interpreta
+\code{nombre}. Las provincias se resuelven con sus distritos componentes cuando
+se usa la estrategia segmentada.}
 
-\item{departamento}{Nombre del departamento (opcional).}
+\item{departamento}{\code{NULL} o cadena con el departamento. Es muy recomendable
+para resolver nombres repetidos y reduce la descarga de límites.}
 
-\item{provincia}{Nombre de la provincia (opcional, aplicable cuando nivel = "distrito").}
+\item{provincia}{\code{NULL} o cadena con la provincia. Solo aplica a búsquedas
+distritales y ayuda a desambiguar homónimos.}
 
-\item{nombre_cientifico}{Nombre de la especie o grupo taxonomico a filtrar (opcional).}
+\item{nombre_cientifico}{\code{NULL} o cadena con un taxón, por ejemplo
+\code{"Panthera onca"}. GBIF intenta resolverlo en su backbone taxonómico;
+iNaturalist lo usa como filtro por nombre.}
 
-\item{grupo}{Grupo taxonomico a filtrar: "flora", "fauna" o NULL.}
+\item{grupo}{\code{NULL}, \code{"flora"} o \code{"fauna"} (sin distinguir mayúsculas). Se
+traduce a Plantae o Animalia. Puede combinarse con \code{nombre_cientifico}.}
 
-\item{limite_por_api}{Numero maximo de registros a solicitar por API (def: 500).}
+\item{limite_por_api}{Entero entre 1 y 10000, o \code{NULL}. Es el máximo por
+fuente y lote, no el máximo final consolidado. \code{NULL} solicita descarga
+completa solo cuando cada API informa un conteo dentro de su capacidad;
+puede ser lento y detenerse para consultas demasiado grandes.}
 
-\item{guardar_resultados}{Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).}
+\item{guardar_resultados}{Lógico. Si es \code{TRUE}, ejecuta
+\code{\link[=exportar_resultados]{exportar_resultados()}} al final. No sobrescribe resultados previos porque
+genera un identificador temporal nuevo.}
 
-\item{tolerancia_simplificacion}{Tolerancia en metros para simplificar el poligono en GBIF (def: 100).}
+\item{tolerancia_simplificacion}{Número no negativo en metros. Controla la
+simplificación de la geometría enviada a GBIF; el filtro final siempre usa
+el polígono original. Aumentarlo reduce WKT extensos, pero no modifica el
+recorte final.}
+
+\item{estrategia_espacial}{Una de \code{"auto"}, \code{"segmentada"} o \code{"directa"}.
+\code{"auto"} y \code{"segmentada"} recorren distritos de una provincia y dividen
+polígonos grandes; \code{"directa"} hace una consulta por fuente con el límite
+completo y es útil solo para áreas pequeñas.}
+
+\item{max_area_ha}{Número positivo en hectáreas, predeterminado 1000. Es el
+área objetivo máxima de las teselas en estrategia segmentada. Valores más
+bajos reducen la densidad por petición, pero aumentan el número de llamadas.}
+
+\item{cache_dir}{Ruta escribible para checkpoints \code{.rds} por fuente y lote.
+El valor predeterminado está dentro del caché de \code{peruocc}. Reutilice la
+misma ruta para reanudar una ejecución interrumpida.}
+
+\item{reintentos}{Entero positivo; número máximo de intentos ante errores
+transitorios de red para cada llamada remota. El valor predeterminado es 3.}
+
+\item{pausa_entre_lotes_s}{Número mayor o igual a cero, en segundos. Añade
+una pausa entre lotes para reducir el riesgo de límites de tasa de las APIs.}
 }
 \value{
-Una lista con el poligono de la unidad, el dataframe de ocurrencias consolidado y estadisticas de resumen.
+Una lista con \code{unidad_sf} (límite original), \code{ocurrencias} (tabla
+estandarizada y deduplicada), \code{resumen} (conteos, lotes y fallos) y
+\code{parametros} (configuración reproducible).
 }
 \description{
-Realiza una busqueda combinada de especies en una unidad administrativa del Peru
+Es la función general de consulta. Obtiene el límite oficial, consulta GBIF e
+iNaturalist, valida localmente que cada coordenada esté dentro del polígono y
+unifica las columnas en un esquema común. Para áreas extensas puede dividir
+la consulta en lotes con checkpoint, evitando que un fallo obligue a empezar
+de nuevo.
+}
+\details{
+La deduplicación usa \code{source} y \code{sourceRecordID}; un mismo registro
+procedente de GBIF e iNaturalist se mantiene, porque son fuentes distintas.
+Los checkpoints se escriben tras terminar cada fuente/lote. Revise
+\code{resultado$resumen$fallos_lotes} antes de interpretar una descarga como
+completa.
+}
+\examples{
+\dontrun{
+resultado <- buscar_especies_peru(
+  nombre = "Tambopata", nivel = "provincia", departamento = "Madre de Dios",
+  grupo = "fauna", limite_por_api = 1000, max_area_ha = 1000
+)
+head(resultado$ocurrencias)
+}
 }

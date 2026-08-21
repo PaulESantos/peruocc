@@ -18,3 +18,5 @@
 ^README\.html$
 ^peruocc-output$
 ^peruocc$
+^Rplots\.pdf$
+^vignettes/peruocc-output$

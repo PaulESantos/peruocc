@@ -2,16 +2,28 @@
 % Please edit documentation in R/setup.R
 \name{verificar_y_configurar_entorno}
 \alias{verificar_y_configurar_entorno}
-\title{Verify package dependencies}
+\title{Verifica y, opcionalmente, instala las dependencias de \code{peruocc}}
 \usage{
 verificar_y_configurar_entorno(instalar = FALSE)
 }
 \arguments{
-\item{instalar}{Whether to install missing dependencies explicitly.}
+\item{instalar}{Lógico de longitud uno. Con \code{FALSE} (predeterminado) informa
+los paquetes faltantes mediante un error, sin cambiar el sistema. Con
+\code{TRUE} intenta instalarlos desde el repositorio configurado de R; requiere
+conexión a Internet y permisos de escritura en la biblioteca de paquetes.}
 }
 \value{
-\code{TRUE}, invisibly, when all dependencies are available.
+Invisiblemente \code{TRUE} si todas las dependencias están disponibles.
 }
 \description{
-Verify package dependencies
+Comprueba la disponibilidad de los paquetes requeridos para límites
+administrativos, operaciones espaciales, consultas a GBIF/iNaturalist,
+visualización y exportación. Úsela al preparar una instalación nueva o para
+diagnosticar un error de carga.
+}
+\examples{
+\dontrun{
+verificar_y_configurar_entorno()
+verificar_y_configurar_entorno(instalar = TRUE)
+}
 }

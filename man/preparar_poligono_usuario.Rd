@@ -2,20 +2,33 @@
 % Please edit documentation in R/spatial_utils.R
 \name{preparar_poligono_usuario}
 \alias{preparar_poligono_usuario}
-\title{Prepara y estandariza un poligono espacial provisto por el usuario}
+\title{Valida y normaliza un polígono aportado por el usuario}
 \usage{
 preparar_poligono_usuario(poligono, nombre = NULL)
 }
 \arguments{
-\item{poligono}{Objeto sf/sfc o ruta a un archivo espacial en disco.}
+\item{poligono}{Un objeto \code{sf}, \code{sfc} o \code{Spatial}, o una ruta de longitud uno
+a \code{.shp}, \code{.geojson}, \code{.gpkg} o \code{.kml}. Debe contener geometrías
+poligonales. Si no tiene CRS se asume EPSG:4326 y se emite una advertencia.}
 
-\item{nombre}{Nombre o etiqueta descriptiva para el poligono (opcional).}
+\item{nombre}{\code{NULL} o una etiqueta de texto no vacía para resultados y
+exportaciones. Si \code{poligono} es una ruta y \code{nombre} es \code{NULL}, se usa el
+nombre del archivo sin extensión; para objetos espaciales se usa
+\code{"Poligono_Personalizado"}.}
 }
 \value{
-Un objeto sf estandarizado en EPSG:4326 con atributos descriptivos.
+Un objeto \code{sf} válido de una fila en EPSG:4326, con las columnas
+\code{unidad}, \code{distrito}, \code{provincia} y \code{departamento}. Las tres últimas se
+rellenan con \code{NA} porque el límite no procede de una unidad administrativa.
 }
 \description{
-Lee archivos espaciales (.shp, .geojson, .gpkg, .kml) o valida objetos \code{sf}/\code{sfc},
-asegurando que esten en proyeccion geografica WGS84 (EPSG:4326), con topologia valida
-y estructurados para consultas de biodiversidad.
+Acepta una geometría u archivo espacial, lo transforma a WGS84, corrige
+topología cuando es posible y unifica múltiples elementos en un único límite.
+Es la preparación previa que usa \code{\link[=buscar_especies_poligono]{buscar_especies_poligono()}}.
+}
+\examples{
+coords <- matrix(c(-77.05, -12.10, -77.01, -12.10, -77.01, -12.05,
+                   -77.05, -12.05, -77.05, -12.10), ncol = 2, byrow = TRUE)
+zona <- sf::st_as_sf(sf::st_sfc(sf::st_polygon(list(coords)), crs = 4326))
+preparar_poligono_usuario(zona, nombre = "Zona de prueba")
 }

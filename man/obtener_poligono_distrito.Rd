@@ -2,20 +2,36 @@
 % Please edit documentation in R/spatial_utils.R
 \name{obtener_poligono_distrito}
 \alias{obtener_poligono_distrito}
-\title{Obtiene el poligono de un distrito especifico en el Peru}
+\title{Obtiene el límite oficial de un distrito peruano}
 \usage{
 obtener_poligono_distrito(distrito, departamento = NULL, provincia = NULL)
 }
 \arguments{
-\item{distrito}{Nombre del distrito (requerido).}
+\item{distrito}{Cadena no vacía con el nombre oficial o usual del distrito.
+La coincidencia ignora tildes y mayúsculas; no se aceptan códigos UBIGEO.}
 
-\item{departamento}{Nombre del departamento (opcional, para resolver ambiguedades).}
+\item{departamento}{\code{NULL} o cadena con uno de los 25 departamentos del Perú.
+Recomendado para nombres de distrito repetidos y para evitar descargar la
+capa nacional completa.}
 
-\item{provincia}{Nombre de la provincia (opcional, para resolver ambiguedades).}
+\item{provincia}{\code{NULL} o cadena con la provincia que contiene el distrito.
+Se combina con \code{departamento} para desambiguar. Si persisten varias
+coincidencias, la función muestra alternativas y se detiene.}
 }
 \value{
-Un objeto sf con el poligono del distrito.
+Un objeto \code{sf} de una fila, EPSG:4326, con columnas \code{departamento},
+\code{provincia}, \code{distrito}, \code{capital} (cuando esté disponible) y geometría.
 }
 \description{
-Obtiene el poligono de un distrito especifico en el Peru
+Descarga o recupera del caché la capa distrital de \code{geoperu}, localiza la
+unidad solicitada sin distinguir mayúsculas ni tildes y devuelve una
+geometría válida en WGS84. Es la forma recomendada de inspeccionar un límite
+antes de una búsqueda o de resolver ambigüedades administrativas.
+}
+\examples{
+\dontrun{
+miraflores <- obtener_poligono_distrito(
+  distrito = "Miraflores", departamento = "Lima", provincia = "Lima"
+)
+}
 }

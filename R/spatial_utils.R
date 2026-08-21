@@ -106,12 +106,29 @@ cargar_mapa_departamental <- function(departamento = NULL) {
   return(mapa)
 }
 
-#' Obtiene el poligono de un distrito especifico en el Peru
+#' Obtiene el límite oficial de un distrito peruano
 #'
-#' @param distrito Nombre del distrito (requerido).
-#' @param departamento Nombre del departamento (opcional, para resolver ambiguedades).
-#' @param provincia Nombre de la provincia (opcional, para resolver ambiguedades).
-#' @return Un objeto sf con el poligono del distrito.
+#' Descarga o recupera del caché la capa distrital de `geoperu`, localiza la
+#' unidad solicitada sin distinguir mayúsculas ni tildes y devuelve una
+#' geometría válida en WGS84. Es la forma recomendada de inspeccionar un límite
+#' antes de una búsqueda o de resolver ambigüedades administrativas.
+#'
+#' @param distrito Cadena no vacía con el nombre oficial o usual del distrito.
+#'   La coincidencia ignora tildes y mayúsculas; no se aceptan códigos UBIGEO.
+#' @param departamento `NULL` o cadena con uno de los 25 departamentos del Perú.
+#'   Recomendado para nombres de distrito repetidos y para evitar descargar la
+#'   capa nacional completa.
+#' @param provincia `NULL` o cadena con la provincia que contiene el distrito.
+#'   Se combina con `departamento` para desambiguar. Si persisten varias
+#'   coincidencias, la función muestra alternativas y se detiene.
+#' @return Un objeto `sf` de una fila, EPSG:4326, con columnas `departamento`,
+#'   `provincia`, `distrito`, `capital` (cuando esté disponible) y geometría.
+#' @examples
+#' \dontrun{
+#' miraflores <- obtener_poligono_distrito(
+#'   distrito = "Miraflores", departamento = "Lima", provincia = "Lima"
+#' )
+#' }
 #' @export
 obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia = NULL) {
   loadNamespace("sf")
@@ -195,11 +212,23 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
   return(coincidencias)
 }
 
-#' Obtiene el poligono consolidado de una provincia especifica en el Peru
+#' Obtiene el límite consolidado de una provincia peruana
 #'
-#' @param provincia Nombre de la provincia (requerido).
-#' @param departamento Nombre del departamento (opcional, para resolver ambiguedades).
-#' @return Un objeto sf con el poligono unificado de la provincia.
+#' Recupera los distritos de la provincia desde `geoperu` y disuelve sus
+#' geometrías en una sola entidad válida. Para descargar ocurrencias provinciales
+#' use [buscar_especies_provincia()], que internamente conserva los distritos
+#' separados para hacer consultas más resilientes.
+#'
+#' @param provincia Cadena no vacía con el nombre de la provincia. La búsqueda
+#'   no distingue tildes ni mayúsculas.
+#' @param departamento `NULL` o cadena con el departamento que contiene la
+#'   provincia. Es obligatorio cuando el nombre existe en más de un departamento.
+#' @return Un objeto `sf` de una fila en EPSG:4326, con `departamento`,
+#'   `provincia`, `distrito` (`NA`) y la geometría disuelta.
+#' @examples
+#' \dontrun{
+#' urubamba <- obtener_poligono_provincia("Urubamba", departamento = "Cusco")
+#' }
 #' @export
 obtener_poligono_provincia <- function(provincia, departamento = NULL) {
   loadNamespace("sf")
@@ -281,13 +310,76 @@ obtener_poligono_provincia <- function(provincia, departamento = NULL) {
   return(provincia_sf)
 }
 
-#' Obtiene el poligono de una unidad administrativa (distrito o provincia)
+# Devuelve los distritos que integran una provincia sin disolver sus geometrías.
+# Se usa internamente para distribuir una consulta grande en unidades recuperables.
+obtener_distritos_provincia <- function(provincia, departamento = NULL) {
+  provincia_sf <- obtener_poligono_provincia(provincia, departamento)
+  mapa <- cargar_mapa_departamental(departamento = provincia_sf$departamento[1])
+  idx <- normalizar_texto(mapa$provincia) == normalizar_texto(provincia_sf$provincia[1])
+  distritos <- mapa[idx, ]
+  distritos <- sf::st_make_valid(distritos)
+  distritos <- asegurar_orientacion_antihoraria(distritos)
+  distritos
+}
+
+# Divide una geometría en teselas de área acotada usando una proyección UTM.
+# La teselación se realiza en metros y se devuelve nuevamente en EPSG:4326.
+dividir_poligono_por_area <- function(poligono_sf, max_area_ha = 1000) {
+  if (!inherits(poligono_sf, "sf")) stop("'poligono_sf' debe ser un objeto sf.")
+  if (!is.numeric(max_area_ha) || length(max_area_ha) != 1L || is.na(max_area_ha) || max_area_ha <= 0) {
+    stop("'max_area_ha' debe ser un numero positivo.")
+  }
+
+  poligono_sf <- sf::st_make_valid(poligono_sf)
+  poligono_sf <- sf::st_transform(poligono_sf, 4326)
+  centroide <- sf::st_coordinates(sf::st_centroid(sf::st_union(poligono_sf)))[1, ]
+  zona_utm <- max(1, min(60, floor((centroide[1] + 180) / 6) + 1))
+  epsg_utm <- if (centroide[2] < 0) 32700 + zona_utm else 32600 + zona_utm
+  poligono_utm <- sf::st_transform(poligono_sf, epsg_utm)
+  area_ha <- as.numeric(sf::st_area(sf::st_union(poligono_utm))) / 10000
+
+  if (area_ha <= max_area_ha) {
+    poligono_sf$tile_id <- 1L
+    return(poligono_sf)
+  }
+
+  lado_m <- sqrt(max_area_ha * 10000)
+  grilla <- sf::st_make_grid(sf::st_union(poligono_utm), cellsize = lado_m, square = TRUE)
+  grilla <- grilla[lengths(sf::st_intersects(grilla, sf::st_union(poligono_utm))) > 0]
+  partes <- sf::st_intersection(grilla, sf::st_geometry(poligono_utm))
+  partes <- partes[!sf::st_is_empty(partes)]
+  partes <- sf::st_as_sf(partes)
+  partes <- sf::st_transform(partes, 4326)
+
+  # Todas las teselas conservan los atributos de la unidad administrativa.
+  for (nombre_columna in setdiff(names(poligono_sf), attr(poligono_sf, "sf_column"))) {
+    partes[[nombre_columna]] <- poligono_sf[[nombre_columna]][1]
+  }
+  partes$tile_id <- seq_len(nrow(partes))
+  partes
+}
+
+#' Obtiene un límite administrativo mediante una interfaz única
 #'
-#' @param nombre Nombre de la unidad administrativa.
-#' @param nivel Nivel administrativo: "distrito" o "provincia" (def: "distrito").
-#' @param departamento Nombre del departamento (opcional).
-#' @param provincia Nombre de la provincia (opcional, para nivel "distrito").
-#' @return Objeto sf con la geometria de la unidad.
+#' Despacha a [obtener_poligono_distrito()] o [obtener_poligono_provincia()]
+#' según `nivel`. Facilita crear funciones genéricas cuando el nivel de consulta
+#' se elige en tiempo de ejecución.
+#'
+#' @param nombre Cadena no vacía. Es el nombre del distrito cuando
+#'   `nivel = "distrito"` o el de la provincia cuando `nivel = "provincia"`.
+#' @param nivel Uno de `"distrito"` o `"provincia"`. Si se suministra más de
+#'   un valor, se usa el primero mediante `match.arg()`.
+#' @param departamento `NULL` o nombre del departamento para limitar la búsqueda
+#'   y resolver homónimos.
+#' @param provincia `NULL` o nombre de provincia; solo se usa con
+#'   `nivel = "distrito"`.
+#' @return Un objeto `sf` en EPSG:4326. Para provincias la geometría está
+#'   disuelta; para distritos contiene una fila de la capa oficial.
+#' @examples
+#' \dontrun{
+#' limite <- obtener_poligono_unidad("Tarapoto", nivel = "distrito",
+#'                                   departamento = "San Martin")
+#' }
 #' @export
 obtener_poligono_unidad <- function(nombre, nivel = c("distrito", "provincia"), departamento = NULL, provincia = NULL) {
   nivel <- match.arg(nivel)
@@ -427,15 +519,27 @@ poligono_a_wkt <- function(sf_obj) {
   return(wkt)
 }
 
-#' Prepara y estandariza un poligono espacial provisto por el usuario
+#' Valida y normaliza un polígono aportado por el usuario
 #'
-#' Lee archivos espaciales (.shp, .geojson, .gpkg, .kml) o valida objetos `sf`/`sfc`,
-#' asegurando que esten en proyeccion geografica WGS84 (EPSG:4326), con topologia valida
-#' y estructurados para consultas de biodiversidad.
+#' Acepta una geometría u archivo espacial, lo transforma a WGS84, corrige
+#' topología cuando es posible y unifica múltiples elementos en un único límite.
+#' Es la preparación previa que usa [buscar_especies_poligono()].
 #'
-#' @param poligono Objeto sf/sfc o ruta a un archivo espacial en disco.
-#' @param nombre Nombre o etiqueta descriptiva para el poligono (opcional).
-#' @return Un objeto sf estandarizado en EPSG:4326 con atributos descriptivos.
+#' @param poligono Un objeto `sf`, `sfc` o `Spatial`, o una ruta de longitud uno
+#'   a `.shp`, `.geojson`, `.gpkg` o `.kml`. Debe contener geometrías
+#'   poligonales. Si no tiene CRS se asume EPSG:4326 y se emite una advertencia.
+#' @param nombre `NULL` o una etiqueta de texto no vacía para resultados y
+#'   exportaciones. Si `poligono` es una ruta y `nombre` es `NULL`, se usa el
+#'   nombre del archivo sin extensión; para objetos espaciales se usa
+#'   `"Poligono_Personalizado"`.
+#' @return Un objeto `sf` válido de una fila en EPSG:4326, con las columnas
+#'   `unidad`, `distrito`, `provincia` y `departamento`. Las tres últimas se
+#'   rellenan con `NA` porque el límite no procede de una unidad administrativa.
+#' @examples
+#' coords <- matrix(c(-77.05, -12.10, -77.01, -12.10, -77.01, -12.05,
+#'                    -77.05, -12.05, -77.05, -12.10), ncol = 2, byrow = TRUE)
+#' zona <- sf::st_as_sf(sf::st_sfc(sf::st_polygon(list(coords)), crs = 4326))
+#' preparar_poligono_usuario(zona, nombre = "Zona de prueba")
 #' @export
 preparar_poligono_usuario <- function(poligono, nombre = NULL) {
   loadNamespace("sf")
@@ -507,4 +611,3 @@ preparar_poligono_usuario <- function(poligono, nombre = NULL) {
   
   return(sf_obj)
 }
-

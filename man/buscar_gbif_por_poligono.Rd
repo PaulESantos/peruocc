@@ -2,30 +2,48 @@
 % Please edit documentation in R/query_gbif.R
 \name{buscar_gbif_por_poligono}
 \alias{buscar_gbif_por_poligono}
-\title{Busca ocurrencias de especies en GBIF dentro de un poligono de distrito o provincia}
+\title{Busca ocurrencias de GBIF dentro de un polígono}
 \usage{
 buscar_gbif_por_poligono(
   poligono_sf,
   nombre_cientifico = NULL,
   grupo = NULL,
   limite = 500,
-  tolerancia_simplificacion = 100
+  tolerancia_simplificacion = 100,
+  reintentos = configuracion_predeterminada()$reintentos_api
 )
 }
 \arguments{
-\item{poligono_sf}{Objeto sf que representa la unidad espacial (EPSG:4326).}
+\item{poligono_sf}{Objeto \code{sf} poligonal, preferiblemente en EPSG:4326. Debe
+contener una geometría válida; atributos administrativos son opcionales y
+se copian al resultado cuando existen.}
 
-\item{nombre_cientifico}{Nombre de la especie o grupo taxonomico (opcional).}
+\item{nombre_cientifico}{\code{NULL} o cadena con un taxón. Se intenta resolver
+mediante el backbone de GBIF; si no hay coincidencia, se aplica como texto
+libre en \code{scientificName}.}
 
-\item{grupo}{Grupo taxonomico: "flora", "fauna" o NULL.}
+\item{grupo}{\code{NULL}, \code{"flora"} o \code{"fauna"}, que se traduce a los reinos
+Plantae y Animalia, respectivamente.}
 
-\item{limite}{Numero maximo de registros a recuperar (max. 100000 para occ_search).}
+\item{limite}{Entero positivo de hasta 100000, o \code{NULL}. Con entero solicita
+hasta ese número de filas. Con \code{NULL} consulta primero el conteo y solo
+continúa si no supera el límite de \code{rgbif::occ_search()} (100000).}
 
-\item{tolerancia_simplificacion}{Tolerancia de simplificacion en metros (def: 100 metros).}
+\item{tolerancia_simplificacion}{Número no negativo de metros. Es la
+tolerancia inicial de simplificación del WKT; se incrementa internamente
+cuando la geometría aún es demasiado extensa.}
+
+\item{reintentos}{Entero positivo con intentos máximos para operaciones
+remotas transitorias, incluido el resolver taxonómico.}
 }
 \value{
-Un dataframe estandarizado con los registros encontrados.
+\code{data.frame} con el esquema estándar de ocurrencias. Los atributos
+\code{api_total} y \code{api_complete} describen la respuesta de GBIF.
 }
 \description{
-Busca ocurrencias de especies en GBIF dentro de un poligono de distrito o provincia
+Función de bajo nivel usada por las búsquedas integradas. Convierte el límite
+a WKT, lo simplifica si es necesario para la API de GBIF y luego vuelve a
+filtrar localmente con el polígono exacto. Para uso habitual prefiera las
+funciones \verb{buscar_especies_*()}, que además integran iNaturalist y manejan
+lotes/checkpoints.
 }

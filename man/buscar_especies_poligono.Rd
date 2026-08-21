@@ -2,7 +2,7 @@
 % Please edit documentation in R/query_combined.R
 \name{buscar_especies_poligono}
 \alias{buscar_especies_poligono}
-\title{Realiza una busqueda combinada de especies en un poligono personalizado provisto por el usuario}
+\title{Busca ocurrencias en un polígono personalizado}
 \usage{
 buscar_especies_poligono(
   poligono,
@@ -11,28 +11,73 @@ buscar_especies_poligono(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
-  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  estrategia_espacial = c("auto", "directa", "segmentada"),
+  max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+  cache_dir = ruta_cache("consultas_ocurrencias"),
+  reintentos = configuracion_predeterminada()$reintentos_api,
+  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s
 )
 }
 \arguments{
-\item{poligono}{Objeto espacial (\code{sf} / \code{sfc}) o ruta a un archivo espacial en disco (\code{.shp}, \code{.geojson}, \code{.gpkg}, \code{.kml}).}
+\item{poligono}{Objeto \code{sf}, \code{sfc} o \code{Spatial}, o ruta de longitud uno a un
+archivo \code{.shp}, \code{.geojson}, \code{.gpkg} o \code{.kml}. Debe tener geometría
+poligonal; los elementos múltiples se disuelven en un único límite.}
 
-\item{nombre}{Nombre o etiqueta descriptiva para el poligono (opcional; por defecto el nombre del archivo o "Poligono_Personalizado").}
+\item{nombre}{\code{NULL} o etiqueta de texto para identificar la consulta. Si es
+\code{NULL}, se usa el nombre del archivo o \code{"Poligono_Personalizado"}.}
 
-\item{nombre_cientifico}{Nombre de la especie o grupo taxonomico a filtrar (opcional).}
+\item{nombre_cientifico}{\code{NULL} o nombre de especie/grupo taxonómico. Se usa
+para filtrar ambas fuentes, aunque cada API puede resolver sinónimos de
+forma distinta.}
 
-\item{grupo}{Grupo taxonomico a filtrar: "flora", "fauna" o NULL.}
+\item{grupo}{\code{NULL}, \code{"flora"} o \code{"fauna"}; filtra por Plantae o Animalia.}
 
-\item{limite_por_api}{Numero maximo de registros a solicitar por API (def: 500).}
+\item{limite_por_api}{Entero entre 1 y 10000, o \code{NULL}. Es un máximo por API
+y tesela; no es el máximo global. \code{NULL} intenta recuperar todas las filas
+solamente si los límites técnicos de ambas APIs lo permiten.}
 
-\item{guardar_resultados}{Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).}
+\item{guardar_resultados}{Lógico. Con \code{TRUE} exporta los resultados en la
+carpeta \verb{processed/} configurada con \code{\link[=peruocc_data_dir]{peruocc_data_dir()}}.}
 
-\item{tolerancia_simplificacion}{Tolerancia en metros para simplificar el poligono en GBIF (def: 100).}
+\item{tolerancia_simplificacion}{Número no negativo, en metros, usado para
+acortar la geometría WKT de GBIF. El filtro espacial final usa siempre la
+geometría original.}
+
+\item{estrategia_espacial}{Una de \code{"auto"}, \code{"segmentada"} o \code{"directa"}.
+\code{"auto"} equivale a \code{"segmentada"} y divide polígonos grandes;
+\code{"directa"} evita teselas y solo es aconsejable para áreas pequeñas.}
+
+\item{max_area_ha}{Área positiva, en hectáreas, objetivo de cada tesela para
+estrategia segmentada. El valor 1000 equilibra tamaño de petición y número
+de llamadas; reduzca este valor ante errores por volumen.}
+
+\item{cache_dir}{Directorio escribible para checkpoints de resultados por
+fuente/lote. Conservarlo permite reanudar una extracción interrumpida.}
+
+\item{reintentos}{Entero positivo con el número máximo de reintentos de
+llamadas remotas transitorias.}
+
+\item{pausa_entre_lotes_s}{Número no negativo de segundos de espera entre
+lotes. Aumentarlo es útil ante respuestas de límite de tasa.}
 }
 \value{
-Una lista con el poligono de la unidad, el dataframe de ocurrencias consolidado y estadisticas de resumen.
+Lista con \code{unidad_sf}, \code{ocurrencias}, \code{resumen} y \code{parametros}.
+\code{resumen$fallos_lotes} indica si alguna fuente/lote no pudo completarse.
 }
 \description{
-Consulta registros de biodiversidad en GBIF e iNaturalist utilizando una delimitacion
-espacial personalizada (archivo Shapefile, GeoJSON, GPKG, KML o un objeto \code{sf}).
+Consulta GBIF e iNaturalist sobre un límite aportado por el usuario. El área
+se normaliza mediante \code{\link[=preparar_poligono_usuario]{preparar_poligono_usuario()}}, se consulta por WKT o
+caja delimitadora y, finalmente, los puntos se recortan contra la geometría
+exacta localmente. Soporta áreas de estudio, buffers, ANP y polígonos de
+múltiples partes.
+}
+\examples{
+coords <- matrix(c(-77.05, -12.10, -77.01, -12.10, -77.01, -12.05,
+                   -77.05, -12.05, -77.05, -12.10), ncol = 2, byrow = TRUE)
+zona <- sf::st_as_sf(sf::st_sfc(sf::st_polygon(list(coords)), crs = 4326))
+\dontrun{
+resultado <- buscar_especies_poligono(zona, nombre = "Zona de prueba",
+                                       grupo = "flora", limite_por_api = 500)
+}
 }

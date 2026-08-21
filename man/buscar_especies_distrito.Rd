@@ -2,7 +2,7 @@
 % Please edit documentation in R/query_combined.R
 \name{buscar_especies_distrito}
 \alias{buscar_especies_distrito}
-\title{Realiza una busqueda combinada de especies en un distrito usando GBIF e iNaturalist}
+\title{Busca ocurrencias en un distrito peruano}
 \usage{
 buscar_especies_distrito(
   distrito,
@@ -12,29 +12,40 @@ buscar_especies_distrito(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
-  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  ...
 )
 }
 \arguments{
-\item{distrito}{Nombre del distrito (requerido).}
+\item{distrito}{Cadena no vacía con el nombre del distrito.}
 
-\item{departamento}{Nombre del departamento (opcional).}
+\item{departamento}{\code{NULL} o departamento que contiene al distrito.}
 
-\item{provincia}{Nombre de la provincia (opcional).}
+\item{provincia}{\code{NULL} o provincia que contiene al distrito; úselo junto a
+\code{departamento} para resolver nombres repetidos.}
 
-\item{nombre_cientifico}{Nombre de la especie o grupo taxonomico a filtrar (opcional).}
+\item{nombre_cientifico}{\code{NULL} o nombre de taxón para filtrar resultados.}
 
-\item{grupo}{Grupo taxonomico a filtrar: "flora", "fauna" o NULL.}
+\item{grupo}{\code{NULL}, \code{"flora"} o \code{"fauna"}.}
 
-\item{limite_por_api}{Numero maximo de registros a solicitar por API (def: 500).}
+\item{limite_por_api}{Entero entre 1 y 10000, o \code{NULL}; consulte
+\code{\link[=buscar_especies_peru]{buscar_especies_peru()}} para sus límites y consecuencias.}
 
-\item{guardar_resultados}{Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).}
+\item{guardar_resultados}{Lógico que exporta CSV, GeoJSON y manifiesto al
+finalizar cuando es \code{TRUE}.}
 
-\item{tolerancia_simplificacion}{Tolerancia en metros para simplificar el poligono en GBIF (def: 100).}
+\item{tolerancia_simplificacion}{Tolerancia de simplificación para la llamada
+a GBIF, expresada en metros.}
+
+\item{...}{Controles avanzados reenviados a \code{\link[=buscar_especies_peru]{buscar_especies_peru()}}:
+\code{estrategia_espacial}, \code{max_area_ha}, \code{cache_dir}, \code{reintentos} y
+\code{pausa_entre_lotes_s}.}
 }
 \value{
-Una lista con el poligono del distrito, el dataframe de ocurrencias y estadisticas de resumen.
+Lista con límite, ocurrencias, resumen y parámetros. Consulte el
+valor retornado por \code{\link[=buscar_especies_peru]{buscar_especies_peru()}}.
 }
 \description{
-Realiza una busqueda combinada de especies en un distrito usando GBIF e iNaturalist
+Atajo legible de \code{\link[=buscar_especies_peru]{buscar_especies_peru()}} con \code{nivel = "distrito"}. Acepte
+los mismos filtros y devuelve la misma estructura de resultado.
 }

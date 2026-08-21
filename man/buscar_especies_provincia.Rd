@@ -2,7 +2,7 @@
 % Please edit documentation in R/query_combined.R
 \name{buscar_especies_provincia}
 \alias{buscar_especies_provincia}
-\title{Realiza una busqueda combinada de especies en una provincia usando GBIF e iNaturalist}
+\title{Busca ocurrencias en una provincia peruana}
 \usage{
 buscar_especies_provincia(
   provincia,
@@ -11,27 +11,38 @@ buscar_especies_provincia(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
-  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  ...
 )
 }
 \arguments{
-\item{provincia}{Nombre de la provincia (requerido).}
+\item{provincia}{Cadena no vacía con el nombre de la provincia.}
 
-\item{departamento}{Nombre del departamento (opcional).}
+\item{departamento}{\code{NULL} o el departamento que contiene la provincia. Es
+necesario cuando el nombre es ambiguo.}
 
-\item{nombre_cientifico}{Nombre de la especie o grupo taxonomico a filtrar (opcional).}
+\item{nombre_cientifico}{\code{NULL} o nombre de taxón para filtrar.}
 
-\item{grupo}{Grupo taxonomico a filtrar: "flora", "fauna" o NULL.}
+\item{grupo}{\code{NULL}, \code{"flora"} o \code{"fauna"}.}
 
-\item{limite_por_api}{Numero maximo de registros a solicitar por API (def: 500).}
+\item{limite_por_api}{Entero entre 1 y 10000, o \code{NULL}; se aplica a cada
+fuente y lote.}
 
-\item{guardar_resultados}{Logico; si es TRUE guarda los resultados en processed/ (def: FALSE).}
+\item{guardar_resultados}{Lógico; si es \code{TRUE} exporta los resultados finales.}
 
-\item{tolerancia_simplificacion}{Tolerancia en metros para simplificar el poligono en GBIF (def: 100).}
+\item{tolerancia_simplificacion}{Tolerancia para simplificación de WKT de
+GBIF, medida en metros.}
+
+\item{...}{Controles avanzados reenviados a \code{\link[=buscar_especies_peru]{buscar_especies_peru()}}.
+Destacan \code{max_area_ha} para ajustar las teselas y \code{cache_dir} para reanudar.}
 }
 \value{
-Una lista con el poligono de la provincia, el dataframe de ocurrencias consolidado y estadisticas de resumen.
+Lista con límite provincial disuelto, ocurrencias consolidadas,
+resumen de lotes y parámetros de la ejecución.
 }
 \description{
-Realiza una busqueda combinada de especies en una provincia usando GBIF e iNaturalist
+Atajo de \code{\link[=buscar_especies_peru]{buscar_especies_peru()}} con \code{nivel = "provincia"}. Con la
+estrategia predeterminada procesa los distritos de forma independiente y
+consolida al final, una opción más recuperable que consultar la provincia
+disuelta en una sola petición.
 }

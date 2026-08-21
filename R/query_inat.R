@@ -1,21 +1,37 @@
 # query_inat.R
 # Funciones para consultar ocurrencias de especies en la base de datos de iNaturalist con filtro espacial.
 
-#' Busca ocurrencias de especies en iNaturalist dentro de un poligono de distrito o provincia
+#' Busca observaciones de iNaturalist dentro de un polígono
 #'
-#' @param poligono_sf Objeto sf que representa la unidad espacial (EPSG:4326).
-#' @param query Texto libre de busqueda (opcional).
-#' @param taxon_name Nombre de la especie o grupo taxonomico (opcional).
-#' @param grupo Grupo taxonomico: "flora", "fauna" o NULL.
-#' @param calidad Grado de calidad: "research" (por defecto), "casual" o NULL (ambos).
-#' @param limite Numero maximo de registros a recuperar (max. 10000 para get_inat_obs).
-#' @return Un dataframe estandarizado con los registros encontrados que caen dentro del poligono.
+#' Función de bajo nivel para iNaturalist. La API recibe la caja delimitadora,
+#' porque no admite el polígono completo en esta interfaz; el paquete convierte
+#' las observaciones a `sf` y descarta localmente los puntos fuera del límite
+#' exacto. Para una búsqueda multifuente use `buscar_especies_*()`.
+#'
+#' @param poligono_sf Objeto `sf` poligonal en EPSG:4326, o transformable a ese
+#'   CRS. Sus atributos administrativos se conservan en la salida si existen.
+#' @param query `NULL` o texto libre que iNaturalist usará como búsqueda general.
+#'   Puede combinarse con `taxon_name`, aunque filtros muy restrictivos pueden
+#'   devolver cero observaciones.
+#' @param taxon_name `NULL` o nombre de taxón reconocido por iNaturalist, como
+#'   `"Panthera onca"` o `"Plantae"`.
+#' @param grupo `NULL`, `"flora"` o `"fauna"`. Solo se usa para establecer el
+#'   reino cuando no se proporciona `taxon_name`.
+#' @param calidad `"research"` (predeterminado), `"casual"` o `NULL`. `NULL`
+#'   no envía filtro de calidad; cualquier otro texto se reenvía a la API.
+#' @param limite Entero positivo de hasta 10000, o `NULL`. `NULL` solicita el
+#'   conteo previo y solo continúa cuando iNaturalist reporta 10000 o menos.
+#' @param reintentos Entero positivo con el máximo de intentos ante fallos de
+#'   red transitorios.
+#' @return `data.frame` estandarizado con las observaciones dentro del polígono.
+#'   Incluye los atributos `api_total` y `api_complete` cuando están disponibles.
 buscar_inat_por_poligono <- function(poligono_sf, 
                                      query = NULL, 
                                      taxon_name = NULL, 
-                                     grupo = NULL, 
-                                     calidad = "research", 
-                                     limite = 500) {
+                                      grupo = NULL, 
+                                      calidad = "research", 
+                                      limite = 500,
+                                      reintentos = configuracion_predeterminada()$reintentos_api) {
   
   cat("[iNaturalist] Iniciando busqueda de ocurrencias...\n")
   
@@ -64,7 +80,7 @@ buscar_inat_por_poligono <- function(poligono_sf,
   
   total_api <- NA_integer_
   if (is.null(limite)) {
-    metadatos <- tryCatch(do.call(rinat::get_inat_obs, c(parametros, list(maxresults = 1, meta = TRUE))), error = function(e) NULL)
+    metadatos <- tryCatch(ejecutar_con_reintentos(function() do.call(rinat::get_inat_obs, c(parametros, list(maxresults = 1, meta = TRUE))), reintentos, "iNaturalist conteo"), error = function(e) NULL)
     total_api <- if (!is.null(metadatos$meta$found)) as.integer(metadatos$meta$found) else NA_integer_
     if (is.na(total_api)) stop("iNaturalist no devolvio el conteo de la consulta; no es posible verificar una descarga completa.")
     if (total_api > 10000L) stop(sprintf("iNaturalist reporta %s registros. El cliente rinat solo descarga hasta 10000 por consulta; use la exportacion oficial de iNaturalist o divida la extraccion por periodos antes de combinarla.", format(total_api, big.mark = ",")))
@@ -74,7 +90,7 @@ buscar_inat_por_poligono <- function(poligono_sf,
   }
   
   obs_raw <- tryCatch({
-    do.call(rinat::get_inat_obs, parametros)
+    ejecutar_con_reintentos(function() do.call(rinat::get_inat_obs, parametros), reintentos, "iNaturalist ocurrencias")
   }, error = function(e) {
     cat("[iNaturalist] Error durante la llamada a get_inat_obs: ", e$message, "\n")
     return(NULL)

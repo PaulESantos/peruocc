@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualize.R
 \name{graficar_ocurrencias}
 \alias{graficar_ocurrencias}
-\title{Grafica el mapa de ocurrencias sobre el poligono de la unidad administrativa}
+\title{Grafica ocurrencias sobre su área de consulta}
 \usage{
 graficar_ocurrencias(
   resultado_lista,
@@ -11,15 +11,30 @@ graficar_ocurrencias(
 )
 }
 \arguments{
-\item{resultado_lista}{Lista de resultados devuelta por buscar_especies_peru(), buscar_especies_distrito() o buscar_especies_provincia().}
+\item{resultado_lista}{Lista devuelta por \code{\link[=buscar_especies_peru]{buscar_especies_peru()}},
+\code{\link[=buscar_especies_distrito]{buscar_especies_distrito()}}, \code{\link[=buscar_especies_provincia]{buscar_especies_provincia()}} o
+\code{\link[=buscar_especies_poligono]{buscar_especies_poligono()}}. Debe contener \code{unidad_sf}, \code{ocurrencias} y
+\code{resumen}.}
 
-\item{color_por}{Columna para clasificar los colores ("source" por defecto, o "kingdom").}
+\item{color_por}{Cadena con la columna usada para colorear puntos. Los valores
+admitidos son \code{"source"} (GBIF/iNaturalist, predeterminado) y \code{"kingdom"}
+(Plantae/Animalia cuando está disponible).}
 
-\item{guardar_mapa}{Logico; si es TRUE guarda el grafico en results/ como PNG (def: FALSE).}
+\item{guardar_mapa}{Lógico de longitud uno. Si es \code{TRUE}, además devuelve el
+gráfico y lo guarda como PNG en \verb{results/} dentro de \code{\link[=peruocc_data_dir]{peruocc_data_dir()}}.}
 }
 \value{
-El objeto de grafico ggplot.
+Un objeto de clase \code{ggplot}. Puede añadirse capas o temas de
+\code{ggplot2} antes de imprimirlo.
 }
 \description{
-Grafica el mapa de ocurrencias sobre el poligono de la unidad administrativa
+Construye un mapa \code{ggplot2} con el polígono consultado y los registros que
+quedaron después del filtro espacial exacto. Es apropiada para inspección
+exploratoria y control de calidad de coordenadas, no para cartografía final.
+}
+\examples{
+\dontrun{
+resultado <- buscar_especies_distrito("Miraflores", departamento = "Lima")
+graficar_ocurrencias(resultado, color_por = "source")
+}
 }

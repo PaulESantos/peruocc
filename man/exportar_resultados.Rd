@@ -2,7 +2,7 @@
 % Please edit documentation in R/project_utils.R
 \name{exportar_resultados}
 \alias{exportar_resultados}
-\title{Exporta los resultados de una busqueda de biodiversidad a disco}
+\title{Exporta un resultado de búsqueda a formatos interoperables}
 \usage{
 exportar_resultados(
   resultado,
@@ -12,18 +12,34 @@ exportar_resultados(
 )
 }
 \arguments{
-\item{resultado}{Lista devuelta por \code{buscar_especies_peru()}, \code{buscar_especies_distrito()} o \code{buscar_especies_provincia()}.}
+\item{resultado}{Lista producida por una función \verb{buscar_especies_*()}. Debe
+contener al menos \code{ocurrencias}, \code{resumen}, \code{parametros} y \code{unidad_sf}.}
 
-\item{dir_salida}{Directorio de destino donde se guardaran los archivos (por defecto el subdirectorio \verb{processed/} de \code{peruocc_data_dir()}).}
+\item{dir_salida}{Ruta de destino. Si es \code{NULL}, usa
+\verb{processed/} dentro de \code{\link[=peruocc_data_dir]{peruocc_data_dir()}}. Se crea junto con sus padres si
+no existe.}
 
-\item{prefijo}{Prefijo opcional para nombrar los archivos. Si es NULL, se genera automaticamente.}
+\item{prefijo}{Cadena opcional para el identificador de archivos. Con \code{NULL}
+se forma uno con fecha UTC, nivel, unidad y grupo. No incluya extensión:
+esta función añade \code{.csv}, \code{.geojson} o \code{.json}.}
 
-\item{formatos}{Vector con los formatos a generar: "csv", "geojson", "manifiesto".}
+\item{formatos}{Vector no vacío formado por \code{"csv"}, \code{"geojson"} y/o
+\code{"manifiesto"}. El CSV mantiene todas las filas; el GeoJSON omite filas sin
+longitud o latitud finitas.}
 }
 \value{
-Una lista invisible con las rutas de los archivos generados.
+Invisiblemente, una lista nombrada con las rutas creadas. Los nombres
+posibles son \code{csv}, \code{geojson} y \code{manifiesto}.
 }
 \description{
-Guarda los registros consolidados de ocurrencias en formatos CSV, capas
-espaciales GeoJSON y un archivo de manifiesto JSON para trazabilidad y reproducibilidad.
+Escribe las ocurrencias consolidadas como tabla CSV, capa GeoJSON y/o un
+manifiesto JSON de reproducibilidad. El manifiesto registra parámetros,
+geometría, versiones de paquetes y las rutas creadas. No se genera ningún
+archivo si \code{resultado$ocurrencias} no contiene filas.
+}
+\examples{
+\dontrun{
+resultado <- buscar_especies_distrito("Miraflores", departamento = "Lima")
+exportar_resultados(resultado, formatos = c("csv", "manifiesto"))
+}
 }

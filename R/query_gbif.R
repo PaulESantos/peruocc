@@ -1,19 +1,38 @@
 # query_gbif.R
 # Funciones para consultar ocurrencias de especies en la base de datos de GBIF.
 
-#' Busca ocurrencias de especies en GBIF dentro de un poligono de distrito o provincia
+#' Busca ocurrencias de GBIF dentro de un polígono
 #'
-#' @param poligono_sf Objeto sf que representa la unidad espacial (EPSG:4326).
-#' @param nombre_cientifico Nombre de la especie o grupo taxonomico (opcional).
-#' @param grupo Grupo taxonomico: "flora", "fauna" o NULL.
-#' @param limite Numero maximo de registros a recuperar (max. 100000 para occ_search).
-#' @param tolerancia_simplificacion Tolerancia de simplificacion en metros (def: 100 metros).
-#' @return Un dataframe estandarizado con los registros encontrados.
+#' Función de bajo nivel usada por las búsquedas integradas. Convierte el límite
+#' a WKT, lo simplifica si es necesario para la API de GBIF y luego vuelve a
+#' filtrar localmente con el polígono exacto. Para uso habitual prefiera las
+#' funciones `buscar_especies_*()`, que además integran iNaturalist y manejan
+#' lotes/checkpoints.
+#'
+#' @param poligono_sf Objeto `sf` poligonal, preferiblemente en EPSG:4326. Debe
+#'   contener una geometría válida; atributos administrativos son opcionales y
+#'   se copian al resultado cuando existen.
+#' @param nombre_cientifico `NULL` o cadena con un taxón. Se intenta resolver
+#'   mediante el backbone de GBIF; si no hay coincidencia, se aplica como texto
+#'   libre en `scientificName`.
+#' @param grupo `NULL`, `"flora"` o `"fauna"`, que se traduce a los reinos
+#'   Plantae y Animalia, respectivamente.
+#' @param limite Entero positivo de hasta 100000, o `NULL`. Con entero solicita
+#'   hasta ese número de filas. Con `NULL` consulta primero el conteo y solo
+#'   continúa si no supera el límite de `rgbif::occ_search()` (100000).
+#' @param tolerancia_simplificacion Número no negativo de metros. Es la
+#'   tolerancia inicial de simplificación del WKT; se incrementa internamente
+#'   cuando la geometría aún es demasiado extensa.
+#' @param reintentos Entero positivo con intentos máximos para operaciones
+#'   remotas transitorias, incluido el resolver taxonómico.
+#' @return `data.frame` con el esquema estándar de ocurrencias. Los atributos
+#'   `api_total` y `api_complete` describen la respuesta de GBIF.
 buscar_gbif_por_poligono <- function(poligono_sf, 
                                      nombre_cientifico = NULL, 
                                      grupo = NULL, 
                                      limite = 500, 
-                                     tolerancia_simplificacion = 100) {
+                                     tolerancia_simplificacion = 100,
+                                     reintentos = configuracion_predeterminada()$reintentos_api) {
   
   cat("[GBIF] Iniciando busqueda de ocurrencias...\n")
   
@@ -32,7 +51,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
   if (!is.null(nombre_cientifico) && nombre_cientifico != "") {
     cat(sprintf("[GBIF] Resolviendo taxonomia para '%s'...\n", nombre_cientifico))
     resolucion <- tryCatch({
-      rgbif::name_backbone(name = nombre_cientifico)
+      ejecutar_con_reintentos(function() rgbif::name_backbone(name = nombre_cientifico), reintentos, "GBIF taxonomia")
     }, error = function(e) {
       cat("[GBIF] Advertencia: No se pudo conectar al resolutor taxonomico de GBIF.\n")
       return(NULL)
@@ -83,7 +102,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
 
   total_api <- NA_integer_
   if (is.null(limite)) {
-    conteo <- tryCatch(do.call(rgbif::occ_search, c(parametros, list(limit = 0))), error = function(e) NULL)
+    conteo <- tryCatch(ejecutar_con_reintentos(function() do.call(rgbif::occ_search, c(parametros, list(limit = 0))), reintentos, "GBIF conteo"), error = function(e) NULL)
     total_api <- if (!is.null(conteo$meta$count)) as.integer(conteo$meta$count) else NA_integer_
     if (is.na(total_api)) stop("GBIF no devolvio el conteo de la consulta; no es posible verificar una descarga completa.")
     if (total_api > 100000L) stop(sprintf("GBIF reporta %s registros. occ_search solo permite 100000; solicite una descarga masiva citable con rgbif::occ_download() usando los mismos filtros.", format(total_api, big.mark = ",")))
@@ -93,7 +112,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
   }
   
   res <- tryCatch({
-    do.call(rgbif::occ_search, parametros)
+    ejecutar_con_reintentos(function() do.call(rgbif::occ_search, parametros), reintentos, "GBIF ocurrencias")
   }, error = function(e) {
     cat("[GBIF] Error durante la llamada a occ_search: ", e$message, "\n")
     return(NULL)
