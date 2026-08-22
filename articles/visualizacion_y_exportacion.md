@@ -105,12 +105,84 @@ resultado <- buscar_especies_distrito(
   grupo = "flora",
   limite_por_api = 150
 )
+#> =====================================================================
+#> BUSQUEDA INTEGRADA EN DISTRITO: MIRAFLORES
+#>   Provincia: Lima
+#>   Departamento: Lima
+#> =====================================================================
+#> 
+#> [SPATIAL] Descargando limites de LIMA via geoperu...
+#> [LOTE] Procesando 1 lote(s) espaciales. Los resultados completados se guardan en '/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias'.
+#> [GBIF] Iniciando busqueda de ocurrencias...
+#> [SPATIAL] Poligono simplificado con exito a tolerancia de 100 metros (WKT: 822 caracteres).
+#> [GBIF] Filtrando por reino Plantae (Flora).
+#> [GBIF] Consultando registros dentro del poligono de 'MIRAFLORES' (limite: 150)...
+#> [GBIF] Busqueda finalizada. Se filtraron 148 registros que caen dentro del poligono seleccionado.
+#> [iNaturalist] Iniciando busqueda de ocurrencias...
+#> [iNaturalist] Filtrando por reino Plantae (Flora).
+#> [iNaturalist] Consultando registros dentro de la caja delimitadora de 'MIRAFLORES' (limite: 150)...
+#> [iNaturalist] Se descargaron 150 registros en la caja delimitadora. Aplicando filtro espacial...
+#> [iNaturalist] Busqueda finalizada. 133 de 150 registros caen dentro del poligono seleccionado.
+#> 
+#> [RESULTADO] Consolidacion exitosa. Total de registros unificados: 281
+#>        Origen Registros
+#> 1        GBIF       148
+#> 2 iNaturalist       133
+#> 3       Total       281
 
 # Paso 2: Inspeccionar resultados o graficar
 summary(resultado$ocurrencias)
+#>     occurrenceID   sourceRecordID     sourceURL       datasetKey 
+#>  Length   :281   Length   :281    Length   :281   Length   :281  
+#>  N.unique :281   N.unique :281    N.unique :281   N.unique :  2  
+#>  N.blank  :  0   N.blank  :  0    N.blank  :  0   N.blank  :  0  
+#>  Min.nchar: 10   Min.nchar:  9    Min.nchar: 42   Min.nchar: 36  
+#>  Max.nchar: 50   Max.nchar: 10    Max.nchar: 50   Max.nchar: 36  
+#>                                                   NAs      :133  
+#>                                                                  
+#>       license      basisOfRecord   scientificName decimalLatitude 
+#>  Length   :281   Length   :281   Length   :281    Min.   :-12.14  
+#>  N.unique :  8   N.unique :  2   N.unique :120    1st Qu.:-12.13  
+#>  N.blank  : 19   N.blank  :  0   N.blank  :  0    Median :-12.12  
+#>  Min.nchar:  0   Min.nchar: 16   Min.nchar: 11    Mean   :-12.12  
+#>  Max.nchar: 58   Max.nchar: 17   Max.nchar: 58    3rd Qu.:-12.12  
+#>                                                   Max.   :-12.11  
+#>                                                                   
+#>  decimalLongitude     eventDate       taxonRank        kingdom   
+#>  Min.   :-77.05   Length   :281   Length   :281   Length   :281  
+#>  1st Qu.:-77.04   N.unique :234   N.unique :  1   N.unique :  1  
+#>  Median :-77.03   N.blank  :  0   N.blank  :  0   N.blank  :  0  
+#>  Mean   :-77.03   Min.nchar: 10   Min.nchar:  7   Min.nchar:  7  
+#>  3rd Qu.:-77.03   Max.nchar: 20   Max.nchar:  7   Max.nchar:  7  
+#>  Max.   :-77.01                   NAs      :133                  
+#>                                                                  
+#>        phylum          class           order           family   
+#>  Length   :281   Length   :281   Length   :281   Length   :281  
+#>  N.unique :  2   N.unique :  4   N.unique : 20   N.unique : 34  
+#>  N.blank  :  0   N.blank  :  0   N.blank  :  0   N.blank  :  0  
+#>  Min.nchar: 10   Min.nchar:  9   Min.nchar:  6   Min.nchar:  7  
+#>  Max.nchar: 12   Max.nchar: 15   Max.nchar: 14   Max.nchar: 16  
+#>  NAs      :133   NAs      :133   NAs      :133   NAs      :133  
+#>                                                                 
+#>        genus          species        recordedBy  coordinateUncertaintyInMeters
+#>  Length   :281   Length   :281   Length   :281   Min.   :   2.0               
+#>  N.unique : 54   N.unique : 64   N.unique :120   1st Qu.:  12.0               
+#>  N.blank  :  0   N.blank  :  0   N.blank  :  0   Median :  21.0               
+#>  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 333.6               
+#>  Max.nchar: 16   Max.nchar: 28   Max.nchar: 30   3rd Qu.:  30.0               
+#>  NAs      :133   NAs      :133   NAs      : 11   Max.   :3945.0               
+#>                                                  NAs    :53                   
+#>        source         district        province       department 
+#>  Length   :281   Length   :281   Length   :281   Length   :281  
+#>  N.unique :  2   N.unique :  1   N.unique :  1   N.unique :  1  
+#>  N.blank  :  0   N.blank  :  0   N.blank  :  0   N.blank  :  0  
+#>  Min.nchar:  4   Min.nchar: 10   Min.nchar:  4   Min.nchar:  4  
+#>  Max.nchar: 11   Max.nchar: 10   Max.nchar:  4   Max.nchar:  4  
+#>                                                                 
+#> 
 
 # Paso 3: Si los datos son conformes, exportar a disco
-exportar_resultados(resultado)
+# exportar_resultados(resultado)
 ```
 
 ------------------------------------------------------------------------
@@ -196,6 +268,8 @@ mapa_fuente <- graficar_ocurrencias(
 print(mapa_fuente)
 ```
 
+![](visualizacion_y_exportacion_files/figure-html/unnamed-chunk-4-1.png)
+
 ### Comparación por Reino Biológico (`kingdom`)
 
 ``` r
@@ -208,6 +282,8 @@ mapa_reino <- graficar_ocurrencias(
 
 print(mapa_reino)
 ```
+
+![](visualizacion_y_exportacion_files/figure-html/unnamed-chunk-5-1.png)
 
 ### Exportar el Mapa Directamente a Imagen
 

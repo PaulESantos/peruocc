@@ -325,9 +325,9 @@ resultado_desde_archivo <- buscar_especies_poligono(
 
 # 3. Exportar resultados con manifiesto de reproducibilidad
 exportar_resultados(resultado_desde_archivo)
-#> [ARCHIVO] Registros tabulares guardados en: '/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260821T063231Z_poligono_reservalocal_flora.csv'
-#> [ARCHIVO] Capa espacial GeoJSON guardada en: '/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260821T063231Z_poligono_reservalocal_flora.geojson'
-#> [ARCHIVO] Manifiesto guardado en: '/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260821T063231Z_poligono_reservalocal_flora.json'
+#> [ARCHIVO] Registros tabulares guardados en: '/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260822T022137Z_poligono_reservalocal_flora.csv'
+#> [ARCHIVO] Capa espacial GeoJSON guardada en: '/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260822T022137Z_poligono_reservalocal_flora.geojson'
+#> [ARCHIVO] Manifiesto guardado en: '/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260822T022137Z_poligono_reservalocal_flora.json'
 ```
 
 ------------------------------------------------------------------------

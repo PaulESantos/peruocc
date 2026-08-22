@@ -222,12 +222,84 @@ selectivamente cuando los datos estén listos:</p>
 <span>  grupo <span class="op">=</span> <span class="st">"flora"</span>,</span>
 <span>  limite_por_api <span class="op">=</span> <span class="fl">150</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; BUSQUEDA INTEGRADA EN DISTRITO: MIRAFLORES</span></span>
+<span><span class="co">#&gt;   Provincia: Lima</span></span>
+<span><span class="co">#&gt;   Departamento: Lima</span></span>
+<span><span class="co">#&gt; =====================================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [SPATIAL] Descargando limites de LIMA via geoperu...</span></span>
+<span><span class="co">#&gt; [LOTE] Procesando 1 lote(s) espaciales. Los resultados completados se guardan en '/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias'.</span></span>
+<span><span class="co">#&gt; [GBIF] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [SPATIAL] Poligono simplificado con exito a tolerancia de 100 metros (WKT: 822 caracteres).</span></span>
+<span><span class="co">#&gt; [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; [GBIF] Consultando registros dentro del poligono de 'MIRAFLORES' (limite: 150)...</span></span>
+<span><span class="co">#&gt; [GBIF] Busqueda finalizada. Se filtraron 148 registros que caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; [iNaturalist] Iniciando busqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; [iNaturalist] Consultando registros dentro de la caja delimitadora de 'MIRAFLORES' (limite: 150)...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Se descargaron 150 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; [iNaturalist] Busqueda finalizada. 133 de 150 registros caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [RESULTADO] Consolidacion exitosa. Total de registros unificados: 281</span></span>
+<span><span class="co">#&gt;        Origen Registros</span></span>
+<span><span class="co">#&gt; 1        GBIF       148</span></span>
+<span><span class="co">#&gt; 2 iNaturalist       133</span></span>
+<span><span class="co">#&gt; 3       Total       281</span></span>
 <span></span>
 <span><span class="co"># Paso 2: Inspeccionar resultados o graficar</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">resultado</span><span class="op">$</span><span class="va">ocurrencias</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     occurrenceID   sourceRecordID     sourceURL       datasetKey </span></span>
+<span><span class="co">#&gt;  Length   :281   Length   :281    Length   :281   Length   :281  </span></span>
+<span><span class="co">#&gt;  N.unique :281   N.unique :281    N.unique :281   N.unique :  2  </span></span>
+<span><span class="co">#&gt;  N.blank  :  0   N.blank  :  0    N.blank  :  0   N.blank  :  0  </span></span>
+<span><span class="co">#&gt;  Min.nchar: 10   Min.nchar:  9    Min.nchar: 42   Min.nchar: 36  </span></span>
+<span><span class="co">#&gt;  Max.nchar: 50   Max.nchar: 10    Max.nchar: 50   Max.nchar: 36  </span></span>
+<span><span class="co">#&gt;                                                   NAs      :133  </span></span>
+<span><span class="co">#&gt;                                                                  </span></span>
+<span><span class="co">#&gt;       license      basisOfRecord   scientificName decimalLatitude </span></span>
+<span><span class="co">#&gt;  Length   :281   Length   :281   Length   :281    Min.   :-12.14  </span></span>
+<span><span class="co">#&gt;  N.unique :  8   N.unique :  2   N.unique :120    1st Qu.:-12.13  </span></span>
+<span><span class="co">#&gt;  N.blank  : 19   N.blank  :  0   N.blank  :  0    Median :-12.12  </span></span>
+<span><span class="co">#&gt;  Min.nchar:  0   Min.nchar: 16   Min.nchar: 11    Mean   :-12.12  </span></span>
+<span><span class="co">#&gt;  Max.nchar: 58   Max.nchar: 17   Max.nchar: 58    3rd Qu.:-12.12  </span></span>
+<span><span class="co">#&gt;                                                   Max.   :-12.11  </span></span>
+<span><span class="co">#&gt;                                                                   </span></span>
+<span><span class="co">#&gt;  decimalLongitude     eventDate       taxonRank        kingdom   </span></span>
+<span><span class="co">#&gt;  Min.   :-77.05   Length   :281   Length   :281   Length   :281  </span></span>
+<span><span class="co">#&gt;  1st Qu.:-77.04   N.unique :234   N.unique :  1   N.unique :  1  </span></span>
+<span><span class="co">#&gt;  Median :-77.03   N.blank  :  0   N.blank  :  0   N.blank  :  0  </span></span>
+<span><span class="co">#&gt;  Mean   :-77.03   Min.nchar: 10   Min.nchar:  7   Min.nchar:  7  </span></span>
+<span><span class="co">#&gt;  3rd Qu.:-77.03   Max.nchar: 20   Max.nchar:  7   Max.nchar:  7  </span></span>
+<span><span class="co">#&gt;  Max.   :-77.01                   NAs      :133                  </span></span>
+<span><span class="co">#&gt;                                                                  </span></span>
+<span><span class="co">#&gt;        phylum          class           order           family   </span></span>
+<span><span class="co">#&gt;  Length   :281   Length   :281   Length   :281   Length   :281  </span></span>
+<span><span class="co">#&gt;  N.unique :  2   N.unique :  4   N.unique : 20   N.unique : 34  </span></span>
+<span><span class="co">#&gt;  N.blank  :  0   N.blank  :  0   N.blank  :  0   N.blank  :  0  </span></span>
+<span><span class="co">#&gt;  Min.nchar: 10   Min.nchar:  9   Min.nchar:  6   Min.nchar:  7  </span></span>
+<span><span class="co">#&gt;  Max.nchar: 12   Max.nchar: 15   Max.nchar: 14   Max.nchar: 16  </span></span>
+<span><span class="co">#&gt;  NAs      :133   NAs      :133   NAs      :133   NAs      :133  </span></span>
+<span><span class="co">#&gt;                                                                 </span></span>
+<span><span class="co">#&gt;        genus          species        recordedBy  coordinateUncertaintyInMeters</span></span>
+<span><span class="co">#&gt;  Length   :281   Length   :281   Length   :281   Min.   :   2.0               </span></span>
+<span><span class="co">#&gt;  N.unique : 54   N.unique : 64   N.unique :120   1st Qu.:  12.0               </span></span>
+<span><span class="co">#&gt;  N.blank  :  0   N.blank  :  0   N.blank  :  0   Median :  21.0               </span></span>
+<span><span class="co">#&gt;  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 333.6               </span></span>
+<span><span class="co">#&gt;  Max.nchar: 16   Max.nchar: 28   Max.nchar: 30   3rd Qu.:  30.0               </span></span>
+<span><span class="co">#&gt;  NAs      :133   NAs      :133   NAs      : 11   Max.   :3945.0               </span></span>
+<span><span class="co">#&gt;                                                  NAs    :53                   </span></span>
+<span><span class="co">#&gt;        source         district        province       department </span></span>
+<span><span class="co">#&gt;  Length   :281   Length   :281   Length   :281   Length   :281  </span></span>
+<span><span class="co">#&gt;  N.unique :  2   N.unique :  1   N.unique :  1   N.unique :  1  </span></span>
+<span><span class="co">#&gt;  N.blank  :  0   N.blank  :  0   N.blank  :  0   N.blank  :  0  </span></span>
+<span><span class="co">#&gt;  Min.nchar:  4   Min.nchar: 10   Min.nchar:  4   Min.nchar:  4  </span></span>
+<span><span class="co">#&gt;  Max.nchar: 11   Max.nchar: 10   Max.nchar:  4   Max.nchar:  4  </span></span>
+<span><span class="co">#&gt;                                                                 </span></span>
+<span><span class="co">#&gt; </span></span>
 <span></span>
 <span><span class="co"># Paso 3: Si los datos son conformes, exportar a disco</span></span>
-<span><span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># exportar_resultados(resultado)</span></span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -327,6 +399,7 @@ poligonal oficial de fondo con las observaciones superpuestas.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_fuente</span><span class="op">)</span></span></code></pre></div>
+<p><img src="visualizacion_y_exportacion_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="comparación-por-reino-biológico-kingdom">Comparación por Reino Biológico (<code>kingdom</code>)<a class="anchor" aria-label="anchor" href="#comparaci%C3%B3n-por-reino-biol%C3%B3gico-kingdom"></a>
@@ -339,6 +412,7 @@ poligonal oficial de fondo con las observaciones superpuestas.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_reino</span><span class="op">)</span></span></code></pre></div>
+<p><img src="visualizacion_y_exportacion_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="exportar-el-mapa-directamente-a-imagen">Exportar el Mapa Directamente a Imagen<a class="anchor" aria-label="anchor" href="#exportar-el-mapa-directamente-a-imagen"></a>
