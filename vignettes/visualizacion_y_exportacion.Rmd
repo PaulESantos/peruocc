@@ -11,7 +11,9 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE
+  fig.width = 8,
+  fig.height = 6,
+  out.width = "100%"
 )
 ```
 
@@ -31,7 +33,7 @@ Esta guía explica:
 
 La función `peruocc_data_dir()` centraliza la ubicación en el disco donde se almacenarán tanto las capas espaciales descargadas en caché como los resultados exportados.
 
-```r
+```{r}
 library(peruocc)
 
 # Configurar el directorio raíz del proyecto para artefactos
@@ -80,7 +82,7 @@ buscar_especies_distrito(
 
 Para la mayoría de los análisis, la mejor práctica es **trabajar primero en memoria** y luego exportar selectivamente cuando los datos estén listos:
 
-```r
+```{r}
 # Paso 1: Consulta rápida en memoria (experimental / interactiva)
 resultado <- buscar_especies_distrito(
   distrito = "Miraflores",
@@ -94,7 +96,7 @@ resultado <- buscar_especies_distrito(
 summary(resultado$ocurrencias)
 
 # Paso 3: Si los datos son conformes, exportar a disco
-exportar_resultados(resultado)
+# exportar_resultados(resultado)
 ```
 
 ---
@@ -153,7 +155,7 @@ La función `graficar_ocurrencias()` produce composiciones visuales basadas en `
 
 ### Comparación por Proveedor de Datos (`source`)
 
-```r
+```{r}
 # Visualizar diferenciando aportes de GBIF vs iNaturalist
 mapa_fuente <- graficar_ocurrencias(
   resultado_lista = resultado,
@@ -165,7 +167,7 @@ print(mapa_fuente)
 
 ### Comparación por Reino Biológico (`kingdom`)
 
-```r
+```{r}
 # Visualizar distribución por reinos (Plantae, Animalia, Fungi, etc.)
 mapa_reino <- graficar_ocurrencias(
   resultado_lista = resultado,
