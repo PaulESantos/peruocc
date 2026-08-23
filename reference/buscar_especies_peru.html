@@ -70,6 +70,7 @@ de nuevo.</p>
 <span>  tolerancia_simplificacion <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">tolerancia_simplificacion_m</span>,</span>
 <span>  estrategia_espacial <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"directa"</span>, <span class="st">"segmentada"</span><span class="op">)</span>,</span>
 <span>  max_area_ha <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">max_area_ha_por_lote</span>,</span>
+<span>  max_lotes <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">max_lotes_espaciales</span>,</span>
 <span>  cache_dir <span class="op">=</span> <span class="fu">ruta_cache</span><span class="op">(</span><span class="st">"consultas_ocurrencias"</span><span class="op">)</span>,</span>
 <span>  reintentos <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">reintentos_api</span>,</span>
 <span>  pausa_entre_lotes_s <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">pausa_entre_lotes_s</span></span>
@@ -126,46 +127,42 @@ genera un identificador temporal nuevo.</p></dd>
 
 
 <dt id="arg-tolerancia-simplificacion">tolerancia_simplificacion<a class="anchor" aria-label="anchor" href="#arg-tolerancia-simplificacion"></a></dt>
-<dd><p>Número no negativo en metros. Controla la
-simplificación de la geometría enviada a GBIF; el filtro final siempre usa
-el polígono original. Aumentarlo reduce WKT extensos, pero no modifica el
-recorte final.</p></dd>
+<dd><p>Distancia en metros para simplificar WKT en
+GBIF si supera el límite de longitud de la API.</p></dd>
 
 
 <dt id="arg-estrategia-espacial">estrategia_espacial<a class="anchor" aria-label="anchor" href="#arg-estrategia-espacial"></a></dt>
-<dd><p>Una de <code>"auto"</code>, <code>"segmentada"</code> o <code>"directa"</code>.
-<code>"auto"</code> y <code>"segmentada"</code> recorren distritos de una provincia y dividen
-polígonos grandes; <code>"directa"</code> hace una consulta por fuente con el límite
-completo y es útil solo para áreas pequeñas.</p></dd>
+<dd><p>Estrategia de particionamiento (<code>"auto"</code>, <code>"directa"</code>
+o <code>"segmentada"</code>). Con <code>"auto"</code>, las provincias se particionan por sus
+distritos y los distritos extensos se dividen en macro-bloques adaptativos.</p></dd>
 
 
 <dt id="arg-max-area-ha">max_area_ha<a class="anchor" aria-label="anchor" href="#arg-max-area-ha"></a></dt>
-<dd><p>Número positivo en hectáreas, predeterminado 1000. Es el
-área objetivo máxima de las teselas en estrategia segmentada. Valores más
-bajos reducen la densidad por petición, pero aumentan el número de llamadas.</p></dd>
+<dd><p>Límite de área en hectáreas por lote para teselación
+cuando se usa <code>estrategia_espacial = "segmentada"</code>.</p></dd>
+
+
+<dt id="arg-max-lotes">max_lotes<a class="anchor" aria-label="anchor" href="#arg-max-lotes"></a></dt>
+<dd><p>Número máximo de macro-bloques espaciales generados por
+unidad geográfica para evitar saturar las cuotas de las APIs.</p></dd>
 
 
 <dt id="arg-cache-dir">cache_dir<a class="anchor" aria-label="anchor" href="#arg-cache-dir"></a></dt>
-<dd><p>Ruta escribible para checkpoints <code>.rds</code> por fuente y lote.
-El valor predeterminado está dentro del caché de <code>peruocc</code>. Reutilice la
-misma ruta para reanudar una ejecución interrumpida.</p></dd>
+<dd><p>Directorio para guardar checkpoints <code>.rds</code> por lote y fuente.</p></dd>
 
 
 <dt id="arg-reintentos">reintentos<a class="anchor" aria-label="anchor" href="#arg-reintentos"></a></dt>
-<dd><p>Entero positivo; número máximo de intentos ante errores
-transitorios de red para cada llamada remota. El valor predeterminado es 3.</p></dd>
+<dd><p>Entero positivo con el número de intentos para llamadas API.</p></dd>
 
 
 <dt id="arg-pausa-entre-lotes-s">pausa_entre_lotes_s<a class="anchor" aria-label="anchor" href="#arg-pausa-entre-lotes-s"></a></dt>
-<dd><p>Número mayor o igual a cero, en segundos. Añade
-una pausa entre lotes para reducir el riesgo de límites de tasa de las APIs.</p></dd>
+<dd><p>Pausa en segundos entre lotes consecutivos.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Una lista con <code>unidad_sf</code> (límite original), <code>ocurrencias</code> (tabla
-estandarizada y deduplicada), <code>resumen</code> (conteos, lotes y fallos) y
-<code>parametros</code> (configuración reproducible).</p>
+    <p>Objeto con clase <code>peruocc_resultado</code> (lista con límite <code>unidad_sf</code>,
+tibble de <code>ocurrencias</code>, <code>resumen</code> estadístico y <code>parametros</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

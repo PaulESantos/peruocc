@@ -21,6 +21,7 @@ buscar_especies_peru(
   tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
   estrategia_espacial = c("auto", "directa", "segmentada"),
   max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+  max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
   cache_dir = ruta_cache("consultas_ocurrencias"),
   reintentos = configuracion_predeterminada()$reintentos_api,
   pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s
@@ -77,45 +78,42 @@ buscar_especies_peru(
 
 - tolerancia_simplificacion:
 
-  Número no negativo en metros. Controla la simplificación de la
-  geometría enviada a GBIF; el filtro final siempre usa el polígono
-  original. Aumentarlo reduce WKT extensos, pero no modifica el recorte
-  final.
+  Distancia en metros para simplificar WKT en GBIF si supera el límite
+  de longitud de la API.
 
 - estrategia_espacial:
 
-  Una de `"auto"`, `"segmentada"` o `"directa"`. `"auto"` y
-  `"segmentada"` recorren distritos de una provincia y dividen polígonos
-  grandes; `"directa"` hace una consulta por fuente con el límite
-  completo y es útil solo para áreas pequeñas.
+  Estrategia de particionamiento (`"auto"`, `"directa"` o
+  `"segmentada"`). Con `"auto"`, las provincias se particionan por sus
+  distritos y los distritos extensos se dividen en macro-bloques
+  adaptativos.
 
 - max_area_ha:
 
-  Número positivo en hectáreas, predeterminado 1000. Es el área objetivo
-  máxima de las teselas en estrategia segmentada. Valores más bajos
-  reducen la densidad por petición, pero aumentan el número de llamadas.
+  Límite de área en hectáreas por lote para teselación cuando se usa
+  `estrategia_espacial = "segmentada"`.
+
+- max_lotes:
+
+  Número máximo de macro-bloques espaciales generados por unidad
+  geográfica para evitar saturar las cuotas de las APIs.
 
 - cache_dir:
 
-  Ruta escribible para checkpoints `.rds` por fuente y lote. El valor
-  predeterminado está dentro del caché de `peruocc`. Reutilice la misma
-  ruta para reanudar una ejecución interrumpida.
+  Directorio para guardar checkpoints `.rds` por lote y fuente.
 
 - reintentos:
 
-  Entero positivo; número máximo de intentos ante errores transitorios
-  de red para cada llamada remota. El valor predeterminado es 3.
+  Entero positivo con el número de intentos para llamadas API.
 
 - pausa_entre_lotes_s:
 
-  Número mayor o igual a cero, en segundos. Añade una pausa entre lotes
-  para reducir el riesgo de límites de tasa de las APIs.
+  Pausa en segundos entre lotes consecutivos.
 
 ## Value
 
-Una lista con `unidad_sf` (límite original), `ocurrencias` (tabla
-estandarizada y deduplicada), `resumen` (conteos, lotes y fallos) y
-`parametros` (configuración reproducible).
+Objeto con clase `peruocc_resultado` (lista con límite `unidad_sf`,
+tibble de `ocurrencias`, `resumen` estadístico y `parametros`).
 
 ## Details
 

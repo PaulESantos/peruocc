@@ -55,6 +55,14 @@ entorno de trabajo y almacenamiento en caché.
 
   Configura el directorio de trabajo de `peruocc`
 
+## Estructura de Datos e Interoperabilidad
+
+Coerción y representación tabular ligera compatible con el ecosistema
+Tidyverse.
+
+- [`as_peruocc_tbl()`](https://paulesantos.github.io/peruocc/reference/as_peruocc_tbl.md)
+  : Coerción a objeto tabular ligero (estilo tibble)
+
 ## Funciones Auxiliares y Topología Espacial
 
 Procesamiento geométrico interno, WKT, orientación CCW y consultas

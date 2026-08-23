@@ -23,8 +23,12 @@ Cargamos `peruocc` y `sf` para el manejo de geometrías vectoriales:
 ``` r
 
 library(peruocc)
+#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.0 ──
+#> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
+#> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
+#> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
+#> ✔ sf      1.1.2   • Operaciones geométricas y filtros espaciales
 library(sf)
-#> Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE
 library(ggplot2)
 
 # Configurar el directorio de trabajo para artefactos y caché
@@ -92,7 +96,7 @@ resultado_personalizado <- buscar_especies_poligono(
 #> 
 #> ── Búsqueda Integrada en Polígono: AREA_ESTUDIO_COSTA ──────────────────────────
 #> • Grupo: flora
-#> ℹ Procesando 4 lote(s) espaciales. Checkpoints en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias
+#> ℹ Procesando 1 lote(s) espaciales. Checkpoints en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
 #> ℹ [GBIF] Filtrando por reino Plantae (Flora).
 #> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "25")...
@@ -102,40 +106,13 @@ resultado_personalizado <- buscar_especies_poligono(
 #> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de Unidad seleccionada (límite: "25")...
 #> ℹ [iNaturalist] Se descargaron 25 registros en la caja delimitadora. Aplicando filtro espacial...
 #> ✔ [iNaturalist] Búsqueda finalizada. 25 de 25 registros caen dentro del polígono seleccionado.
-#> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
-#> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "25")...
-#> ✔ [GBIF] Búsqueda finalizada. Se filtraron 1 registro(s) que caen dentro del polígono seleccionado.
-#> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
-#> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
-#> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de Unidad seleccionada (límite: "25")...
-#> ℹ [iNaturalist] Se descargaron 1 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 1 de 1 registros caen dentro del polígono seleccionado.
-#> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
-#> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "25")...
-#> ✔ [GBIF] Búsqueda finalizada. Se filtraron 14 registro(s) que caen dentro del polígono seleccionado.
-#> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
-#> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
-#> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de Unidad seleccionada (límite: "25")...
-#> ℹ [iNaturalist] Se descargaron 14 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 13 de 14 registros caen dentro del polígono seleccionado.
-#> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
-#> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "25")...
-#> ✔ [GBIF] Búsqueda finalizada. Se filtraron 25 registro(s) que caen dentro del polígono seleccionado.
-#> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
-#> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
-#> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de Unidad seleccionada (límite: "25")...
-#> ℹ [iNaturalist] Se descargaron 9 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 9 de 9 registros caen dentro del polígono seleccionado.
-#> ✔ Consolidación exitosa. Total de registros unificados: 113
+#> ✔ Consolidación exitosa. Total de registros unificados: 50
 #> 
 #> ── Resumen de Registros ──
 #> 
-#> • GBIF: 65 registro(s)
-#> • iNaturalist: 48 registro(s)
-#> ✔ Total consolidado: 113 registro(s)
+#> • GBIF: 25 registro(s)
+#> • iNaturalist: 25 registro(s)
+#> ✔ Total consolidado: 50 registro(s)
 ```
 
 ------------------------------------------------------------------------
@@ -164,13 +141,13 @@ print(resultado_personalizado$resumen)
 #> [1] NA
 #> 
 #> $total_registros
-#> [1] 113
+#> [1] 50
 #> 
 #> $registros_gbif
-#> [1] 65
+#> [1] 25
 #> 
 #> $registros_inat
-#> [1] 48
+#> [1] 25
 #> 
 #> $limite_por_api
 #> [1] 25
@@ -188,7 +165,7 @@ print(resultado_personalizado$resumen)
 #> [1] FALSE
 #> 
 #> $lotes_espaciales
-#> [1] 4
+#> [1] 1
 #> 
 #> $fallos_lotes
 #> character(0)
@@ -198,20 +175,15 @@ print(resultado_personalizado$resumen)
 
 # Vista previa de las primeras ocurrencias
 head(resultado_personalizado$ocurrencias[, c("scientificName", "source", "eventDate", "decimalLatitude", "decimalLongitude")])
-#>                         scientificName source           eventDate
-#> NA...1   Washingtonia robusta H.Wendl.   GBIF 2026-04-30T11:39:05
-#> NA.1...2             Fragaria vesca L.   GBIF    2025-05-01T12:24
-#> NA.2...3        Annona cherimola Mill.   GBIF    2025-05-03T09:07
-#> NA.3...4        Passiflora edulis Sims   GBIF 2025-06-21T11:49:59
-#> NA.4...5               Urtica urens L.   GBIF 2025-08-20T17:38:53
-#> NA.5...6       Sonchus asper (L.) Hill   GBIF    2025-10-15T14:47
-#>          decimalLatitude decimalLongitude
-#> NA...1         -12.05598        -77.03645
-#> NA.1...2       -12.03994        -77.01650
-#> NA.2...3       -12.03994        -77.01650
-#> NA.3...4       -12.04664        -77.02698
-#> NA.4...5       -12.05815        -77.03707
-#> NA.5...6       -12.05133        -77.03492
+#> # A tibble: 6 × 5
+#>   scientificName source   eventDate decimalLatitude decimalLongitude
+#>   <chr>          <chr>    <chr>               <dbl>            <dbl>
+#> 1 Washingtonia … GBIF     2026-04-…           -12.1            -77.0
+#> 2 Fragaria vesc… GBIF     2025-05-…           -12.0            -77.0
+#> 3 Annona cherim… GBIF     2025-05-…           -12.0            -77.0
+#> 4 Passiflora ed… GBIF     2025-06-…           -12.0            -77.0
+#> 5 Urtica urens … GBIF     2025-08-…           -12.1            -77.0
+#> 6 Sonchus asper… GBIF     2025-10-…           -12.1            -77.0
 ```
 
 ------------------------------------------------------------------------
@@ -276,7 +248,7 @@ resultado_desde_archivo <- buscar_especies_poligono(
 #> 
 #> ── Búsqueda Integrada en Polígono: RESERVA_LOCAL ───────────────────────────────
 #> • Grupo: flora
-#> ℹ Procesando 4 lote(s) espaciales. Checkpoints en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias
+#> ℹ Procesando 1 lote(s) espaciales. Checkpoints en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
 #> ℹ [GBIF] Filtrando por reino Plantae (Flora).
 #> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "15")...
@@ -286,46 +258,19 @@ resultado_desde_archivo <- buscar_especies_poligono(
 #> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de Unidad seleccionada (límite: "15")...
 #> ℹ [iNaturalist] Se descargaron 15 registros en la caja delimitadora. Aplicando filtro espacial...
 #> ✔ [iNaturalist] Búsqueda finalizada. 15 de 15 registros caen dentro del polígono seleccionado.
-#> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
-#> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "15")...
-#> ✔ [GBIF] Búsqueda finalizada. Se filtraron 1 registro(s) que caen dentro del polígono seleccionado.
-#> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
-#> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
-#> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de Unidad seleccionada (límite: "15")...
-#> ℹ [iNaturalist] Se descargaron 1 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 1 de 1 registros caen dentro del polígono seleccionado.
-#> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
-#> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "15")...
-#> ✔ [GBIF] Búsqueda finalizada. Se filtraron 6 registro(s) que caen dentro del polígono seleccionado.
-#> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
-#> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
-#> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de Unidad seleccionada (límite: "15")...
-#> ℹ [iNaturalist] Se descargaron 14 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 13 de 14 registros caen dentro del polígono seleccionado.
-#> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
-#> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "15")...
-#> ✔ [GBIF] Búsqueda finalizada. Se filtraron 15 registro(s) que caen dentro del polígono seleccionado.
-#> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
-#> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
-#> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de Unidad seleccionada (límite: "15")...
-#> ℹ [iNaturalist] Se descargaron 9 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 9 de 9 registros caen dentro del polígono seleccionado.
-#> ✔ Consolidación exitosa. Total de registros unificados: 75
+#> ✔ Consolidación exitosa. Total de registros unificados: 30
 #> 
 #> ── Resumen de Registros ──
 #> 
-#> • GBIF: 37 registro(s)
-#> • iNaturalist: 38 registro(s)
-#> ✔ Total consolidado: 75 registro(s)
+#> • GBIF: 15 registro(s)
+#> • iNaturalist: 15 registro(s)
+#> ✔ Total consolidado: 30 registro(s)
 
 # 3. Exportar resultados con manifiesto de reproducibilidad
 exportar_resultados(resultado_desde_archivo)
-#> ✔ Registros tabulares guardados en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T004822Z_poligono_reservalocal_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T004822Z_poligono_reservalocal_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260823T004822Z_poligono_reservalocal_flora.json
+#> ✔ Registros tabulares guardados en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T032223Z_poligono_reservalocal_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T032223Z_poligono_reservalocal_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260823T032223Z_poligono_reservalocal_flora.json
 ```
 
 ------------------------------------------------------------------------

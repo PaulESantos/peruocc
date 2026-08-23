@@ -68,6 +68,7 @@ múltiples partes.</p>
 <span>  tolerancia_simplificacion <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">tolerancia_simplificacion_m</span>,</span>
 <span>  estrategia_espacial <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"directa"</span>, <span class="st">"segmentada"</span><span class="op">)</span>,</span>
 <span>  max_area_ha <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">max_area_ha_por_lote</span>,</span>
+<span>  max_lotes <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">max_lotes_espaciales</span>,</span>
 <span>  cache_dir <span class="op">=</span> <span class="fu">ruta_cache</span><span class="op">(</span><span class="st">"consultas_ocurrencias"</span><span class="op">)</span>,</span>
 <span>  reintentos <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">reintentos_api</span>,</span>
 <span>  pausa_entre_lotes_s <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">pausa_entre_lotes_s</span></span>
@@ -126,6 +127,11 @@ geometría original.</p></dd>
 <dd><p>Área positiva, en hectáreas, objetivo de cada tesela para
 estrategia segmentada. El valor 1000 equilibra tamaño de petición y número
 de llamadas; reduzca este valor ante errores por volumen.</p></dd>
+
+
+<dt id="arg-max-lotes">max_lotes<a class="anchor" aria-label="anchor" href="#arg-max-lotes"></a></dt>
+<dd><p>Número máximo de macro-bloques espaciales generados por
+unidad geográfica para evitar saturar las cuotas de las APIs.</p></dd>
 
 
 <dt id="arg-cache-dir">cache_dir<a class="anchor" aria-label="anchor" href="#arg-cache-dir"></a></dt>

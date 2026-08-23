@@ -98,6 +98,11 @@ el disco donde se almacenarán tanto las capas espaciales descargadas en
 caché como los resultados exportados.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; ── <span style="font-weight: bold;">Cargando peruocc</span> ────────────────────────────────────────────────── v0.1.0 ──</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">geoperu</span> 0.0.1   <span style="color: #555555;">• Límites cartográficos oficiales del Perú</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rgbif  </span> 3.8.5   <span style="color: #555555;">• Extracción de ocurrencias desde GBIF</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rinat  </span> 0.1.10  <span style="color: #555555;">• Observaciones ciudadanas de iNaturalist</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">sf     </span> 1.1.2   <span style="color: #555555;">• Operaciones geométricas y filtros espaciales</span></span></span>
 <span></span>
 <span><span class="co"># Configurar el directorio raíz del proyecto para artefactos</span></span>
 <span><span class="fu"><a href="../reference/peruocc_data_dir.html">peruocc_data_dir</a></span><span class="op">(</span><span class="st">"peruocc-output"</span><span class="op">)</span></span></code></pre></div>
@@ -233,12 +238,16 @@ selectivamente cuando los datos estén listos:</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 822 caracteres).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">MIRAFLORES</span> (límite: <span style="color: #0000BB;">"150"</span>)...</span></span>
+<span><span class="co">#&gt; Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an</span></span>
+<span><span class="co">#&gt; effect only for `x[i, j]`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Búsqueda finalizada. Se filtraron 148 registro(s) que caen dentro del polígono seleccionado.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Consultando registros dentro de la caja delimitadora de <span style="font-weight: bold;">MIRAFLORES</span> (límite: <span style="color: #0000BB;">"150"</span>)...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Se descargaron 150 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [iNaturalist] Búsqueda finalizada. 133 de 150 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an effect only for `x[i, j]`.</span></span>
+<span><span class="co">#&gt; `drop` argument ignored for subsetting a tibble with `x[j]`, it has an effect only for `x[i, j]`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Consolidación exitosa. Total de registros unificados: <span style="font-weight: bold;">281</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Resumen de Registros</span> ──</span></span>
@@ -397,8 +406,12 @@ poligonal oficial de fondo con las observaciones superpuestas.</p>
 <span>  resultado_lista <span class="op">=</span> <span class="va">resultado</span>,</span>
 <span>  color_por <span class="op">=</span> <span class="st">"source"</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an</span></span>
+<span><span class="co">#&gt; effect only for `x[i, j]`.</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_fuente</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_fuente</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an</span></span>
+<span><span class="co">#&gt; effect only for `x[i, j]`.</span></span></code></pre></div>
 <p><img src="visualizacion_y_exportacion_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">
@@ -410,8 +423,12 @@ poligonal oficial de fondo con las observaciones superpuestas.</p>
 <span>  resultado_lista <span class="op">=</span> <span class="va">resultado</span>,</span>
 <span>  color_por <span class="op">=</span> <span class="st">"kingdom"</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an effect only for `x[i, j]`.</span></span>
+<span><span class="co">#&gt; `drop` argument ignored for subsetting a tibble with `x[j]`, it has an effect only for `x[i, j]`.</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_reino</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_reino</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an</span></span>
+<span><span class="co">#&gt; effect only for `x[i, j]`.</span></span></code></pre></div>
 <p><img src="visualizacion_y_exportacion_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="100%"></p>
 </div>
 <div class="section level3">

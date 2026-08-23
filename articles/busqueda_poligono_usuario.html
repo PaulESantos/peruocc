@@ -95,8 +95,12 @@ proyectos ambientales. * Archivos espaciales en formatos estándar
 geometrías vectoriales:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; ── <span style="font-weight: bold;">Cargando peruocc</span> ────────────────────────────────────────────────── v0.1.0 ──</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">geoperu</span> 0.0.1   <span style="color: #555555;">• Límites cartográficos oficiales del Perú</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rgbif  </span> 3.8.5   <span style="color: #555555;">• Extracción de ocurrencias desde GBIF</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rinat  </span> 0.1.10  <span style="color: #555555;">• Observaciones ciudadanas de iNaturalist</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">sf     </span> 1.1.2   <span style="color: #555555;">• Operaciones geométricas y filtros espaciales</span></span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Configurar el directorio de trabajo para artefactos y caché</span></span>
@@ -160,7 +164,7 @@ deduplicación bajo el estándar <strong>Darwin Core</strong>.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Búsqueda Integrada en Polígono: AREA_ESTUDIO_COSTA</span> <span style="color: #00BBBB;">──────────────────────────</span></span></span>
 <span><span class="co">#&gt; • Grupo: flora</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Procesando 4 lote(s) espaciales. Checkpoints en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Procesando 1 lote(s) espaciales. Checkpoints en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"25"</span>)...</span></span>
@@ -170,40 +174,13 @@ deduplicación bajo el estándar <strong>Darwin Core</strong>.</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Consultando registros dentro de la caja delimitadora de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"25"</span>)...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Se descargaron 25 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [iNaturalist] Búsqueda finalizada. 25 de 25 registros caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"25"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Búsqueda finalizada. Se filtraron 1 registro(s) que caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Consultando registros dentro de la caja delimitadora de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"25"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Se descargaron 1 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [iNaturalist] Búsqueda finalizada. 1 de 1 registros caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"25"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Búsqueda finalizada. Se filtraron 14 registro(s) que caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Consultando registros dentro de la caja delimitadora de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"25"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Se descargaron 14 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [iNaturalist] Búsqueda finalizada. 13 de 14 registros caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"25"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Búsqueda finalizada. Se filtraron 25 registro(s) que caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Consultando registros dentro de la caja delimitadora de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"25"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Se descargaron 9 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [iNaturalist] Búsqueda finalizada. 9 de 9 registros caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Consolidación exitosa. Total de registros unificados: <span style="font-weight: bold;">113</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Consolidación exitosa. Total de registros unificados: <span style="font-weight: bold;">50</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Resumen de Registros</span> ──</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> GBIF: <span style="color: #0000BB;">65</span> registro(s)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> iNaturalist: <span style="color: #0000BB;">48</span> registro(s)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Total consolidado: <span style="font-weight: bold;">113</span> registro(s)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> GBIF: <span style="color: #0000BB;">25</span> registro(s)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> iNaturalist: <span style="color: #0000BB;">25</span> registro(s)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Total consolidado: <span style="font-weight: bold;">50</span> registro(s)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -230,13 +207,13 @@ deduplicación bajo el estándar <strong>Darwin Core</strong>.</p>
 <span><span class="co">#&gt; [1] NA</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $total_registros</span></span>
-<span><span class="co">#&gt; [1] 113</span></span>
+<span><span class="co">#&gt; [1] 50</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $registros_gbif</span></span>
-<span><span class="co">#&gt; [1] 65</span></span>
+<span><span class="co">#&gt; [1] 25</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $registros_inat</span></span>
-<span><span class="co">#&gt; [1] 48</span></span>
+<span><span class="co">#&gt; [1] 25</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $limite_por_api</span></span>
 <span><span class="co">#&gt; [1] 25</span></span>
@@ -254,7 +231,7 @@ deduplicación bajo el estándar <strong>Darwin Core</strong>.</p>
 <span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $lotes_espaciales</span></span>
-<span><span class="co">#&gt; [1] 4</span></span>
+<span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $fallos_lotes</span></span>
 <span><span class="co">#&gt; character(0)</span></span>
@@ -264,20 +241,15 @@ deduplicación bajo el estándar <strong>Darwin Core</strong>.</p>
 <span></span>
 <span><span class="co"># Vista previa de las primeras ocurrencias</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">resultado_personalizado</span><span class="op">$</span><span class="va">ocurrencias</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scientificName"</span>, <span class="st">"source"</span>, <span class="st">"eventDate"</span>, <span class="st">"decimalLatitude"</span>, <span class="st">"decimalLongitude"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                         scientificName source           eventDate</span></span>
-<span><span class="co">#&gt; NA...1   Washingtonia robusta H.Wendl.   GBIF 2026-04-30T11:39:05</span></span>
-<span><span class="co">#&gt; NA.1...2             Fragaria vesca L.   GBIF    2025-05-01T12:24</span></span>
-<span><span class="co">#&gt; NA.2...3        Annona cherimola Mill.   GBIF    2025-05-03T09:07</span></span>
-<span><span class="co">#&gt; NA.3...4        Passiflora edulis Sims   GBIF 2025-06-21T11:49:59</span></span>
-<span><span class="co">#&gt; NA.4...5               Urtica urens L.   GBIF 2025-08-20T17:38:53</span></span>
-<span><span class="co">#&gt; NA.5...6       Sonchus asper (L.) Hill   GBIF    2025-10-15T14:47</span></span>
-<span><span class="co">#&gt;          decimalLatitude decimalLongitude</span></span>
-<span><span class="co">#&gt; NA...1         -12.05598        -77.03645</span></span>
-<span><span class="co">#&gt; NA.1...2       -12.03994        -77.01650</span></span>
-<span><span class="co">#&gt; NA.2...3       -12.03994        -77.01650</span></span>
-<span><span class="co">#&gt; NA.3...4       -12.04664        -77.02698</span></span>
-<span><span class="co">#&gt; NA.4...5       -12.05815        -77.03707</span></span>
-<span><span class="co">#&gt; NA.5...6       -12.05133        -77.03492</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #555555;"># A tibble: 6 × 5</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; </span>  scientificName source   eventDate decimalLatitude decimalLongitude</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">  &lt;chr&gt;          &lt;chr&gt;    &lt;chr&gt;               &lt;dbl&gt;            &lt;dbl&gt;</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; 1 </span>Washingtonia … GBIF     2026-04-…           -12.1            -77.0</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">2 </span>Fragaria vesc… GBIF     2025-05-…           -12.0            -77.0</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">3 </span>Annona cherim… GBIF     2025-05-…           -12.0            -77.0</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">4 </span>Passiflora ed… GBIF     2025-06-…           -12.0            -77.0</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">5 </span>Urtica urens … GBIF     2025-08-…           -12.1            -77.0</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">6 </span>Sonchus asper… GBIF     2025-10-…           -12.1            -77.0</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -336,7 +308,7 @@ ruta:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Búsqueda Integrada en Polígono: RESERVA_LOCAL</span> <span style="color: #00BBBB;">───────────────────────────────</span></span></span>
 <span><span class="co">#&gt; • Grupo: flora</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Procesando 4 lote(s) espaciales. Checkpoints en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Procesando 1 lote(s) espaciales. Checkpoints en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"15"</span>)...</span></span>
@@ -346,46 +318,19 @@ ruta:</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Consultando registros dentro de la caja delimitadora de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"15"</span>)...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Se descargaron 15 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [iNaturalist] Búsqueda finalizada. 15 de 15 registros caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"15"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Búsqueda finalizada. Se filtraron 1 registro(s) que caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Consultando registros dentro de la caja delimitadora de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"15"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Se descargaron 1 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [iNaturalist] Búsqueda finalizada. 1 de 1 registros caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"15"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Búsqueda finalizada. Se filtraron 6 registro(s) que caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Consultando registros dentro de la caja delimitadora de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"15"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Se descargaron 14 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [iNaturalist] Búsqueda finalizada. 13 de 14 registros caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"15"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Búsqueda finalizada. Se filtraron 15 registro(s) que caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Consultando registros dentro de la caja delimitadora de <span style="font-weight: bold;">Unidad seleccionada</span> (límite: <span style="color: #0000BB;">"15"</span>)...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Se descargaron 9 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [iNaturalist] Búsqueda finalizada. 9 de 9 registros caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Consolidación exitosa. Total de registros unificados: <span style="font-weight: bold;">75</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Consolidación exitosa. Total de registros unificados: <span style="font-weight: bold;">30</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Resumen de Registros</span> ──</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> GBIF: <span style="color: #0000BB;">37</span> registro(s)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> iNaturalist: <span style="color: #0000BB;">38</span> registro(s)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Total consolidado: <span style="font-weight: bold;">75</span> registro(s)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> GBIF: <span style="color: #0000BB;">15</span> registro(s)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> iNaturalist: <span style="color: #0000BB;">15</span> registro(s)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Total consolidado: <span style="font-weight: bold;">30</span> registro(s)</span></span>
 <span></span>
 <span><span class="co"># 3. Exportar resultados con manifiesto de reproducibilidad</span></span>
 <span><span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado_desde_archivo</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T004822Z_poligono_reservalocal_flora.csv</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T004822Z_poligono_reservalocal_flora.geojson</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260823T004822Z_poligono_reservalocal_flora.json</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T032223Z_poligono_reservalocal_flora.csv</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T032223Z_poligono_reservalocal_flora.geojson</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260823T032223Z_poligono_reservalocal_flora.json</span></span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">

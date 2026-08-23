@@ -48,6 +48,11 @@ sola vez y los almacena en archivos locales binarios `.rds`:
 ``` r
 
 library(peruocc)
+#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.0 ──
+#> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
+#> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
+#> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
+#> ✔ sf      1.1.2   • Operaciones geométricas y filtros espaciales
 # Configurar directorio donde se guardarán caché, resultados y manifiestos
 peruocc_data_dir("peruocc-output")
 
