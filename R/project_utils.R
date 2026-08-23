@@ -1,7 +1,7 @@
 # Internal helpers for validation, schemas, and run manifests.
 
 schema_ocurrencias <- function() {
-  as_tibble(data.frame(
+  as_peruocc_tbl(data.frame(
     occurrenceID = character(),
     sourceRecordID = character(),
     sourceURL = character(),

@@ -1,6 +1,6 @@
-test_that("as_tibble coerciona data.frames y matrices correctamente", {
+test_that("as_peruocc_tbl coerciona data.frames y matrices correctamente", {
   df <- data.frame(a = 1:5, b = letters[1:5], stringsAsFactors = FALSE)
-  tbl <- peruocc::as_tibble(df)
+  tbl <- peruocc::as_peruocc_tbl(df)
   
   expect_s3_class(tbl, "tbl_df")
   expect_s3_class(tbl, "tbl")
@@ -13,7 +13,7 @@ test_that("as_tibble coerciona data.frames y matrices correctamente", {
 
 test_that("subsetting preserva la clase peruocc_tbl", {
   df <- data.frame(a = 1:10, b = 11:20)
-  tbl <- peruocc::as_tibble(df)
+  tbl <- peruocc::as_peruocc_tbl(df)
   sub_tbl <- tbl[1:3, ]
   
   expect_s3_class(sub_tbl, "tbl_df")
@@ -34,7 +34,7 @@ test_that("print.peruocc_tbl funciona limpiamente con formateo alineado y pie de
     extra2 = 1:15,
     stringsAsFactors = FALSE
   )
-  tbl <- peruocc::as_tibble(df)
+  tbl <- peruocc::as_peruocc_tbl(df)
   
   # Imprimir con ancho acotado para probar variables ocultas
   salida <- capture.output(print(tbl, n = 5, width = 60))
@@ -46,7 +46,7 @@ test_that("print.peruocc_tbl funciona limpiamente con formateo alineado y pie de
 
 test_that("print.peruocc_tbl maneja tablas vacias correctamente", {
   df_vacio <- data.frame(a = character(), b = numeric(), stringsAsFactors = FALSE)
-  tbl_vacio <- peruocc::as_tibble(df_vacio)
+  tbl_vacio <- peruocc::as_peruocc_tbl(df_vacio)
   salida <- capture.output(print(tbl_vacio))
   expect_true(any(grepl("# A tibble: 0 × 2", salida)))
 })

@@ -1,26 +1,26 @@
 # tibble_light.R
 # Implementacion ligera de tibble sin dependencias externas pesadas.
 
-#' Coerción a objeto tibble ligero
+#' Coerción a objeto tabular ligero (estilo tibble)
 #'
 #' Convierte un `data.frame` u objeto compatible en una estructura tabular
 #' con clase `c("peruocc_tbl", "tbl_df", "tbl", "data.frame")`, compatible
-#' con el ecosistema tidyverse sin añadir dependencias pesadas.
+#' con el ecosistema tidyverse sin generar conflictos ni dependencias pesadas.
 #'
 #' @param x Un `data.frame`, lista o matriz a convertir.
 #' @param ... Argumentos adicionales ignorados para compatibilidad.
 #' @return Un objeto tabular con clase `c("peruocc_tbl", "tbl_df", "tbl", "data.frame")`.
 #' @examples
 #' df <- data.frame(a = 1:5, b = letters[1:5])
-#' tbl <- as_tibble(df)
+#' tbl <- as_peruocc_tbl(df)
 #' class(tbl)
 #' @export
-as_tibble <- function(x, ...) {
-  UseMethod("as_tibble")
+as_peruocc_tbl <- function(x, ...) {
+  UseMethod("as_peruocc_tbl")
 }
 
 #' @export
-as_tibble.data.frame <- function(x, ...) {
+as_peruocc_tbl.data.frame <- function(x, ...) {
   if (inherits(x, "peruocc_tbl") && inherits(x, "tbl_df")) {
     return(x)
   }
@@ -30,9 +30,12 @@ as_tibble.data.frame <- function(x, ...) {
 }
 
 #' @export
-as_tibble.default <- function(x, ...) {
-  as_tibble.data.frame(as.data.frame(x, stringsAsFactors = FALSE))
+as_peruocc_tbl.default <- function(x, ...) {
+  as_peruocc_tbl.data.frame(as.data.frame(x, stringsAsFactors = FALSE))
 }
+
+# Alias interno para compatibilidad
+as_tibble <- as_peruocc_tbl
 
 #' @export
 `[.peruocc_tbl` <- function(x, i, j, drop = FALSE) {

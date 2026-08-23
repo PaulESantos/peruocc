@@ -14,7 +14,7 @@ consolidar_ocurrencias <- function(resultados_lista) {
   con_id <- dplyr::filter(ocurrencias, !is.na(sourceRecordID) & nzchar(sourceRecordID))
   sin_id <- dplyr::filter(ocurrencias, is.na(sourceRecordID) | !nzchar(sourceRecordID))
   res <- dplyr::bind_rows(dplyr::distinct(con_id, source, sourceRecordID, .keep_all = TRUE), sin_id)
-  as_tibble(res)
+  as_peruocc_tbl(res)
 }
 
 consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limite,

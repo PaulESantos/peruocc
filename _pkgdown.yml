@@ -92,6 +92,11 @@ reference:
       - peruocc_data_dir
       - peruspecies_data_dir
 
+  - title: "Estructura de Datos e Interoperabilidad"
+    desc: "Coerción y representación tabular ligera compatible con el ecosistema Tidyverse."
+    contents:
+      - as_peruocc_tbl
+
   - title: "Funciones Auxiliares y Topología Espacial"
     desc: "Procesamiento geométrico interno, WKT, orientación CCW y consultas modulares."
     contents:
