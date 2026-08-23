@@ -14,6 +14,7 @@ buscar_especies_poligono(
   tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
   estrategia_espacial = c("auto", "directa", "segmentada"),
   max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+  max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
   cache_dir = ruta_cache("consultas_ocurrencias"),
   reintentos = configuracion_predeterminada()$reintentos_api,
   pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s
@@ -51,6 +52,9 @@ geometría original.}
 \item{max_area_ha}{Área positiva, en hectáreas, objetivo de cada tesela para
 estrategia segmentada. El valor 1000 equilibra tamaño de petición y número
 de llamadas; reduzca este valor ante errores por volumen.}
+
+\item{max_lotes}{Número máximo de macro-bloques espaciales generados por
+unidad geográfica para evitar saturar las cuotas de las APIs.}
 
 \item{cache_dir}{Directorio escribible para checkpoints de resultados por
 fuente/lote. Conservarlo permite reanudar una extracción interrumpida.}

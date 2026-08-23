@@ -13,7 +13,8 @@ consolidar_ocurrencias <- function(resultados_lista) {
   ocurrencias <- dplyr::bind_rows(resultados_lista)
   con_id <- dplyr::filter(ocurrencias, !is.na(sourceRecordID) & nzchar(sourceRecordID))
   sin_id <- dplyr::filter(ocurrencias, is.na(sourceRecordID) | !nzchar(sourceRecordID))
-  dplyr::bind_rows(dplyr::distinct(con_id, source, sourceRecordID, .keep_all = TRUE), sin_id)
+  res <- dplyr::bind_rows(dplyr::distinct(con_id, source, sourceRecordID, .keep_all = TRUE), sin_id)
+  as_tibble(res)
 }
 
 consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limite,
@@ -57,15 +58,56 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
 }
 
 preparar_lotes_espaciales <- function(unidad_sf, nivel, nombre, departamento,
-                                      estrategia_espacial, max_area_ha) {
-  if (estrategia_espacial == "directa") return(unidad_sf)
+                                      estrategia_espacial,
+                                      max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+                                      max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
+                                      nombre_cientifico = NULL,
+                                      grupo = NULL) {
+  if (estrategia_espacial == "directa") {
+    unidad_sf$tile_id <- 1L
+    return(unidad_sf)
+  }
   bases <- if (nivel == "provincia") {
     obtener_distritos_provincia(nombre, departamento)
   } else {
     unidad_sf
   }
-  lotes <- lapply(seq_len(nrow(bases)), function(i) dividir_poligono_por_area(bases[i, ], max_area_ha))
-  do.call(rbind, lotes)
+  if (estrategia_espacial == "segmentada") {
+    lotes <- lapply(seq_len(nrow(bases)), function(i) {
+      dividir_poligono_por_area(bases[i, ], max_area_ha = max_area_ha, max_lotes = max_lotes)
+    })
+    res <- do.call(rbind, lotes)
+    res$tile_id <- seq_len(nrow(res))
+    return(res)
+  }
+  
+  # En modo "auto":
+  # 1. Si es búsqueda de una especie concreta, se consulta en 1 bloque directo por unidad
+  # 2. Si es inventario general y la unidad es grande (> 50,000 ha),
+  #    se divide adaptativamente en macro-bloques controlados (máximo max_lotes).
+  if (is.null(nombre_cientifico)) {
+    umbral_macro_ha <- configuracion_predeterminada()$umbral_macro_bloques_ha
+    lotes_lista <- list()
+    for (i in seq_len(nrow(bases))) {
+      b_i <- bases[i, ]
+      area_ha <- tryCatch({
+        as.numeric(sf::st_area(sf::st_union(sf::st_transform(b_i, 3857)))) / 10000
+      }, error = function(e) 0)
+      
+      if (area_ha > umbral_macro_ha) {
+        lotes_lista[[i]] <- dividir_poligono_por_area(b_i, max_area_ha = umbral_macro_ha, max_lotes = max_lotes)
+      } else {
+        b_i$tile_id <- 1L
+        lotes_lista[[i]] <- b_i
+      }
+    }
+    res <- do.call(rbind, lotes_lista)
+    res$tile_id <- seq_len(nrow(res))
+    return(res)
+  }
+  
+  bases$tile_id <- seq_len(nrow(bases))
+  bases
 }
 
 #' Busca y consolida ocurrencias en una unidad administrativa del Perú
@@ -97,27 +139,20 @@ preparar_lotes_espaciales <- function(unidad_sf, nivel, nombre, departamento,
 #' @param guardar_resultados Lógico. Si es `TRUE`, ejecuta
 #'   [exportar_resultados()] al final. No sobrescribe resultados previos porque
 #'   genera un identificador temporal nuevo.
-#' @param tolerancia_simplificacion Número no negativo en metros. Controla la
-#'   simplificación de la geometría enviada a GBIF; el filtro final siempre usa
-#'   el polígono original. Aumentarlo reduce WKT extensos, pero no modifica el
-#'   recorte final.
-#' @param estrategia_espacial Una de `"auto"`, `"segmentada"` o `"directa"`.
-#'   `"auto"` y `"segmentada"` recorren distritos de una provincia y dividen
-#'   polígonos grandes; `"directa"` hace una consulta por fuente con el límite
-#'   completo y es útil solo para áreas pequeñas.
-#' @param max_area_ha Número positivo en hectáreas, predeterminado 1000. Es el
-#'   área objetivo máxima de las teselas en estrategia segmentada. Valores más
-#'   bajos reducen la densidad por petición, pero aumentan el número de llamadas.
-#' @param cache_dir Ruta escribible para checkpoints `.rds` por fuente y lote.
-#'   El valor predeterminado está dentro del caché de `peruocc`. Reutilice la
-#'   misma ruta para reanudar una ejecución interrumpida.
-#' @param reintentos Entero positivo; número máximo de intentos ante errores
-#'   transitorios de red para cada llamada remota. El valor predeterminado es 3.
-#' @param pausa_entre_lotes_s Número mayor o igual a cero, en segundos. Añade
-#'   una pausa entre lotes para reducir el riesgo de límites de tasa de las APIs.
-#' @return Una lista con `unidad_sf` (límite original), `ocurrencias` (tabla
-#'   estandarizada y deduplicada), `resumen` (conteos, lotes y fallos) y
-#'   `parametros` (configuración reproducible).
+#' @param tolerancia_simplificacion Distancia en metros para simplificar WKT en
+#'   GBIF si supera el límite de longitud de la API.
+#' @param estrategia_espacial Estrategia de particionamiento (`"auto"`, `"directa"`
+#'   o `"segmentada"`). Con `"auto"`, las provincias se particionan por sus
+#'   distritos y los distritos extensos se dividen en macro-bloques adaptativos.
+#' @param max_area_ha Límite de área en hectáreas por lote para teselación
+#'   cuando se usa `estrategia_espacial = "segmentada"`.
+#' @param max_lotes Número máximo de macro-bloques espaciales generados por
+#'   unidad geográfica para evitar saturar las cuotas de las APIs.
+#' @param cache_dir Directorio para guardar checkpoints `.rds` por lote y fuente.
+#' @param reintentos Entero positivo con el número de intentos para llamadas API.
+#' @param pausa_entre_lotes_s Pausa en segundos entre lotes consecutivos.
+#' @return Objeto con clase `peruocc_resultado` (lista con límite `unidad_sf`,
+#'   tibble de `ocurrencias`, `resumen` estadístico y `parametros`).
 #' @details La deduplicación usa `source` y `sourceRecordID`; un mismo registro
 #' procedente de GBIF e iNaturalist se mantiene, porque son fuentes distintas.
 #' Los checkpoints se escriben tras terminar cada fuente/lote. Revise
@@ -143,12 +178,12 @@ buscar_especies_peru <- function(nombre,
                                  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
                                  estrategia_espacial = c("auto", "directa", "segmentada"),
                                  max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+                                 max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
                                  cache_dir = ruta_cache("consultas_ocurrencias"),
                                  reintentos = configuracion_predeterminada()$reintentos_api,
                                  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s) {
   nivel <- match.arg(nivel)
   estrategia_espacial <- match.arg(estrategia_espacial)
-  if (estrategia_espacial == "auto") estrategia_espacial <- "segmentada"
   validar_entrada_busqueda(unidad = nombre, grupo = grupo, limite = limite_por_api, nivel = nivel)
   
   cli::cli_h1("B\u00fasqueda Integrada: {toupper(nombre)} ({toupper(nivel)})")
@@ -173,11 +208,12 @@ buscar_especies_peru <- function(nombre,
   nombre_oficial_dep <- if (!is.null(unidad_sf$departamento) && !is.na(unidad_sf$departamento[1])) unidad_sf$departamento[1] else NA_character_
   etiqueta_unidad <- if (!is.na(nombre_oficial_dist)) nombre_oficial_dist else nombre_oficial_prov
   
-  # 2. Provincias se descomponen en distritos; cada unidad grande se tesela.
+  # 2. Provincias se descomponen en distritos; unidades extensas se teselan de forma adaptativa.
   lotes_sf <- preparar_lotes_espaciales(unidad_sf, nivel, nombre, departamento,
-                                        estrategia_espacial, max_area_ha)
+                                        estrategia_espacial, max_area_ha, max_lotes,
+                                        nombre_cientifico, grupo)
   clave_ejecucion <- nombre_seguro_cache(c(nivel, nombre, departamento, nombre_cientifico, grupo,
-                                           limite_por_api, max_area_ha, tolerancia_simplificacion,
+                                           limite_por_api, max_area_ha, max_lotes, tolerancia_simplificacion,
                                            estrategia_espacial))
   descarga <- consultar_lotes_espaciales(lotes_sf, nombre_cientifico, grupo, limite_por_api,
                                          tolerancia_simplificacion, cache_dir, reintentos,
@@ -372,6 +408,8 @@ buscar_especies_provincia <- function(provincia,
 #' @param max_area_ha Área positiva, en hectáreas, objetivo de cada tesela para
 #'   estrategia segmentada. El valor 1000 equilibra tamaño de petición y número
 #'   de llamadas; reduzca este valor ante errores por volumen.
+#' @param max_lotes Número máximo de macro-bloques espaciales generados por
+#'   unidad geográfica para evitar saturar las cuotas de las APIs.
 #' @param cache_dir Directorio escribible para checkpoints de resultados por
 #'   fuente/lote. Conservarlo permite reanudar una extracción interrumpida.
 #' @param reintentos Entero positivo con el número máximo de reintentos de
@@ -398,6 +436,7 @@ buscar_especies_poligono <- function(poligono,
                                      tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
                                      estrategia_espacial = c("auto", "directa", "segmentada"),
                                      max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+                                     max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
                                      cache_dir = ruta_cache("consultas_ocurrencias"),
                                      reintentos = configuracion_predeterminada()$reintentos_api,
                                      pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s) {
@@ -408,7 +447,6 @@ buscar_especies_poligono <- function(poligono,
   
   validar_entrada_busqueda(unidad = etiqueta_unidad, grupo = grupo, limite = limite_por_api, nivel = "poligono")
   estrategia_espacial <- match.arg(estrategia_espacial)
-  if (estrategia_espacial == "auto") estrategia_espacial <- "segmentada"
   
   cli::cli_h1("B\u00fasqueda Integrada en Pol\u00edgono: {toupper(etiqueta_unidad)}")
   params_items <- character()
@@ -418,10 +456,13 @@ buscar_especies_poligono <- function(poligono,
     cli::cli_ul(params_items)
   }
   
-  # 2. Un poligono personalizado tambien se tesela cuando supera el umbral.
-  lotes_sf <- if (estrategia_espacial == "directa") unidad_sf else dividir_poligono_por_area(unidad_sf, max_area_ha)
+  # 2. Particionamiento adaptativo de poligono personalizado
+  lotes_sf <- preparar_lotes_espaciales(unidad_sf, nivel = "poligono", nombre = etiqueta_unidad,
+                                        departamento = NULL, estrategia_espacial = estrategia_espacial,
+                                        max_area_ha = max_area_ha, max_lotes = max_lotes,
+                                        nombre_cientifico = nombre_cientifico, grupo = grupo)
   clave_ejecucion <- nombre_seguro_cache(c("poligono", etiqueta_unidad, nombre_cientifico, grupo,
-                                           limite_por_api, max_area_ha, tolerancia_simplificacion,
+                                           limite_por_api, max_area_ha, max_lotes, tolerancia_simplificacion,
                                            estrategia_espacial))
   descarga <- consultar_lotes_espaciales(lotes_sf, nombre_cientifico, grupo, limite_por_api,
                                          tolerancia_simplificacion, cache_dir, reintentos,

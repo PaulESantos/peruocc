@@ -64,6 +64,8 @@ configuracion_predeterminada <- function() {
     limite_por_api = 500L,
     tolerancia_simplificacion_m = 100,
     max_area_ha_por_lote = 1000,
+    max_lotes_espaciales = 16L,
+    umbral_macro_bloques_ha = 50000,
     reintentos_api = 3L,
     pausa_entre_lotes_s = 0.2
   )

@@ -79,24 +79,53 @@ buscar_inat_por_poligono <- function(poligono_sf,
   }
   
   total_api <- NA_integer_
+  df_vacio <- schema_ocurrencias()
+
   if (is.null(limite)) {
-    metadatos <- tryCatch(ejecutar_con_reintentos(function() do.call(rinat::get_inat_obs, c(parametros, list(maxresults = 1, meta = TRUE))), reintentos, "iNaturalist conteo"), error = function(e) NULL)
+    metadatos <- tryCatch(
+      ejecutar_con_reintentos(function() {
+        tryCatch(
+          do.call(rinat::get_inat_obs, c(parametros, list(maxresults = 1, meta = TRUE))),
+          error = function(e) {
+            if (grepl("zero results|no records|invalid search", e$message, ignore.case = TRUE)) {
+              return(list(meta = list(found = 0L)))
+            }
+            stop(e)
+          }
+        )
+      }, reintentos, "iNaturalist conteo"),
+      error = function(e) NULL
+    )
     total_api <- if (!is.null(metadatos$meta$found)) as.integer(metadatos$meta$found) else NA_integer_
     if (is.na(total_api)) cli::cli_abort("iNaturalist no devolvi\u00f3 el conteo de la consulta; no es posible verificar una descarga completa.")
     if (total_api > 10000L) cli::cli_abort("iNaturalist reporta {format(total_api, big.mark = ',')} registros. El cliente rinat solo descarga hasta 10000 por consulta; use la exportaci\u00f3n oficial de iNaturalist o divida la extracci\u00f3n por per\u00edodos antes de combinarla.")
+    if (total_api == 0L) {
+      cli::cli_alert_info("[iNaturalist] No se encontraron ocurrencias en la caja delimitadora.")
+      attr(df_vacio, "api_total") <- 0L
+      attr(df_vacio, "api_complete") <- TRUE
+      return(df_vacio)
+    }
     parametros$maxresults <- total_api
   } else {
     parametros$maxresults <- limite
   }
   
   obs_raw <- tryCatch({
-    ejecutar_con_reintentos(function() do.call(rinat::get_inat_obs, parametros), reintentos, "iNaturalist ocurrencias")
+    ejecutar_con_reintentos(function() {
+      tryCatch(
+        do.call(rinat::get_inat_obs, parametros),
+        error = function(e) {
+          if (grepl("zero results|no records|invalid search", e$message, ignore.case = TRUE)) {
+            return(data.frame())
+          }
+          stop(e)
+        }
+      )
+    }, reintentos, "iNaturalist ocurrencias")
   }, error = function(e) {
     cli::cli_alert_danger("[iNaturalist] Error durante la llamada a {.fn get_inat_obs}: {e$message}")
     return(NULL)
   })
-  
-  df_vacio <- schema_ocurrencias()
   
   if (is.null(obs_raw) || nrow(obs_raw) == 0) {
     cli::cli_alert_info("[iNaturalist] No se encontraron ocurrencias en la caja delimitadora.")

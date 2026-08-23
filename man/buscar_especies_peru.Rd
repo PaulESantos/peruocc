@@ -16,6 +16,7 @@ buscar_especies_peru(
   tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
   estrategia_espacial = c("auto", "directa", "segmentada"),
   max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+  max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
   cache_dir = ruta_cache("consultas_ocurrencias"),
   reintentos = configuracion_predeterminada()$reintentos_api,
   pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s
@@ -51,34 +52,28 @@ puede ser lento y detenerse para consultas demasiado grandes.}
 \code{\link[=exportar_resultados]{exportar_resultados()}} al final. No sobrescribe resultados previos porque
 genera un identificador temporal nuevo.}
 
-\item{tolerancia_simplificacion}{Número no negativo en metros. Controla la
-simplificación de la geometría enviada a GBIF; el filtro final siempre usa
-el polígono original. Aumentarlo reduce WKT extensos, pero no modifica el
-recorte final.}
+\item{tolerancia_simplificacion}{Distancia en metros para simplificar WKT en
+GBIF si supera el límite de longitud de la API.}
 
-\item{estrategia_espacial}{Una de \code{"auto"}, \code{"segmentada"} o \code{"directa"}.
-\code{"auto"} y \code{"segmentada"} recorren distritos de una provincia y dividen
-polígonos grandes; \code{"directa"} hace una consulta por fuente con el límite
-completo y es útil solo para áreas pequeñas.}
+\item{estrategia_espacial}{Estrategia de particionamiento (\code{"auto"}, \code{"directa"}
+o \code{"segmentada"}). Con \code{"auto"}, las provincias se particionan por sus
+distritos y los distritos extensos se dividen en macro-bloques adaptativos.}
 
-\item{max_area_ha}{Número positivo en hectáreas, predeterminado 1000. Es el
-área objetivo máxima de las teselas en estrategia segmentada. Valores más
-bajos reducen la densidad por petición, pero aumentan el número de llamadas.}
+\item{max_area_ha}{Límite de área en hectáreas por lote para teselación
+cuando se usa \code{estrategia_espacial = "segmentada"}.}
 
-\item{cache_dir}{Ruta escribible para checkpoints \code{.rds} por fuente y lote.
-El valor predeterminado está dentro del caché de \code{peruocc}. Reutilice la
-misma ruta para reanudar una ejecución interrumpida.}
+\item{max_lotes}{Número máximo de macro-bloques espaciales generados por
+unidad geográfica para evitar saturar las cuotas de las APIs.}
 
-\item{reintentos}{Entero positivo; número máximo de intentos ante errores
-transitorios de red para cada llamada remota. El valor predeterminado es 3.}
+\item{cache_dir}{Directorio para guardar checkpoints \code{.rds} por lote y fuente.}
 
-\item{pausa_entre_lotes_s}{Número mayor o igual a cero, en segundos. Añade
-una pausa entre lotes para reducir el riesgo de límites de tasa de las APIs.}
+\item{reintentos}{Entero positivo con el número de intentos para llamadas API.}
+
+\item{pausa_entre_lotes_s}{Pausa en segundos entre lotes consecutivos.}
 }
 \value{
-Una lista con \code{unidad_sf} (límite original), \code{ocurrencias} (tabla
-estandarizada y deduplicada), \code{resumen} (conteos, lotes y fallos) y
-\code{parametros} (configuración reproducible).
+Objeto con clase \code{peruocc_resultado} (lista con límite \code{unidad_sf},
+tibble de \code{ocurrencias}, \code{resumen} estadístico y \code{parametros}).
 }
 \description{
 Es la función general de consulta. Obtiene el límite oficial, consulta GBIF e

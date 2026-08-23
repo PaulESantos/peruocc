@@ -40,19 +40,38 @@ cargar_mapa_departamental <- function(departamento = NULL) {
     dep_clean <- gsub(" ", "_", tolower(departamento_norm))
     rds_path <- ruta_cache(sprintf("distritos_%s.rds", dep_clean))
     
+    mapa <- NULL
     if (file.exists(rds_path)) {
-      cli::cli_alert_info("Cargando l\u00edmites de {.strong {dep_oficial}} desde el cach\u00e9 local...")
-      mapa <- readRDS(rds_path)
-    } else {
+      mapa <- tryCatch(readRDS(rds_path), error = function(e) NULL)
+      if (is.null(mapa) || !inherits(mapa, "sf")) {
+        unlink(rds_path)
+        mapa <- NULL
+      } else {
+        cli::cli_alert_info("Cargando l\u00edmites de {.strong {dep_oficial}} desde el cach\u00e9 local...")
+      }
+    }
+    
+    if (is.null(mapa)) {
       cli::cli_alert_info("Descargando l\u00edmites de {.strong {dep_oficial}} v\u00eda {.pkg geoperu}...")
       mapa <- tryCatch({
-        geoperu::get_geo_peru(geography = dep_oficial, level = "dep", simplified = FALSE, showProgress = FALSE)
+        ejecutar_con_reintentos(function() {
+          res <- geoperu::get_geo_peru(geography = dep_oficial, level = "dep", simplified = FALSE, showProgress = FALSE)
+          if (is.null(res) || !inherits(res, c("sf", "sfc", "data.frame"))) {
+            stop("geoperu retorno un objeto vacio o nulo (posible tiempo de espera agotado)")
+          }
+          if (!inherits(res, "sf")) res <- sf::st_as_sf(res)
+          res
+        }, reintentos = 3L, etiqueta = "geoperu", pausa_inicial_s = 1)
       }, error = function(e) {
-        cli::cli_abort("Error al descargar l\u00edmites de {.pkg geoperu}: {e$message}")
+        cli::cli_abort("No se pudieron descargar los l\u00edmites de {.strong {dep_oficial}} desde {.pkg geoperu}: {e$message}")
       })
-      saveRDS(mapa, rds_path)
+      if (!is.null(mapa) && inherits(mapa, "sf")) {
+        saveRDS(mapa, rds_path)
+      }
     }
-    if (!inherits(mapa, "sf")) mapa <- sf::st_as_sf(mapa)
+    if (is.null(mapa) || !inherits(mapa, "sf")) {
+      cli::cli_abort("No se pudo cargar la capa espacial para {.strong {dep_oficial}}.")
+    }
     return(mapa)
   }
   
@@ -321,6 +340,9 @@ obtener_poligono_provincia <- function(provincia, departamento = NULL) {
 obtener_distritos_provincia <- function(provincia, departamento = NULL) {
   provincia_sf <- obtener_poligono_provincia(provincia, departamento)
   mapa <- cargar_mapa_departamental(departamento = provincia_sf$departamento[1])
+  if (attr(mapa, "sf_column") != "geometry") {
+    sf::st_geometry(mapa) <- "geometry"
+  }
   idx <- normalizar_texto(mapa$provincia) == normalizar_texto(provincia_sf$provincia[1])
   distritos <- mapa[idx, ]
   distritos <- sf::st_make_valid(distritos)
@@ -328,16 +350,27 @@ obtener_distritos_provincia <- function(provincia, departamento = NULL) {
   distritos
 }
 
-# Divide una geometría en teselas de área acotada usando una proyección UTM.
+# Divide una geometría en teselas o macro-bloques de área acotada usando una proyección UTM.
 # La teselación se realiza en metros y se devuelve nuevamente en EPSG:4326.
-dividir_poligono_por_area <- function(poligono_sf, max_area_ha = 1000) {
+dividir_poligono_por_area <- function(poligono_sf,
+                                      max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+                                      max_lotes = configuracion_predeterminada()$max_lotes_espaciales) {
   if (!inherits(poligono_sf, "sf")) cli::cli_abort("{.arg poligono_sf} debe ser un objeto {.cls sf}.")
   if (!is.numeric(max_area_ha) || length(max_area_ha) != 1L || is.na(max_area_ha) || max_area_ha <= 0) {
     cli::cli_abort("{.arg max_area_ha} debe ser un n\u00famero positivo.")
   }
+  if (!is.null(max_lotes) && (!is.numeric(max_lotes) || length(max_lotes) != 1L || is.na(max_lotes) || max_lotes < 1)) {
+    cli::cli_abort("{.arg max_lotes} debe ser un n\u00famero entero positivo o NULL.")
+  }
 
   poligono_sf <- sf::st_make_valid(poligono_sf)
   poligono_sf <- sf::st_transform(poligono_sf, 4326)
+  
+  if (attr(poligono_sf, "sf_column") != "geometry") {
+    sf::st_geometry(poligono_sf) <- "geometry"
+  }
+  cols_atributos <- setdiff(names(poligono_sf), c("geometry", "tile_id"))
+
   centroide <- sf::st_coordinates(sf::st_centroid(sf::st_union(poligono_sf)))[1, ]
   zona_utm <- max(1, min(60, floor((centroide[1] + 180) / 6) + 1))
   epsg_utm <- if (centroide[2] < 0) 32700 + zona_utm else 32600 + zona_utm
@@ -346,23 +379,37 @@ dividir_poligono_por_area <- function(poligono_sf, max_area_ha = 1000) {
 
   if (area_ha <= max_area_ha) {
     poligono_sf$tile_id <- 1L
-    return(poligono_sf)
+    cols_ordenadas <- c(cols_atributos, "tile_id", "geometry")
+    return(poligono_sf[, cols_ordenadas])
   }
 
-  lado_m <- sqrt(max_area_ha * 10000)
+  # Calculo de macro-bloques adaptativos:
+  # El área de cada lote se ajusta para que el número total estimado de lotes no sobrepase max_lotes
+  area_lote_ha <- if (!is.null(max_lotes)) max(max_area_ha, area_ha / max_lotes) else max_area_ha
+  lado_m <- sqrt(area_lote_ha * 10000)
+
   grilla <- sf::st_make_grid(sf::st_union(poligono_utm), cellsize = lado_m, square = TRUE)
   grilla <- grilla[lengths(sf::st_intersects(grilla, sf::st_union(poligono_utm))) > 0]
-  partes <- sf::st_intersection(grilla, sf::st_geometry(poligono_utm))
-  partes <- partes[!sf::st_is_empty(partes)]
-  partes <- sf::st_as_sf(partes)
-  partes <- sf::st_transform(partes, 4326)
-
-  # Todas las teselas conservan los atributos de la unidad administrativa.
-  for (nombre_columna in setdiff(names(poligono_sf), attr(poligono_sf, "sf_column"))) {
-    partes[[nombre_columna]] <- poligono_sf[[nombre_columna]][1]
+  partes_geom <- sf::st_intersection(grilla, sf::st_geometry(poligono_utm))
+  partes_geom <- partes_geom[!sf::st_is_empty(partes_geom)]
+  if (any(sf::st_geometry_type(partes_geom) == "GEOMETRYCOLLECTION")) {
+    partes_geom <- sf::st_collection_extract(partes_geom, "POLYGON")
   }
-  partes$tile_id <- seq_len(nrow(partes))
-  partes
+  partes_geom <- sf::st_transform(partes_geom, 4326)
+
+  df_base <- as.data.frame(poligono_sf)[1, cols_atributos, drop = FALSE]
+  if (nrow(df_base) == 0 || length(cols_atributos) == 0) {
+    df_rep <- data.frame(row.names = seq_along(partes_geom))
+  } else {
+    df_rep <- df_base[rep(1, length(partes_geom)), , drop = FALSE]
+    rownames(df_rep) <- NULL
+  }
+  df_rep$tile_id <- seq_along(partes_geom)
+  df_rep$geometry <- partes_geom
+
+  partes_sf <- sf::st_as_sf(df_rep, sf_column_name = "geometry", crs = 4326)
+  cols_ordenadas <- c(cols_atributos, "tile_id", "geometry")
+  partes_sf[, cols_ordenadas]
 }
 
 #' Obtiene un límite administrativo mediante una interfaz única

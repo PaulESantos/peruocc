@@ -1,7 +1,7 @@
 # Internal helpers for validation, schemas, and run manifests.
 
 schema_ocurrencias <- function() {
-  data.frame(
+  as_tibble(data.frame(
     occurrenceID = character(),
     sourceRecordID = character(),
     sourceURL = character(),
@@ -27,7 +27,7 @@ schema_ocurrencias <- function() {
     province = character(),
     department = character(),
     stringsAsFactors = FALSE
-  )
+  ))
 }
 
 valor_columna <- function(datos, nombre, tipo = "character") {
