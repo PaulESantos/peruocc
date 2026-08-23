@@ -11,13 +11,28 @@ test_that("as_peruocc_tbl coerciona data.frames y matrices correctamente", {
   expect_equal(tbl$a, 1:5)
 })
 
-test_that("subsetting preserva la clase peruocc_tbl", {
-  df <- data.frame(a = 1:10, b = 11:20)
+test_that("subsetting preserva la clase peruocc_tbl y no emite avisos de drop", {
+  df <- data.frame(a = 1:10, b = 11:20, c = letters[1:10], stringsAsFactors = FALSE)
   tbl <- peruocc::as_peruocc_tbl(df)
-  sub_tbl <- tbl[1:3, ]
   
+  # Subsetting 2 argumentos
+  sub_tbl <- expect_no_warning(tbl[1:3, ])
   expect_s3_class(sub_tbl, "tbl_df")
   expect_equal(nrow(sub_tbl), 3)
+  
+  # Subsetting 1 argumento (columnas)
+  sub_cols <- expect_no_warning(tbl[1:2])
+  expect_s3_class(sub_cols, "tbl_df")
+  expect_equal(ncol(sub_cols), 2)
+  expect_equal(nrow(sub_cols), 10)
+  
+  # Subsetting sin argumentos
+  sub_todo <- expect_no_warning(tbl[])
+  expect_equal(dim(sub_todo), dim(tbl))
+  
+  # Subsetting vector con drop = TRUE
+  vec <- expect_no_warning(tbl[1:3, 1, drop = TRUE])
+  expect_equal(vec, 1:3)
 })
 
 test_that("print.peruocc_tbl funciona limpiamente con formateo alineado y pie de pagina", {

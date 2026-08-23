@@ -39,7 +39,16 @@ as_tibble <- as_peruocc_tbl
 
 #' @export
 `[.peruocc_tbl` <- function(x, i, j, drop = FALSE) {
-  res <- NextMethod("[", drop = drop)
+  if (missing(i) && missing(j)) {
+    return(x)
+  }
+  
+  res <- if (nargs() < 3L || missing(j)) {
+    NextMethod("[")
+  } else {
+    NextMethod("[", drop = drop)
+  }
+  
   if (is.data.frame(res)) {
     attr(res, "row.names") <- .set_row_names(nrow(res))
     class(res) <- unique(c("peruocc_tbl", "tbl_df", "tbl", "data.frame"))
