@@ -121,16 +121,12 @@ resultado <- buscar_especies_distrito(
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 822 caracteres).
 #> ℹ [GBIF] Filtrando por reino Plantae (Flora).
 #> ℹ [GBIF] Consultando registros dentro del polígono de MIRAFLORES (límite: "150")...
-#> Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an
-#> effect only for `x[i, j]`.
 #> ✔ [GBIF] Búsqueda finalizada. Se filtraron 148 registro(s) que caen dentro del polígono seleccionado.
 #> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
 #> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
 #> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de MIRAFLORES (límite: "150")...
 #> ℹ [iNaturalist] Se descargaron 150 registros en la caja delimitadora. Aplicando filtro espacial...
 #> ✔ [iNaturalist] Búsqueda finalizada. 133 de 150 registros caen dentro del polígono seleccionado.
-#> Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an effect only for `x[i, j]`.
-#> `drop` argument ignored for subsetting a tibble with `x[j]`, it has an effect only for `x[i, j]`.
 #> ✔ Consolidación exitosa. Total de registros unificados: 281
 #> 
 #> ── Resumen de Registros ──
@@ -273,12 +269,8 @@ mapa_fuente <- graficar_ocurrencias(
   resultado_lista = resultado,
   color_por = "source"
 )
-#> Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an
-#> effect only for `x[i, j]`.
 
 print(mapa_fuente)
-#> Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an
-#> effect only for `x[i, j]`.
 ```
 
 ![](visualizacion_y_exportacion_files/figure-html/unnamed-chunk-4-1.png)
@@ -292,12 +284,8 @@ mapa_reino <- graficar_ocurrencias(
   resultado_lista = resultado,
   color_por = "kingdom"
 )
-#> Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an effect only for `x[i, j]`.
-#> `drop` argument ignored for subsetting a tibble with `x[j]`, it has an effect only for `x[i, j]`.
 
 print(mapa_reino)
-#> Warning: `drop` argument ignored for subsetting a tibble with `x[j]`, it has an
-#> effect only for `x[i, j]`.
 ```
 
 ![](visualizacion_y_exportacion_files/figure-html/unnamed-chunk-5-1.png)
