@@ -526,7 +526,7 @@ personalizadas.
 - [`obtener_poligono_distrito()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_distrito.md)
   : Obtiene el límite oficial de un distrito peruano
 - [`obtener_poligono_provincia()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_provincia.md)
-  : Obtiene el límite consolidado de una provincia peruana
+  : Obtiene el límite oficial de una provincia peruana
 - [`obtener_poligono_unidad()`](https://paulesantos.github.io/peruocc/reference/obtener_poligono_unidad.md)
   : Obtiene un límite administrativo mediante una interfaz única
 - [`preparar_poligono_usuario()`](https://paulesantos.github.io/peruocc/reference/preparar_poligono_usuario.md)

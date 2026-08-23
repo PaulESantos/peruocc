@@ -57,7 +57,7 @@ distrito_sf <- obtener_poligono_distrito(
   departamento = "Cusco",
   provincia = "Urubamba"
 )
-#> [SPATIAL] Cargando limites de CUSCO desde el cache local...
+#> ℹ Cargando límites de CUSCO desde el caché local...
 
 distrito_sf
 #> Simple feature collection with 1 feature and 4 fields
@@ -82,7 +82,7 @@ provincia_sf <- obtener_poligono_provincia(
   provincia = "Tambopata",
   departamento = "Madre de Dios"
 )
-#> [SPATIAL] Cargando limites de MADRE DE DIOS desde el cache local...
+#> ℹ Cargando límites de MADRE DE DIOS desde el caché local...
 
 provincia_sf
 #> Simple feature collection with 1 feature and 3 fields

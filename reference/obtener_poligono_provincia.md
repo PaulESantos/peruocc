@@ -1,4 +1,4 @@
-# Obtiene el límite consolidado de una provincia peruana
+# Obtiene el límite oficial de una provincia peruana
 
 Recupera los distritos de la provincia desde `geoperu` y disuelve sus
 geometrías en una sola entidad válida. Para descargar ocurrencias

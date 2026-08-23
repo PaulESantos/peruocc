@@ -105,30 +105,30 @@ resultado <- buscar_especies_distrito(
   grupo = "flora",
   limite_por_api = 150
 )
-#> =====================================================================
-#> BUSQUEDA INTEGRADA EN DISTRITO: MIRAFLORES
-#>   Provincia: Lima
-#>   Departamento: Lima
-#> =====================================================================
 #> 
-#> [SPATIAL] Descargando limites de LIMA via geoperu...
-#> [LOTE] Procesando 1 lote(s) espaciales. Los resultados completados se guardan en '/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias'.
-#> [GBIF] Iniciando busqueda de ocurrencias...
-#> [SPATIAL] Poligono simplificado con exito a tolerancia de 100 metros (WKT: 822 caracteres).
-#> [GBIF] Filtrando por reino Plantae (Flora).
-#> [GBIF] Consultando registros dentro del poligono de 'MIRAFLORES' (limite: 150)...
-#> [GBIF] Busqueda finalizada. Se filtraron 148 registros que caen dentro del poligono seleccionado.
-#> [iNaturalist] Iniciando busqueda de ocurrencias...
-#> [iNaturalist] Filtrando por reino Plantae (Flora).
-#> [iNaturalist] Consultando registros dentro de la caja delimitadora de 'MIRAFLORES' (limite: 150)...
-#> [iNaturalist] Se descargaron 150 registros en la caja delimitadora. Aplicando filtro espacial...
-#> [iNaturalist] Busqueda finalizada. 133 de 150 registros caen dentro del poligono seleccionado.
+#> ── Búsqueda Integrada: MIRAFLORES (DISTRITO) ───────────────────────────────────
+#> • Departamento: Lima
+#> • Provincia: Lima
+#> • Grupo: flora
+#> ℹ Descargando límites de LIMA vía geoperu...
+#> ℹ Procesando 1 lote(s) espaciales. Checkpoints en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias
+#> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
+#> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 822 caracteres).
+#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
+#> ℹ [GBIF] Consultando registros dentro del polígono de MIRAFLORES (límite: "150")...
+#> ✔ [GBIF] Búsqueda finalizada. Se filtraron 148 registro(s) que caen dentro del polígono seleccionado.
+#> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
+#> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
+#> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de MIRAFLORES (límite: "150")...
+#> ℹ [iNaturalist] Se descargaron 150 registros en la caja delimitadora. Aplicando filtro espacial...
+#> ✔ [iNaturalist] Búsqueda finalizada. 133 de 150 registros caen dentro del polígono seleccionado.
+#> ✔ Consolidación exitosa. Total de registros unificados: 281
 #> 
-#> [RESULTADO] Consolidacion exitosa. Total de registros unificados: 281
-#>        Origen Registros
-#> 1        GBIF       148
-#> 2 iNaturalist       133
-#> 3       Total       281
+#> ── Resumen de Registros ──
+#> 
+#> • GBIF: 148 registro(s)
+#> • iNaturalist: 133 registro(s)
+#> ✔ Total consolidado: 281 registro(s)
 
 # Paso 2: Inspeccionar resultados o graficar
 summary(resultado$ocurrencias)
