@@ -33,7 +33,7 @@ buscar_inat_por_poligono <- function(poligono_sf,
                                       limite = 500,
                                       reintentos = configuracion_predeterminada()$reintentos_api) {
   
-  cat("[iNaturalist] Iniciando busqueda de ocurrencias...\n")
+  cli::cli_alert_info("[iNaturalist] Iniciando b\u00fasqueda de ocurrencias...")
   
   # Obtener nombres administrativos para registrar en el dataset
   nombre_distrito <- if (!is.null(poligono_sf$distrito) && !is.na(poligono_sf$distrito[1])) poligono_sf$distrito[1] else NA_character_
@@ -52,16 +52,16 @@ buscar_inat_por_poligono <- function(poligono_sf,
     grupo_clean <- tolower(trimws(grupo))
     if (grupo_clean == "flora") {
       taxon_query <- "Plantae"
-      cat("[iNaturalist] Filtrando por reino Plantae (Flora).\n")
+      cli::cli_alert_info("[iNaturalist] Filtrando por reino Plantae (Flora).")
     } else if (grupo_clean == "fauna") {
       taxon_query <- "Animalia"
-      cat("[iNaturalist] Filtrando por reino Animalia (Fauna).\n")
+      cli::cli_alert_info("[iNaturalist] Filtrando por reino Animalia (Fauna).")
     }
   }
   
   # 3. Consultar a iNaturalist usando el Bounding Box
   limite_etiqueta <- if (is.null(limite)) "completo" else as.character(limite)
-  cat(sprintf("[iNaturalist] Consultando registros dentro de la caja delimitadora de '%s' (limite: %s)...\n", etiqueta_unidad, limite_etiqueta))
+  cli::cli_alert_info("[iNaturalist] Consultando registros dentro de la caja delimitadora de {.strong {etiqueta_unidad}} (l\u00edmite: {.val {limite_etiqueta}})...")
   
   parametros <- list(
     bounds = bbox_vector,
@@ -82,8 +82,8 @@ buscar_inat_por_poligono <- function(poligono_sf,
   if (is.null(limite)) {
     metadatos <- tryCatch(ejecutar_con_reintentos(function() do.call(rinat::get_inat_obs, c(parametros, list(maxresults = 1, meta = TRUE))), reintentos, "iNaturalist conteo"), error = function(e) NULL)
     total_api <- if (!is.null(metadatos$meta$found)) as.integer(metadatos$meta$found) else NA_integer_
-    if (is.na(total_api)) stop("iNaturalist no devolvio el conteo de la consulta; no es posible verificar una descarga completa.")
-    if (total_api > 10000L) stop(sprintf("iNaturalist reporta %s registros. El cliente rinat solo descarga hasta 10000 por consulta; use la exportacion oficial de iNaturalist o divida la extraccion por periodos antes de combinarla.", format(total_api, big.mark = ",")))
+    if (is.na(total_api)) cli::cli_abort("iNaturalist no devolvi\u00f3 el conteo de la consulta; no es posible verificar una descarga completa.")
+    if (total_api > 10000L) cli::cli_abort("iNaturalist reporta {format(total_api, big.mark = ',')} registros. El cliente rinat solo descarga hasta 10000 por consulta; use la exportaci\u00f3n oficial de iNaturalist o divida la extracci\u00f3n por per\u00edodos antes de combinarla.")
     parametros$maxresults <- total_api
   } else {
     parametros$maxresults <- limite
@@ -92,20 +92,20 @@ buscar_inat_por_poligono <- function(poligono_sf,
   obs_raw <- tryCatch({
     ejecutar_con_reintentos(function() do.call(rinat::get_inat_obs, parametros), reintentos, "iNaturalist ocurrencias")
   }, error = function(e) {
-    cat("[iNaturalist] Error durante la llamada a get_inat_obs: ", e$message, "\n")
+    cli::cli_alert_danger("[iNaturalist] Error durante la llamada a {.fn get_inat_obs}: {e$message}")
     return(NULL)
   })
   
   df_vacio <- schema_ocurrencias()
   
   if (is.null(obs_raw) || nrow(obs_raw) == 0) {
-    cat("[iNaturalist] No se encontraron ocurrencias en la caja delimitadora.\n")
+    cli::cli_alert_info("[iNaturalist] No se encontraron ocurrencias en la caja delimitadora.")
     attr(df_vacio, "api_total") <- if (is.na(total_api)) 0L else total_api
     attr(df_vacio, "api_complete") <- is.null(limite) && !is.na(total_api)
     return(df_vacio)
   }
   
-  cat(sprintf("[iNaturalist] Se descargaron %d registros en la caja delimitadora. Aplicando filtro espacial...\n", nrow(obs_raw)))
+  cli::cli_alert_info("[iNaturalist] Se descargaron {nrow(obs_raw)} registros en la caja delimitadora. Aplicando filtro espacial...")
   
   # 4. Filtro Espacial (Interseccion con el poligono exacto)
   obs_sf <- sf::st_as_sf(obs_raw, coords = c("longitude", "latitude"), crs = 4326, remove = FALSE)
@@ -116,7 +116,7 @@ buscar_inat_por_poligono <- function(poligono_sf,
   obs_dentro <- obs_sf[interseccion[, 1], ]
   
   if (nrow(obs_dentro) == 0) {
-    cat("[iNaturalist] Ninguno de los registros se encuentra estrictamente dentro del poligono seleccionado.\n")
+    cli::cli_alert_warning("[iNaturalist] Ninguno de los registros se encuentra estrictamente dentro del pol\u00edgono seleccionado.")
     return(df_vacio)
   }
   
@@ -172,8 +172,7 @@ buscar_inat_por_poligono <- function(poligono_sf,
   datos_procesados$province <- nombre_provincia
   datos_procesados$department <- nombre_departamento
   
-  cat(sprintf("[iNaturalist] Busqueda finalizada. %d de %d registros caen dentro del poligono seleccionado.\n",
-              nrow(datos_procesados), nrow(obs_raw)))
+  cli::cli_alert_success("[iNaturalist] B\u00fasqueda finalizada. {nrow(datos_procesados)} de {nrow(obs_raw)} registros caen dentro del pol\u00edgono seleccionado.")
   attr(datos_procesados, "api_total") <- total_api
   attr(datos_procesados, "api_complete") <- is.null(limite) && !is.na(total_api) && nrow(obs_raw) == total_api
   

@@ -18,6 +18,7 @@ Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.1.0)
 Imports:
+    cli,
     dplyr,
     geoperu,
     ggplot2,

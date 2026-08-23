@@ -45,7 +45,7 @@ valor_columna <- function(datos, nombre, tipo = "character") {
 # Ejecuta una operación remota con espera exponencial para errores transitorios.
 ejecutar_con_reintentos <- function(operacion, reintentos = 3L, etiqueta = "API", pausa_inicial_s = 0.5) {
   if (!is.numeric(reintentos) || length(reintentos) != 1L || is.na(reintentos) || reintentos < 1) {
-    stop("'reintentos' debe ser un entero positivo.")
+    cli::cli_abort("{.arg reintentos} debe ser un entero positivo.")
   }
   ultimo_error <- NULL
   for (intento in seq_len(as.integer(reintentos))) {
@@ -56,20 +56,23 @@ ejecutar_con_reintentos <- function(operacion, reintentos = 3L, etiqueta = "API"
     if (!is.null(resultado)) return(resultado)
     if (intento < reintentos) {
       espera <- pausa_inicial_s * 2^(intento - 1)
-      cat(sprintf("[%s] Intento %d/%d fallo; reintentando en %.1f s.\n", etiqueta, intento, reintentos, espera))
+      cli::cli_alert_warning("[{etiqueta}] Intento {intento}/{reintentos} fall\u00f3; reintentando en {round(espera, 1)} s...")
       Sys.sleep(espera)
     }
   }
-  stop(ultimo_error)
+  cli::cli_abort(
+    "Fallaron todos los reintentos ({reintentos}) para [{etiqueta}]: {ultimo_error$message}",
+    parent = ultimo_error
+  )
 }
 
 validar_entrada_busqueda <- function(unidad, grupo = NULL, limite = NULL, nivel = "distrito") {
   if (!is.character(unidad) || length(unidad) != 1L || !nzchar(trimws(unidad))) {
-    stop(sprintf("'%s' debe ser un texto no vacio.", nivel))
+    cli::cli_abort("{.arg {nivel}} debe ser un texto no vac\u00edo.")
   }
 
   if (!is.null(grupo) && !tolower(grupo) %in% c("flora", "fauna")) {
-    stop("'grupo' debe ser 'flora', 'fauna' o NULL.")
+    cli::cli_abort("{.arg grupo} debe ser {.val flora}, {.val fauna} o {.val NULL}.")
   }
 
   if (is.null(limite)) {
@@ -78,7 +81,7 @@ validar_entrada_busqueda <- function(unidad, grupo = NULL, limite = NULL, nivel 
 
   if (!is.numeric(limite) || length(limite) != 1L || is.na(limite) ||
       limite < 1 || limite > 10000 || limite != as.integer(limite)) {
-    stop("'limite_por_api' debe ser NULL o un entero entre 1 y 10000.")
+    cli::cli_abort("{.arg limite_por_api} debe ser {.val NULL} o un entero entre 1 y 10000.")
   }
 
   invisible(TRUE)
@@ -162,7 +165,7 @@ escribir_manifiesto <- function(run_id, parametros, unidad_sf, resumen, archivos
 #' @export
 exportar_resultados <- function(resultado, dir_salida = NULL, prefijo = NULL, formatos = c("csv", "geojson", "manifiesto")) {
   if (missing(resultado) || is.null(resultado) || !is.list(resultado)) {
-    stop("Error: 'resultado' debe ser una lista valida generada por buscar_especies_*().")
+    cli::cli_abort("{.arg resultado} debe ser una lista v\u00e1lida generada por {.fn buscar_especies_*}.")
   }
   
   ocurrencias <- resultado$ocurrencias
@@ -171,7 +174,7 @@ exportar_resultados <- function(resultado, dir_salida = NULL, prefijo = NULL, fo
   parametros <- resultado$parametros
   
   if (is.null(ocurrencias) || nrow(ocurrencias) == 0) {
-    message("[EXPORTAR] No hay ocurrencias para exportar.")
+    cli::cli_alert_info("No hay ocurrencias para exportar.")
     return(invisible(list()))
   }
   
@@ -197,10 +200,10 @@ exportar_resultados <- function(resultado, dir_salida = NULL, prefijo = NULL, fo
     ruta_csv <- file.path(dir_salida, sprintf("ocurrencias_%s.csv", run_id))
     tryCatch({
       readr::write_csv(ocurrencias, ruta_csv)
-      cat(sprintf("[ARCHIVO] Registros tabulares guardados en: '%s'\n", ruta_csv))
+      cli::cli_alert_success("Registros tabulares guardados en: {.file {ruta_csv}}")
       archivos_creados$csv <- ruta_csv
     }, error = function(e) {
-      warning("[ARCHIVO] Error al exportar CSV: ", e$message)
+      cli::cli_warn(c("!" = "Error al exportar CSV: {e$message}"))
     })
   }
   
@@ -217,11 +220,11 @@ exportar_resultados <- function(resultado, dir_salida = NULL, prefijo = NULL, fo
           remove = FALSE
         )
         sf::st_write(sf_guardar, ruta_geojson, quiet = TRUE, delete_dsn = TRUE)
-        cat(sprintf("[ARCHIVO] Capa espacial GeoJSON guardada en: '%s'\n", ruta_geojson))
+        cli::cli_alert_success("Capa espacial GeoJSON guardada en: {.file {ruta_geojson}}")
         archivos_creados$geojson <- ruta_geojson
       }
     }, error = function(e) {
-      warning("[SIG] Error al exportar GeoJSON: ", e$message)
+      cli::cli_warn(c("!" = "Error al exportar GeoJSON: {e$message}"))
     })
   }
   
@@ -237,10 +240,10 @@ exportar_resultados <- function(resultado, dir_salida = NULL, prefijo = NULL, fo
         archivos = archivos_creados,
         ruta = ruta_manifiesto
       )
-      cat(sprintf("[ARCHIVO] Manifiesto guardado en: '%s'\n", ruta_manifiesto))
+      cli::cli_alert_success("Manifiesto JSON guardado en: {.file {ruta_manifiesto}}")
       archivos_creados$manifiesto <- ruta_manifiesto
     }, error = function(e) {
-      warning("[ARCHIVO] Error al exportar manifiesto: ", e$message)
+      cli::cli_warn(c("!" = "Error al exportar manifiesto: {e$message}"))
     })
   }
   

@@ -34,7 +34,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
                                      tolerancia_simplificacion = 100,
                                      reintentos = configuracion_predeterminada()$reintentos_api) {
   
-  cat("[GBIF] Iniciando busqueda de ocurrencias...\n")
+  cli::cli_alert_info("[GBIF] Iniciando b\u00fasqueda de ocurrencias...")
   
   # 1. Simplificar el poligono de manera inteligente para la API (limite de longitud WKT <= 1500)
   poligono_api <- simplificar_para_api(poligono_sf, tolerancia_inicial_metros = tolerancia_simplificacion)
@@ -49,20 +49,19 @@ buscar_gbif_por_poligono <- function(poligono_sf,
   # 2. Configurar filtros taxonomicos
   taxon_key <- NULL
   if (!is.null(nombre_cientifico) && nombre_cientifico != "") {
-    cat(sprintf("[GBIF] Resolviendo taxonomia para '%s'...\n", nombre_cientifico))
+    cli::cli_alert_info("[GBIF] Resolviendo taxonom\u00eda para {.val {nombre_cientifico}}...")
     resolucion <- tryCatch({
       ejecutar_con_reintentos(function() rgbif::name_backbone(name = nombre_cientifico), reintentos, "GBIF taxonomia")
     }, error = function(e) {
-      cat("[GBIF] Advertencia: No se pudo conectar al resolutor taxonomico de GBIF.\n")
+      cli::cli_alert_warning("[GBIF] No se pudo conectar al resolutor taxon\u00f3mico de GBIF.")
       return(NULL)
     })
     
     if (!is.null(resolucion) && resolucion$matchType != "NONE") {
       taxon_key <- resolucion$usageKey
-      cat(sprintf("[GBIF] Taxon resuelto: %s (Key: %s, Rank: %s)\n", 
-                  resolucion$scientificName, as.character(taxon_key), resolucion$rank))
+      cli::cli_alert_success("[GBIF] Tax\u00f3n resuelto: {.strong {resolucion$scientificName}} (Key: {taxon_key}, Rank: {resolucion$rank})")
     } else {
-      cat(sprintf("[GBIF] Advertencia: No se encontro coincidencia taxonomica para '%s'. Se buscara por texto libre.\n", nombre_cientifico))
+      cli::cli_alert_warning("[GBIF] No se encontr\u00f3 coincidencia taxon\u00f3mica para {.val {nombre_cientifico}}. Se buscar\u00e1 por texto libre.")
     }
   }
   
@@ -73,16 +72,16 @@ buscar_gbif_por_poligono <- function(poligono_sf,
     grupo_clean <- tolower(trimws(grupo))
     if (grupo_clean == "flora") {
       kingdom_key <- 6
-      cat("[GBIF] Filtrando por reino Plantae (Flora).\n")
+      cli::cli_alert_info("[GBIF] Filtrando por reino Plantae (Flora).")
     } else if (grupo_clean == "fauna") {
       kingdom_key <- 1
-      cat("[GBIF] Filtrando por reino Animalia (Fauna).\n")
+      cli::cli_alert_info("[GBIF] Filtrando por reino Animalia (Fauna).")
     }
   }
   
   # 3. Ejecutar consulta
   limite_etiqueta <- if (is.null(limite)) "completo" else as.character(limite)
-  cat(sprintf("[GBIF] Consultando registros dentro del poligono de '%s' (limite: %s)...\n", etiqueta_unidad, limite_etiqueta))
+  cli::cli_alert_info("[GBIF] Consultando registros dentro del pol\u00edgono de {.strong {etiqueta_unidad}} (l\u00edmite: {.val {limite_etiqueta}})...")
   
   parametros <- list(
     geometry = wkt,
@@ -104,8 +103,8 @@ buscar_gbif_por_poligono <- function(poligono_sf,
   if (is.null(limite)) {
     conteo <- tryCatch(ejecutar_con_reintentos(function() do.call(rgbif::occ_search, c(parametros, list(limit = 0))), reintentos, "GBIF conteo"), error = function(e) NULL)
     total_api <- if (!is.null(conteo$meta$count)) as.integer(conteo$meta$count) else NA_integer_
-    if (is.na(total_api)) stop("GBIF no devolvio el conteo de la consulta; no es posible verificar una descarga completa.")
-    if (total_api > 100000L) stop(sprintf("GBIF reporta %s registros. occ_search solo permite 100000; solicite una descarga masiva citable con rgbif::occ_download() usando los mismos filtros.", format(total_api, big.mark = ",")))
+    if (is.na(total_api)) cli::cli_abort("GBIF no devolvi\u00f3 el conteo de la consulta; no es posible verificar una descarga completa.")
+    if (total_api > 100000L) cli::cli_abort("GBIF reporta {format(total_api, big.mark = ',')} registros. occ_search solo permite 100000; solicite una descarga masiva citable con {.fn rgbif::occ_download} usando los mismos filtros.")
     parametros$limit <- total_api
   } else {
     parametros$limit <- limite
@@ -114,14 +113,14 @@ buscar_gbif_por_poligono <- function(poligono_sf,
   res <- tryCatch({
     ejecutar_con_reintentos(function() do.call(rgbif::occ_search, parametros), reintentos, "GBIF ocurrencias")
   }, error = function(e) {
-    cat("[GBIF] Error durante la llamada a occ_search: ", e$message, "\n")
+    cli::cli_alert_danger("[GBIF] Error durante la llamada a {.fn occ_search}: {e$message}")
     return(NULL)
   })
   
   df_vacio <- schema_ocurrencias()
   
   if (is.null(res) || is.null(res$data) || nrow(res$data) == 0) {
-    cat("[GBIF] No se encontraron ocurrencias.\n")
+    cli::cli_alert_info("[GBIF] No se encontraron ocurrencias.")
     attr(df_vacio, "api_total") <- if (is.na(total_api)) 0L else total_api
     attr(df_vacio, "api_complete") <- is.null(limite) && !is.na(total_api)
     return(df_vacio)
@@ -193,7 +192,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
     }
   }
   
-  cat(sprintf("[GBIF] Busqueda finalizada. Se filtraron %d registros que caen dentro del poligono seleccionado.\n", nrow(datos_procesados)))
+  cli::cli_alert_success("[GBIF] B\u00fasqueda finalizada. Se filtraron {nrow(datos_procesados)} registro(s) que caen dentro del pol\u00edgono seleccionado.")
   attr(datos_procesados, "api_total") <- if (is.na(total_api)) res$meta$count else total_api
   attr(datos_procesados, "api_complete") <- is.null(limite) && !is.na(total_api) && nrow(res$data) == total_api
   

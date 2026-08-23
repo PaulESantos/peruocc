@@ -2,7 +2,7 @@
 % Please edit documentation in R/spatial_utils.R
 \name{obtener_poligono_provincia}
 \alias{obtener_poligono_provincia}
-\title{Obtiene el límite consolidado de una provincia peruana}
+\title{Obtiene el límite oficial de una provincia peruana}
 \usage{
 obtener_poligono_provincia(provincia, departamento = NULL)
 }

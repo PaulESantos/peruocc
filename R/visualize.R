@@ -69,10 +69,10 @@ graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_
           ggplot2::scale_color_manual(values = colores_reino, name = "Reino")
       }
     } else {
-      cat("[VISUALIZACION] Nota: Los registros encontrados carecen de coordenadas validas para ser graficados.\n")
+      cli::cli_alert_warning("Los registros encontrados carecen de coordenadas v\u00e1lidas para ser graficados.")
     }
   } else {
-    cat("[VISUALIZACION] Nota: No se encontraron registros de ocurrencias para graficar.\n")
+    cli::cli_alert_info("No se encontraron registros de ocurrencias para graficar.")
   }
   
   # Formatear el diseno y leyendas
@@ -109,9 +109,9 @@ graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_
     
     tryCatch({
       ggplot2::ggsave(nombre_img, plot = g, width = 8, height = 7, dpi = 300, bg = "white")
-      cat(sprintf("[VISUALIZACION] Mapa estatico guardado en: '%s'\n", nombre_img))
+      cli::cli_alert_success("Mapa est\u00e1tico guardado en: {.file {nombre_img}}")
     }, error = function(e) {
-      cat("[VISUALIZACION] Error al guardar el mapa en archivo: ", e$message, "\n")
+      cli::cli_alert_danger("Error al guardar el mapa en archivo: {e$message}")
     })
   }
   

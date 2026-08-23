@@ -33,7 +33,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
     indice_dep <- which(deps_norm == departamento_norm)
     
     if (length(indice_dep) == 0) {
-      stop(sprintf("Error: El departamento '%s' no es valido en el Peru.", departamento))
+      cli::cli_abort("El departamento {.val {departamento}} no es v\u00e1lido en el Per\u00fa.")
     }
     
     dep_oficial <- deps_oficiales[indice_dep]
@@ -41,14 +41,14 @@ cargar_mapa_departamental <- function(departamento = NULL) {
     rds_path <- ruta_cache(sprintf("distritos_%s.rds", dep_clean))
     
     if (file.exists(rds_path)) {
-      cat(sprintf("[SPATIAL] Cargando limites de %s desde el cache local...\n", dep_oficial))
+      cli::cli_alert_info("Cargando l\u00edmites de {.strong {dep_oficial}} desde el cach\u00e9 local...")
       mapa <- readRDS(rds_path)
     } else {
-      cat(sprintf("[SPATIAL] Descargando limites de %s via geoperu...\n", dep_oficial))
+      cli::cli_alert_info("Descargando l\u00edmites de {.strong {dep_oficial}} v\u00eda {.pkg geoperu}...")
       mapa <- tryCatch({
         geoperu::get_geo_peru(geography = dep_oficial, level = "dep", simplified = FALSE, showProgress = FALSE)
       }, error = function(e) {
-        stop(sprintf("Error al descargar limites de geoperu: %s", e$message))
+        cli::cli_abort("Error al descargar l\u00edmites de {.pkg geoperu}: {e$message}")
       })
       saveRDS(mapa, rds_path)
     }
@@ -62,7 +62,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
   archivos_cache <- archivos_cache[!grepl("distritos_peru_completo.rds$", archivos_cache)]
   
   if (length(archivos_cache) > 0) {
-    cat("[SPATIAL] Cargando datos disponibles desde cache local...\n")
+    cli::cli_alert_info("Cargando datos disponibles desde cach\u00e9 local...")
     lista_mapas <- lapply(archivos_cache, readRDS)
     mapa_acumulado <- do.call(rbind, lista_mapas)
     if (!inherits(mapa_acumulado, "sf")) mapa_acumulado <- sf::st_as_sf(mapa_acumulado)
@@ -71,13 +71,13 @@ cargar_mapa_departamental <- function(departamento = NULL) {
   
   rds_completo <- ruta_cache("distritos_peru_completo.rds")
   if (file.exists(rds_completo)) {
-    cat("[SPATIAL] Cargando base de datos completa desde cache local...\n")
+    cli::cli_alert_info("Cargando base de datos completa desde cach\u00e9 local...")
     mapa <- readRDS(rds_completo)
     if (!inherits(mapa, "sf")) mapa <- sf::st_as_sf(mapa)
     return(mapa)
   }
   
-  cat("[SPATIAL] Departamento no especificado. Descargando limites distritales del Peru via geoperu...\n")
+  cli::cli_alert_info("Departamento no especificado. Descargando l\u00edmites distritales del Per\u00fa v\u00eda {.pkg geoperu}...")
   lista_todos <- list()
   for (dep in deps_oficiales) {
     dep_clean <- gsub(" ", "_", tolower(normalizar_texto(dep)))
@@ -86,11 +86,11 @@ cargar_mapa_departamental <- function(departamento = NULL) {
     if (file.exists(rds_path)) {
       lista_todos[[dep]] <- readRDS(rds_path)
     } else {
-      cat(sprintf("  - Descargando departamento: %s...\n", dep))
+      cli::cli_alert_info("Descargando departamento: {.strong {dep}}...")
       dep_sf <- tryCatch({
         geoperu::get_geo_peru(geography = dep, level = "dep", simplified = FALSE, showProgress = FALSE)
       }, error = function(e) {
-        cat(sprintf("    Error al descargar %s: %s\n", dep, e$message))
+        cli::cli_alert_danger("Error al descargar {.strong {dep}}: {e$message}")
         NULL
       })
       if (!is.null(dep_sf)) {
@@ -101,7 +101,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
   }
   mapa <- do.call(rbind, lista_todos)
   saveRDS(mapa, rds_completo)
-  cat("[SPATIAL] Cache local completo creado con exito.\n")
+  cli::cli_alert_success("Cach\u00e9 local completo creado con \u00e9xito.")
   if (!inherits(mapa, "sf")) mapa <- sf::st_as_sf(mapa)
   return(mapa)
 }
@@ -133,7 +133,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
 obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia = NULL) {
   loadNamespace("sf")
   if (missing(distrito) || is.null(distrito)) {
-    stop("Error: Debe proporcionar el nombre de un distrito.")
+    cli::cli_abort("Debe proporcionar el nombre de un distrito en {.arg distrito}.")
   }
   
   distrito_norm <- normalizar_texto(distrito)
@@ -160,12 +160,14 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
   
   if (length(idx) == 0) {
     sugerencias <- unique(utils::head(mapa$distrito[agrep(distrito_norm, distritos_mapa_norm, max.distance = 0.1)], 5))
-    mensaje_error <- paste0("Error: No se encontro el distrito '", distrito, "'.")
     if (length(sugerencias) > 0) {
-      mensaje_error <- paste0(mensaje_error, " Quiso decir uno de estos?: ",
-                              paste(sugerencias, collapse = ", "))
+      cli::cli_abort(c(
+        "x" = "No se encontr\u00f3 el distrito {.val {distrito}}.",
+        "i" = "Quiz\u00e1s quiso decir: {.val {sugerencias}}"
+      ))
+    } else {
+      cli::cli_abort("No se encontr\u00f3 el distrito {.val {distrito}}.")
     }
-    stop(mensaje_error)
   }
   
   if (!is.null(provincia_norm)) {
@@ -177,18 +179,19 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
   }
   
   if (length(idx) > 1) {
-    cat("\nSe encontraron multiples distritos con el nombre '", distrito, "':\n")
-    for (i in idx) {
-      cat(sprintf("  - Departamento: %s | Provincia: %s | Distrito: %s\n", 
-                  mapa$departamento[i], 
-                  mapa$provincia[i], 
-                  mapa$distrito[i]))
-    }
-    stop("Ambiguedad detectada. Por favor especifique el parametro 'departamento' o 'provincia' para afinar la busqueda.")
+    detalles <- sprintf("Departamento: %s | Provincia: %s | Distrito: %s", 
+                        mapa$departamento[idx], 
+                        mapa$provincia[idx], 
+                        mapa$distrito[idx])
+    cli::cli_abort(c(
+      "x" = "Ambig\u00fcedad detectada: se encontraron m\u00faltiples distritos con el nombre {.val {distrito}}:",
+      stats::setNames(detalles, rep("*", length(detalles))),
+      "i" = "Especifique el par\u00e1metro {.arg departamento} o {.arg provincia} para afinar la b\u00fasqueda."
+    ))
   }
   
   if (length(idx) == 0) {
-    stop(sprintf("Error: No se encontro el distrito '%s' con los filtros especificados.", distrito))
+    cli::cli_abort("No se encontr\u00f3 el distrito {.val {distrito}} con los filtros especificados.")
   }
   
   col_geom <- attr(mapa, "sf_column")
@@ -212,7 +215,7 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
   return(coincidencias)
 }
 
-#' Obtiene el límite consolidado de una provincia peruana
+#' Obtiene el límite oficial de una provincia peruana
 #'
 #' Recupera los distritos de la provincia desde `geoperu` y disuelve sus
 #' geometrías en una sola entidad válida. Para descargar ocurrencias provinciales
@@ -233,7 +236,7 @@ obtener_poligono_distrito <- function(distrito, departamento = NULL, provincia =
 obtener_poligono_provincia <- function(provincia, departamento = NULL) {
   loadNamespace("sf")
   if (missing(provincia) || is.null(provincia)) {
-    stop("Error: Debe proporcionar el nombre de una provincia.")
+    cli::cli_abort("Debe proporcionar el nombre de una provincia en {.arg provincia}.")
   }
   
   provincia_norm <- normalizar_texto(provincia)
@@ -256,12 +259,14 @@ obtener_poligono_provincia <- function(provincia, departamento = NULL) {
   
   if (length(idx) == 0) {
     sugerencias <- unique(utils::head(mapa$provincia[agrep(provincia_norm, provincias_mapa_norm, max.distance = 0.1)], 5))
-    mensaje_error <- paste0("Error: No se encontro la provincia '", provincia, "'.")
     if (length(sugerencias) > 0) {
-      mensaje_error <- paste0(mensaje_error, " Quiso decir una de estas?: ",
-                              paste(sugerencias, collapse = ", "))
+      cli::cli_abort(c(
+        "x" = "No se encontr\u00f3 la provincia {.val {provincia}}.",
+        "i" = "Quiz\u00e1s quiso decir: {.val {sugerencias}}"
+      ))
+    } else {
+      cli::cli_abort("No se encontr\u00f3 la provincia {.val {provincia}}.")
     }
-    stop(mensaje_error)
   }
   
   if (!is.null(departamento_norm)) {
@@ -270,11 +275,12 @@ obtener_poligono_provincia <- function(provincia, departamento = NULL) {
   
   deps_encontrados <- unique(mapa$departamento[idx])
   if (length(deps_encontrados) > 1) {
-    cat("\nSe encontraron provincias con el mismo nombre en multiples departamentos:\n")
-    for (dep in deps_encontrados) {
-      cat(sprintf("  - Departamento: %s | Provincia: %s\n", dep, provincia))
-    }
-    stop("Ambiguedad detectada. Por favor especifique el parametro 'departamento' para afinar la busqueda.")
+    detalles <- sprintf("Departamento: %s | Provincia: %s", deps_encontrados, provincia)
+    cli::cli_abort(c(
+      "x" = "Ambig\u00fcedad detectada: se encontraron provincias con el nombre {.val {provincia}} en m\u00faltiples departamentos:",
+      stats::setNames(detalles, rep("*", length(detalles))),
+      "i" = "Especifique el par\u00e1metro {.arg departamento} para afinar la b\u00fasqueda."
+    ))
   }
   
   col_geom <- attr(mapa, "sf_column")
@@ -325,9 +331,9 @@ obtener_distritos_provincia <- function(provincia, departamento = NULL) {
 # Divide una geometría en teselas de área acotada usando una proyección UTM.
 # La teselación se realiza en metros y se devuelve nuevamente en EPSG:4326.
 dividir_poligono_por_area <- function(poligono_sf, max_area_ha = 1000) {
-  if (!inherits(poligono_sf, "sf")) stop("'poligono_sf' debe ser un objeto sf.")
+  if (!inherits(poligono_sf, "sf")) cli::cli_abort("{.arg poligono_sf} debe ser un objeto {.cls sf}.")
   if (!is.numeric(max_area_ha) || length(max_area_ha) != 1L || is.na(max_area_ha) || max_area_ha <= 0) {
-    stop("'max_area_ha' debe ser un numero positivo.")
+    cli::cli_abort("{.arg max_area_ha} debe ser un n\u00famero positivo.")
   }
 
   poligono_sf <- sf::st_make_valid(poligono_sf)
@@ -461,7 +467,7 @@ simplificar_para_api <- function(sf_obj, max_char = 1500, tolerancia_inicial_met
     wkt_simp <- sf::st_as_text(geom_simp[[1]])
     
     if (nchar(wkt_simp) <= max_char) {
-      cat(sprintf("[SPATIAL] Poligono simplificado con exito a tolerancia de %d metros (WKT: %d caracteres).\n", tol_metros, nchar(wkt_simp)))
+      cli::cli_alert_success("Pol\u00edgono simplificado con \u00e9xito a tolerancia de {tol_metros} metros (WKT: {nchar(wkt_simp)} caracteres).")
       return(sf_simp)
     }
     
@@ -469,7 +475,7 @@ simplificar_para_api <- function(sf_obj, max_char = 1500, tolerancia_inicial_met
   }
   
   # Si sigue siendo demasiado complejo, usar el Bounding Box como fallback
-  cat("[SPATIAL] Poligono demasiado complejo. Usando Bounding Box como fallback para la consulta API.\n")
+  cli::cli_alert_warning("Pol\u00edgono demasiado complejo ({nchar(wkt)} caracteres). Usando Bounding Box como fallback para la consulta API.")
   bbox <- sf::st_bbox(sf_obj)
   sf_bbox <- sf::st_as_sf(sf::st_as_sfc(bbox))
   
@@ -513,7 +519,7 @@ poligono_a_wkt <- function(sf_obj) {
   wkt <- sf::st_as_text(geom[[1]])
   
   if (nchar(wkt) > 1500) {
-    warning("La geometria WKT es muy larga (", nchar(wkt), " caracteres). Puede provocar fallos en la consulta API de GBIF. Considere aumentar el parametro de simplificacion.")
+    cli::cli_warn("La geometr\u00eda WKT es extensa ({nchar(wkt)} caracteres). Puede provocar fallos en la consulta API de GBIF. Considere aumentar el par\u00e1metro de simplificaci\u00f3n.")
   }
   
   return(wkt)
@@ -545,16 +551,16 @@ preparar_poligono_usuario <- function(poligono, nombre = NULL) {
   loadNamespace("sf")
   
   if (missing(poligono) || is.null(poligono)) {
-    stop("Error: Debe proporcionar un poligono (objeto sf o ruta a archivo espacial).")
+    cli::cli_abort("Debe proporcionar un pol\u00edgono (objeto {.cls sf} o ruta a archivo espacial).")
   }
   
   # 1. Leer desde archivo si es character
   if (is.character(poligono)) {
     if (length(poligono) != 1L || !nzchar(trimws(poligono))) {
-      stop("Error: La ruta del archivo espacial no es valida.")
+      cli::cli_abort("La ruta del archivo espacial no es v\u00e1lida.")
     }
     if (!file.exists(poligono)) {
-      stop(sprintf("Error: No se encontro el archivo espacial en la ruta: '%s'", poligono))
+      cli::cli_abort("No se encontr\u00f3 el archivo espacial en la ruta: {.file {poligono}}")
     }
     if (is.null(nombre) || !nzchar(trimws(nombre))) {
       nombre <- tools::file_path_sans_ext(basename(poligono))
@@ -562,7 +568,7 @@ preparar_poligono_usuario <- function(poligono, nombre = NULL) {
     sf_obj <- tryCatch({
       sf::st_read(poligono, quiet = TRUE)
     }, error = function(e) {
-      stop(sprintf("Error al leer archivo espacial '%s': %s", poligono, e$message))
+      cli::cli_abort("Error al leer archivo espacial {.file {poligono}}: {e$message}")
     })
   } else if (inherits(poligono, c("sf", "sfc", "Spatial"))) {
     sf_obj <- sf::st_as_sf(poligono)
@@ -570,20 +576,20 @@ preparar_poligono_usuario <- function(poligono, nombre = NULL) {
       nombre <- "Poligono_Personalizado"
     }
   } else {
-    stop("Error: 'poligono' debe ser un objeto sf/sfc o una ruta a un archivo espacial (.shp, .geojson, .gpkg, .kml).")
+    cli::cli_abort("{.arg poligono} debe ser un objeto {.cls sf}/{.cls sfc} o una ruta a un archivo espacial (.shp, .geojson, .gpkg, .kml).")
   }
   
   if (nrow(sf_obj) == 0) {
-    stop("Error: El objeto espacial no contiene registros ni geometrias.")
+    cli::cli_abort("El objeto espacial no contiene registros ni geometr\u00edas.")
   }
   
   # 2. Validar y estandarizar CRS a EPSG:4326
   crs_actual <- sf::st_crs(sf_obj)
   if (is.na(crs_actual)) {
-    warning("[SPATIAL] El poligono carece de sistema de referencia (CRS). Se asumira EPSG:4326 (WGS84).")
+    cli::cli_warn("El pol\u00edgono carece de sistema de referencia (CRS). Se asumir\u00e1 EPSG:4326 (WGS84).")
     sf::st_crs(sf_obj) <- 4326
   } else if (crs_actual != sf::st_crs(4326)) {
-    cat(sprintf("[SPATIAL] Reproyectando geometria desde %s a EPSG:4326 (WGS84)...\n", crs_actual$input))
+    cli::cli_alert_info("Reproyectando geometr\u00eda desde {.val {crs_actual$input}} a {.val EPSG:4326} (WGS84)...")
     sf_obj <- sf::st_transform(sf_obj, crs = 4326)
   }
   
@@ -592,7 +598,7 @@ preparar_poligono_usuario <- function(poligono, nombre = NULL) {
   
   # 4. Unificar si tiene multiples filas/poligonos
   if (nrow(sf_obj) > 1) {
-    cat(sprintf("[SPATIAL] El archivo contiene %d elementos. Unificando en una sola entidad...\n", nrow(sf_obj)))
+    cli::cli_alert_info("El archivo contiene {nrow(sf_obj)} elementos. Unificando en una sola entidad...")
     geom_union <- sf::st_union(sf_obj)
     sf_obj <- sf::st_as_sf(sf::st_sfc(geom_union, crs = 4326))
   }
@@ -600,7 +606,7 @@ preparar_poligono_usuario <- function(poligono, nombre = NULL) {
   # 5. Asegurar tipo poligonal
   geom_type <- as.character(sf::st_geometry_type(sf_obj, by_geometry = FALSE))
   if (!geom_type %in% c("POLYGON", "MULTIPOLYGON", "GEOMETRYCOLLECTION")) {
-    stop(sprintf("Error: La geometria debe ser poligonal (POLYGON o MULTIPOLYGON), se detecto: %s", geom_type))
+    cli::cli_abort("La geometr\u00eda debe ser poligonal ({.cls POLYGON} o {.cls MULTIPOLYGON}), se detect\u00f3: {.cls {geom_type}}")
   }
   
   # 6. Asignar metadatos descriptivos

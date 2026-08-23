@@ -23,7 +23,7 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
   resultados <- list()
   fallos <- character()
   total_lotes <- nrow(lotes_sf)
-  cat(sprintf("[LOTE] Procesando %d lote(s) espaciales. Los resultados completados se guardan en '%s'.\n", total_lotes, cache_dir))
+  cli::cli_alert_info("Procesando {total_lotes} lote(s) espaciales. Checkpoints en: {.path {cache_dir}}")
 
   for (i in seq_len(total_lotes)) {
     lote <- lotes_sf[i, ]
@@ -32,7 +32,7 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
       resultado <- NULL
       if (file.exists(archivo_cache)) {
         resultado <- tryCatch(readRDS(archivo_cache), error = function(e) NULL)
-        if (!is.null(resultado)) cat(sprintf("[LOTE] %d/%d %s: recuperado de checkpoint.\n", i, total_lotes, toupper(fuente)))
+        if (!is.null(resultado)) cli::cli_alert_info("Lote {i}/{total_lotes} ({toupper(fuente)}): recuperado de checkpoint.")
       }
       if (is.null(resultado)) {
         resultado <- tryCatch({
@@ -151,17 +151,21 @@ buscar_especies_peru <- function(nombre,
   if (estrategia_espacial == "auto") estrategia_espacial <- "segmentada"
   validar_entrada_busqueda(unidad = nombre, grupo = grupo, limite = limite_por_api, nivel = nivel)
   
-  cat("=====================================================================\n")
-  cat(sprintf("BUSQUEDA INTEGRADA EN %s: %s\n", toupper(nivel), toupper(nombre)))
-  if (!is.null(provincia) && nivel == "distrito") cat(sprintf("  Provincia: %s\n", provincia))
-  if (!is.null(departamento)) cat(sprintf("  Departamento: %s\n", departamento))
-  cat("=====================================================================\n\n")
+  cli::cli_h1("B\u00fasqueda Integrada: {toupper(nombre)} ({toupper(nivel)})")
+  params_items <- character()
+  if (!is.null(departamento)) params_items <- c(params_items, paste0("Departamento: ", departamento))
+  if (!is.null(provincia) && nivel == "distrito") params_items <- c(params_items, paste0("Provincia: ", provincia))
+  if (!is.null(nombre_cientifico)) params_items <- c(params_items, paste0("Tax\u00f3n: ", nombre_cientifico))
+  if (!is.null(grupo)) params_items <- c(params_items, paste0("Grupo: ", grupo))
+  if (length(params_items) > 0) {
+    cli::cli_ul(params_items)
+  }
   
   # 1. Obtener el poligono de la unidad administrativa
   unidad_sf <- tryCatch({
     obtener_poligono_unidad(nombre = nombre, nivel = nivel, departamento = departamento, provincia = provincia)
   }, error = function(e) {
-    stop(e$message)
+    cli::cli_abort(e$message, parent = e)
   })
   
   nombre_oficial_dist <- if (!is.null(unidad_sf$distrito) && !is.na(unidad_sf$distrito[1])) unidad_sf$distrito[1] else NA_character_
@@ -179,8 +183,11 @@ buscar_especies_peru <- function(nombre,
                                          tolerancia_simplificacion, cache_dir, reintentos,
                                          pausa_entre_lotes_s, clave_ejecucion)
   ocurrencias_combinadas <- descarga$ocurrencias
-  if (nrow(ocurrencias_combinadas) == 0) cat("\n[RESULTADO] No se encontraron ocurrencias en ninguna de las bases de datos.\n")
-  else cat(sprintf("\n[RESULTADO] Consolidacion exitosa. Total de registros unificados: %d\n", nrow(ocurrencias_combinadas)))
+  if (nrow(ocurrencias_combinadas) == 0) {
+    cli::cli_alert_warning("No se encontraron ocurrencias en ninguna de las bases de datos.")
+  } else {
+    cli::cli_alert_success("Consolidaci\u00f3n exitosa. Total de registros unificados: {.strong {nrow(ocurrencias_combinadas)}}")
+  }
   
   # 5. Generar Estadisticas de Resumen
   n_gbif <- sum(ocurrencias_combinadas$source == "GBIF")
@@ -205,10 +212,16 @@ buscar_especies_peru <- function(nombre,
     nota_cobertura = if (is.null(limite_por_api)) "Se solicito descarga completa dentro de los limites tecnicos de las APIs." else "Se solicito una muestra limitada por API; la cobertura puede estar truncada."
   )
   
-  print(data.frame(
-    Origen = c("GBIF", "iNaturalist", "Total"),
-    Registros = c(n_gbif, n_inat, nrow(ocurrencias_combinadas))
+  cli::cli_h2("Resumen de Registros")
+  cli::cli_bullets(c(
+    "*" = "GBIF: {.val {n_gbif}} registro(s)",
+    "*" = "iNaturalist: {.val {n_inat}} registro(s)",
+    "v" = "Total consolidado: {.strong {nrow(ocurrencias_combinadas)}} registro(s)"
   ))
+  if (length(descarga$fallos) > 0) {
+    cli::cli_alert_danger("Se registraron fallos en {length(descarga$fallos)} lote(s):")
+    cli::cli_ul(descarga$fallos)
+  }
   
   resultado_obj <- list(
     unidad_sf = unidad_sf,
@@ -397,11 +410,13 @@ buscar_especies_poligono <- function(poligono,
   estrategia_espacial <- match.arg(estrategia_espacial)
   if (estrategia_espacial == "auto") estrategia_espacial <- "segmentada"
   
-  cat("=====================================================================\n")
-  cat(sprintf("BUSQUEDA INTEGRADA EN POLIGONO PERSONALIZADO: %s\n", toupper(etiqueta_unidad)))
-  if (!is.null(nombre_cientifico)) cat(sprintf("  Taxon: %s\n", nombre_cientifico))
-  if (!is.null(grupo)) cat(sprintf("  Grupo: %s\n", grupo))
-  cat("=====================================================================\n\n")
+  cli::cli_h1("B\u00fasqueda Integrada en Pol\u00edgono: {toupper(etiqueta_unidad)}")
+  params_items <- character()
+  if (!is.null(nombre_cientifico)) params_items <- c(params_items, paste0("Tax\u00f3n: ", nombre_cientifico))
+  if (!is.null(grupo)) params_items <- c(params_items, paste0("Grupo: ", grupo))
+  if (length(params_items) > 0) {
+    cli::cli_ul(params_items)
+  }
   
   # 2. Un poligono personalizado tambien se tesela cuando supera el umbral.
   lotes_sf <- if (estrategia_espacial == "directa") unidad_sf else dividir_poligono_por_area(unidad_sf, max_area_ha)
@@ -412,8 +427,11 @@ buscar_especies_poligono <- function(poligono,
                                          tolerancia_simplificacion, cache_dir, reintentos,
                                          pausa_entre_lotes_s, clave_ejecucion)
   ocurrencias_combinadas <- descarga$ocurrencias
-  if (nrow(ocurrencias_combinadas) == 0) cat("\n[RESULTADO] No se encontraron ocurrencias en ninguna de las bases de datos.\n")
-  else cat(sprintf("\n[RESULTADO] Consolidacion exitosa. Total de registros unificados: %d\n", nrow(ocurrencias_combinadas)))
+  if (nrow(ocurrencias_combinadas) == 0) {
+    cli::cli_alert_warning("No se encontraron ocurrencias en ninguna de las bases de datos.")
+  } else {
+    cli::cli_alert_success("Consolidaci\u00f3n exitosa. Total de registros unificados: {.strong {nrow(ocurrencias_combinadas)}}")
+  }
   
   # 5. Generar Estadisticas de Resumen
   n_gbif <- sum(ocurrencias_combinadas$source == "GBIF")
@@ -438,10 +456,16 @@ buscar_especies_poligono <- function(poligono,
     nota_cobertura = if (is.null(limite_por_api)) "Se solicito descarga completa dentro de los limites tecnicos de las APIs." else "Se solicito una muestra limitada por API; la cobertura puede estar truncada."
   )
   
-  print(data.frame(
-    Origen = c("GBIF", "iNaturalist", "Total"),
-    Registros = c(n_gbif, n_inat, nrow(ocurrencias_combinadas))
+  cli::cli_h2("Resumen de Registros")
+  cli::cli_bullets(c(
+    "*" = "GBIF: {.val {n_gbif}} registro(s)",
+    "*" = "iNaturalist: {.val {n_inat}} registro(s)",
+    "v" = "Total consolidado: {.strong {nrow(ocurrencias_combinadas)}} registro(s)"
   ))
+  if (length(descarga$fallos) > 0) {
+    cli::cli_alert_danger("Se registraron fallos en {length(descarga$fallos)} lote(s):")
+    cli::cli_ul(descarga$fallos)
+  }
   
   resultado_obj <- list(
     unidad_sf = unidad_sf,
