@@ -25,6 +25,7 @@
 #'   cuando la geometría aún es demasiado extensa.
 #' @param reintentos Entero positivo con intentos máximos para operaciones
 #'   remotas transitorias, incluido el resolver taxonómico.
+#' @param verbose Lógico. Si es `TRUE`, muestra alertas de progreso.
 #' @return `data.frame` con el esquema estándar de ocurrencias. Los atributos
 #'   `api_total` y `api_complete` describen la respuesta de GBIF.
 buscar_gbif_por_poligono <- function(poligono_sf, 
@@ -32,9 +33,10 @@ buscar_gbif_por_poligono <- function(poligono_sf,
                                      grupo = NULL, 
                                      limite = 500, 
                                      tolerancia_simplificacion = 100,
-                                     reintentos = configuracion_predeterminada()$reintentos_api) {
+                                     reintentos = configuracion_predeterminada()$reintentos_api,
+                                     verbose = TRUE) {
   
-  cli::cli_alert_info("[GBIF] Iniciando b\u00fasqueda de ocurrencias...")
+  if (verbose) cli::cli_alert_info("[GBIF] Iniciando b\u00fasqueda de ocurrencias...")
   
   # 1. Simplificar el poligono de manera inteligente para la API (limite de longitud WKT <= 1500)
   poligono_api <- simplificar_para_api(poligono_sf, tolerancia_inicial_metros = tolerancia_simplificacion)
@@ -49,19 +51,19 @@ buscar_gbif_por_poligono <- function(poligono_sf,
   # 2. Configurar filtros taxonomicos
   taxon_key <- NULL
   if (!is.null(nombre_cientifico) && nombre_cientifico != "") {
-    cli::cli_alert_info("[GBIF] Resolviendo taxonom\u00eda para {.val {nombre_cientifico}}...")
+    if (verbose) cli::cli_alert_info("[GBIF] Resolviendo taxonom\u00eda para {.val {nombre_cientifico}}...")
     resolucion <- tryCatch({
       ejecutar_con_reintentos(function() rgbif::name_backbone(name = nombre_cientifico), reintentos, "GBIF taxonomia")
     }, error = function(e) {
-      cli::cli_alert_warning("[GBIF] No se pudo conectar al resolutor taxon\u00f3mico de GBIF.")
+      if (verbose) cli::cli_alert_warning("[GBIF] No se pudo conectar al resolutor taxon\u00f3mico de GBIF.")
       return(NULL)
     })
     
     if (!is.null(resolucion) && resolucion$matchType != "NONE") {
       taxon_key <- resolucion$usageKey
-      cli::cli_alert_success("[GBIF] Tax\u00f3n resuelto: {.strong {resolucion$scientificName}} (Key: {taxon_key}, Rank: {resolucion$rank})")
+      if (verbose) cli::cli_alert_success("[GBIF] Tax\u00f3n resuelto: {.strong {resolucion$scientificName}} (Key: {taxon_key}, Rank: {resolucion$rank})")
     } else {
-      cli::cli_alert_warning("[GBIF] No se encontr\u00f3 coincidencia taxon\u00f3mica para {.val {nombre_cientifico}}. Se buscar\u00e1 por texto libre.")
+      if (verbose) cli::cli_alert_warning("[GBIF] No se encontr\u00f3 coincidencia taxon\u00f3mica para {.val {nombre_cientifico}}. Se buscar\u00e1 por texto libre.")
     }
   }
   
@@ -72,16 +74,16 @@ buscar_gbif_por_poligono <- function(poligono_sf,
     grupo_clean <- tolower(trimws(grupo))
     if (grupo_clean == "flora") {
       kingdom_key <- 6
-      cli::cli_alert_info("[GBIF] Filtrando por reino Plantae (Flora).")
+      if (verbose) cli::cli_alert_info("[GBIF] Filtrando por reino Plantae (Flora).")
     } else if (grupo_clean == "fauna") {
       kingdom_key <- 1
-      cli::cli_alert_info("[GBIF] Filtrando por reino Animalia (Fauna).")
+      if (verbose) cli::cli_alert_info("[GBIF] Filtrando por reino Animalia (Fauna).")
     }
   }
   
   # 3. Ejecutar consulta
   limite_etiqueta <- if (is.null(limite)) "completo" else as.character(limite)
-  cli::cli_alert_info("[GBIF] Consultando registros dentro del pol\u00edgono de {.strong {etiqueta_unidad}} (l\u00edmite: {.val {limite_etiqueta}})...")
+  if (verbose) cli::cli_alert_info("[GBIF] Consultando registros dentro del pol\u00edgono de {.strong {etiqueta_unidad}} (l\u00edmite: {.val {limite_etiqueta}})...")
   
   parametros <- list(
     geometry = wkt,
@@ -120,7 +122,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
   df_vacio <- schema_ocurrencias()
   
   if (is.null(res) || is.null(res$data) || nrow(res$data) == 0) {
-    cli::cli_alert_info("[GBIF] No se encontraron ocurrencias.")
+    if (verbose) cli::cli_alert_info("[GBIF] No se encontraron ocurrencias.")
     attr(df_vacio, "api_total") <- if (is.na(total_api)) 0L else total_api
     attr(df_vacio, "api_complete") <- is.null(limite) && !is.na(total_api)
     return(df_vacio)
@@ -192,7 +194,7 @@ buscar_gbif_por_poligono <- function(poligono_sf,
     }
   }
   
-  cli::cli_alert_success("[GBIF] B\u00fasqueda finalizada. Se filtraron {nrow(datos_procesados)} registro(s) que caen dentro del pol\u00edgono seleccionado.")
+  if (verbose) cli::cli_alert_success("[GBIF] B\u00fasqueda finalizada. Se filtraron {nrow(datos_procesados)} registro(s) que caen dentro del pol\u00edgono seleccionado.")
   attr(datos_procesados, "api_total") <- if (is.na(total_api)) res$meta$count else total_api
   attr(datos_procesados, "api_complete") <- is.null(limite) && !is.na(total_api) && nrow(res$data) == total_api
   

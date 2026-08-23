@@ -10,7 +10,8 @@ buscar_gbif_por_poligono(
   grupo = NULL,
   limite = 500,
   tolerancia_simplificacion = 100,
-  reintentos = configuracion_predeterminada()$reintentos_api
+  reintentos = configuracion_predeterminada()$reintentos_api,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ cuando la geometría aún es demasiado extensa.}
 
 \item{reintentos}{Entero positivo con intentos máximos para operaciones
 remotas transitorias, incluido el resolver taxonómico.}
+
+\item{verbose}{Lógico. Si es \code{TRUE}, muestra alertas de progreso.}
 }
 \value{
 \code{data.frame} con el esquema estándar de ocurrencias. Los atributos

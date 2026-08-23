@@ -11,7 +11,8 @@ buscar_inat_por_poligono(
   grupo = NULL,
   calidad = "research",
   limite = 500,
-  reintentos = configuracion_predeterminada()$reintentos_api
+  reintentos = configuracion_predeterminada()$reintentos_api,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ conteo previo y solo continúa cuando iNaturalist reporta 10000 o menos.}
 
 \item{reintentos}{Entero positivo con el máximo de intentos ante fallos de
 red transitorios.}
+
+\item{verbose}{Lógico. Si es \code{TRUE}, muestra mensajes de progreso.}
 }
 \value{
 \code{data.frame} estandarizado con las observaciones dentro del polígono.

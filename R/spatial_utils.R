@@ -22,6 +22,8 @@ departamentos_oficiales <- function() {
     "PUNO", "SAN MARTIN", "TACNA", "TUMBES", "UCAYALI")
 }
 
+.peruocc_mem_cache <- new.env(parent = emptyenv())
+
 # Helper interno para cargar geometrias departamentales con cache
 cargar_mapa_departamental <- function(departamento = NULL) {
   loadNamespace("sf")
@@ -38,6 +40,11 @@ cargar_mapa_departamental <- function(departamento = NULL) {
     
     dep_oficial <- deps_oficiales[indice_dep]
     dep_clean <- gsub(" ", "_", tolower(departamento_norm))
+    
+    if (exists(dep_clean, envir = .peruocc_mem_cache, inherits = FALSE)) {
+      return(get(dep_clean, envir = .peruocc_mem_cache))
+    }
+    
     rds_path <- ruta_cache(sprintf("distritos_%s.rds", dep_clean))
     
     mapa <- NULL
@@ -72,6 +79,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
     if (is.null(mapa) || !inherits(mapa, "sf")) {
       cli::cli_abort("No se pudo cargar la capa espacial para {.strong {dep_oficial}}.")
     }
+    assign(dep_clean, mapa, envir = .peruocc_mem_cache)
     return(mapa)
   }
   

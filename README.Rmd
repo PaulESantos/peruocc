@@ -136,8 +136,7 @@ res_distrito <- buscar_especies_peru(
   limite_por_api = 200
 )
 
-res_distrito$ocurrencias |> 
-  dplyr::as_tibble()
+res_distrito$ocurrencias 
 
 # Consulta general a nivel provincial en memoria
 res_provincia <- buscar_especies_peru(
@@ -148,8 +147,7 @@ res_provincia <- buscar_especies_peru(
   limite_por_api = 200
 )
 
-res_provincia$ocurrencias |> 
-  dplyr::as_tibble()
+res_provincia$ocurrencias 
 ```
 
 ### 2. Consultas Específicas por Nivel
@@ -166,8 +164,7 @@ resultado_dist <- buscar_especies_distrito(
   guardar_resultados = FALSE
 )
 
-resultado_dist$ocurrencias |> 
-  dplyr::as_tibble()
+resultado_dist$ocurrencias 
 ```
 
 #### B. A nivel de Provincia (`buscar_especies_provincia`)
@@ -180,8 +177,7 @@ resultado_prov <- buscar_especies_provincia(
   limite_por_api = 300,
   guardar_resultados = FALSE
 )
-resultado_prov$ocurrencias |> 
-  dplyr::as_tibble()
+resultado_prov$ocurrencias
 
 ```
 
@@ -201,8 +197,7 @@ resultado_custom <- buscar_especies_poligono(
   limite_por_api = 100
 )
 
-resultado_custom$ocurrencias |> 
-  dplyr::as_tibble()
+resultado_custom$ocurrencias 
 ```
 
 ### 3. Visualización Cartográfica (`graficar_ocurrencias`)

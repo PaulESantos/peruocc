@@ -24,25 +24,53 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
   resultados <- list()
   fallos <- character()
   total_lotes <- nrow(lotes_sf)
-  cli::cli_alert_info("Procesando {total_lotes} lote(s) espaciales. Checkpoints en: {.path {cache_dir}}")
+  es_multi_lote <- (total_lotes > 1L)
+  
+  if (es_multi_lote) {
+    nombres_distritos <- if ("distrito" %in% names(lotes_sf)) unique(stats::na.omit(lotes_sf$distrito)) else character()
+    if (length(nombres_distritos) > 0) {
+      cli::cli_alert_info("Procesando {total_lotes} lotes espaciales (distritos): {.val {nombres_distritos}}")
+    } else {
+      cli::cli_alert_info("Procesando {total_lotes} lotes espaciales...")
+    }
+  }
 
   for (i in seq_len(total_lotes)) {
     lote <- lotes_sf[i, ]
+    nombre_lote <- if ("distrito" %in% names(lote) && !is.na(lote$distrito[1])) {
+      lote$distrito[1]
+    } else if ("provincia" %in% names(lote) && !is.na(lote$provincia[1])) {
+      lote$provincia[1]
+    } else if ("tile_id" %in% names(lote)) {
+      paste0("Bloque ", lote$tile_id[1])
+    } else {
+      paste0("Lote ", i)
+    }
+    
+    n_gbif <- 0L
+    n_inat <- 0L
+    checkpoint_gbif <- FALSE
+    checkpoint_inat <- FALSE
+    
     for (fuente in c("gbif", "inat")) {
       archivo_cache <- file.path(cache_dir, sprintf("%s_lote_%05d_%s.rds", clave_ejecucion, i, fuente))
       resultado <- NULL
       if (file.exists(archivo_cache)) {
         resultado <- tryCatch(readRDS(archivo_cache), error = function(e) NULL)
-        if (!is.null(resultado)) cli::cli_alert_info("Lote {i}/{total_lotes} ({toupper(fuente)}): recuperado de checkpoint.")
+        if (!is.null(resultado)) {
+          if (fuente == "gbif") checkpoint_gbif <- TRUE else checkpoint_inat <- TRUE
+        }
       }
       if (is.null(resultado)) {
         resultado <- tryCatch({
           if (fuente == "gbif") {
             buscar_gbif_por_poligono(lote, nombre_cientifico, grupo, limite,
-                                     tolerancia_simplificacion, reintentos)
+                                     tolerancia_simplificacion, reintentos,
+                                     verbose = !es_multi_lote)
           } else {
             buscar_inat_por_poligono(lote, taxon_name = nombre_cientifico, grupo = grupo,
-                                     limite = limite, reintentos = reintentos)
+                                     limite = limite, reintentos = reintentos,
+                                     verbose = !es_multi_lote)
           }
         }, error = function(e) {
           fallos <<- c(fallos, sprintf("lote %d %s: %s", i, fuente, e$message))
@@ -50,8 +78,20 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
         })
         if (!is.null(resultado)) saveRDS(resultado, archivo_cache)
       }
-      if (!is.null(resultado)) resultados[[length(resultados) + 1L]] <- resultado
+      if (!is.null(resultado)) {
+        resultados[[length(resultados) + 1L]] <- resultado
+        if (fuente == "gbif") n_gbif <- nrow(resultado) else n_inat <- nrow(resultado)
+      }
     }
+    
+    if (es_multi_lote) {
+      if (checkpoint_gbif && checkpoint_inat) {
+        cli::cli_alert_info("Lote {i}/{total_lotes} [{toupper(nombre_lote)}]: recuperado de checkpoint ({n_gbif + n_inat} registros).")
+      } else {
+        cli::cli_alert_success("Lote {i}/{total_lotes} [{toupper(nombre_lote)}]: {n_gbif} (GBIF) + {n_inat} (iNat) = {n_gbif + n_inat} registros.")
+      }
+    }
+    
     if (i < total_lotes && pausa_entre_lotes_s > 0) Sys.sleep(pausa_entre_lotes_s)
   }
   list(ocurrencias = consolidar_ocurrencias(resultados), fallos = fallos)
