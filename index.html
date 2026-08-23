@@ -187,6 +187,11 @@ harmonizes Darwin Core records.
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; ── Cargando peruocc ────────────────────────────────────────────────── v0.1.0 ──</span></span>
+<span><span class="co">#&gt; ✔ geoperu 0.0.2   • Límites cartográficos oficiales del Perú</span></span>
+<span><span class="co">#&gt; ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF</span></span>
+<span><span class="co">#&gt; ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist</span></span>
+<span><span class="co">#&gt; ✔ sf      1.1.1   • Operaciones geométricas y filtros espaciales</span></span>
 <span></span>
 <span><span class="co"># Configurar directorio donde se guardarán caché, resultados y manifiestos</span></span>
 <span><span class="fu"><a href="reference/peruocc_data_dir.html">peruocc_data_dir</a></span><span class="op">(</span><span class="st">"peruocc-output"</span><span class="op">)</span></span></code></pre></div>
@@ -212,33 +217,30 @@ harmonizes Darwin Core records.
 <span>  grupo <span class="op">=</span> <span class="st">"flora"</span>,            <span class="co"># "flora", "fauna" o NULL</span></span>
 <span>  limite_por_api <span class="op">=</span> <span class="fl">200</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; =====================================================================</span></span>
-<span><span class="co">#&gt; BUSQUEDA INTEGRADA EN DISTRITO: MIRAFLORES</span></span>
-<span><span class="co">#&gt;   Provincia: Lima</span></span>
-<span><span class="co">#&gt;   Departamento: Lima</span></span>
-<span><span class="co">#&gt; =====================================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [SPATIAL] Cargando limites de LIMA desde el cache local...</span></span>
-<span><span class="co">#&gt; [GBIF] Iniciando busqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; [SPATIAL] Poligono simplificado con exito a tolerancia de 100 metros (WKT: 822 caracteres).</span></span>
-<span><span class="co">#&gt; [GBIF] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; [GBIF] Consultando registros dentro del poligono de 'MIRAFLORES' (limite: 200)...</span></span>
-<span><span class="co">#&gt; [GBIF] Busqueda finalizada. Se filtraron 198 registros que caen dentro del poligono seleccionado.</span></span>
-<span><span class="co">#&gt; [iNaturalist] Iniciando busqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; [iNaturalist] Consultando registros dentro de la caja delimitadora de 'MIRAFLORES' (limite: 200)...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Busqueda finalizada. 167 de 200 registros caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; ── Búsqueda Integrada: MIRAFLORES (DISTRITO) ───────────────────────────────────</span></span>
+<span><span class="co">#&gt; • Departamento: Lima</span></span>
+<span><span class="co">#&gt; • Provincia: Lima</span></span>
+<span><span class="co">#&gt; • Grupo: flora</span></span>
+<span><span class="co">#&gt; ℹ Descargando límites de LIMA vía geoperu...</span></span>
+<span><span class="co">#&gt; ℹ Procesando 1 lote(s) espaciales. Checkpoints en: 'D:/peruocc/peruocc-output/cache/consultas_ocurrencias'</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 822 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de MIRAFLORES (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 198 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de MIRAFLORES (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 167 de 200 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 365</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [RESULTADO] Consolidacion exitosa. Total de registros unificados: 365</span></span>
-<span><span class="co">#&gt;        Origen Registros</span></span>
-<span><span class="co">#&gt; 1        GBIF       198</span></span>
-<span><span class="co">#&gt; 2 iNaturalist       167</span></span>
-<span><span class="co">#&gt; 3       Total       365</span></span>
+<span><span class="co">#&gt; ── Resumen de Registros ──</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [ARCHIVO] Resultados guardados en: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042527Z_p25272_distrito_miraflores_flora.csv'</span></span>
-<span><span class="co">#&gt; [ARCHIVO] Capa espacial guardada en GeoJSON: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042527Z_p25272_distrito_miraflores_flora.geojson'</span></span>
-<span><span class="co">#&gt; [ARCHIVO] Manifiesto de reproducibilidad guardado en: 'D:/peruocc/peruocc-output/processed/manifiesto_20260819T042527Z_p25272_distrito_miraflores_flora.json'</span></span>
+<span><span class="co">#&gt; • GBIF: 198 registro(s)</span></span>
+<span><span class="co">#&gt; • iNaturalist: 167 registro(s)</span></span>
+<span><span class="co">#&gt; ✔ Total consolidado: 365 registro(s)</span></span>
 <span></span>
 <span><span class="va">res_distrito</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -270,49 +272,117 @@ harmonizes Darwin Core records.
 <span>  grupo <span class="op">=</span> <span class="st">"fauna"</span>,</span>
 <span>  limite_por_api <span class="op">=</span> <span class="fl">200</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; =====================================================================</span></span>
-<span><span class="co">#&gt; BUSQUEDA INTEGRADA EN PROVINCIA: CUSCO</span></span>
-<span><span class="co">#&gt;   Departamento: Cusco</span></span>
-<span><span class="co">#&gt; =====================================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [SPATIAL] Cargando limites de CUSCO desde el cache local...</span></span>
-<span><span class="co">#&gt; [GBIF] Iniciando busqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; [SPATIAL] Poligono simplificado con exito a tolerancia de 300 metros (WKT: 1215 caracteres).</span></span>
-<span><span class="co">#&gt; [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
-<span><span class="co">#&gt; [GBIF] Consultando registros dentro del poligono de 'CUSCO' (limite: 200)...</span></span>
-<span><span class="co">#&gt; [GBIF] Busqueda finalizada. Se filtraron 200 registros que caen dentro del poligono seleccionado.</span></span>
-<span><span class="co">#&gt; [iNaturalist] Iniciando busqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
-<span><span class="co">#&gt; [iNaturalist] Consultando registros dentro de la caja delimitadora de 'CUSCO' (limite: 200)...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Busqueda finalizada. 181 de 200 registros caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; ── Búsqueda Integrada: CUSCO (PROVINCIA) ───────────────────────────────────────</span></span>
+<span><span class="co">#&gt; • Departamento: Cusco</span></span>
+<span><span class="co">#&gt; • Grupo: fauna</span></span>
+<span><span class="co">#&gt; ℹ Descargando límites de CUSCO vía geoperu...</span></span>
+<span><span class="co">#&gt; ℹ Cargando límites de CUSCO desde el caché local...</span></span>
+<span><span class="co">#&gt; ℹ Cargando límites de CUSCO desde el caché local...</span></span>
+<span><span class="co">#&gt; ℹ Procesando 8 lote(s) espaciales. Checkpoints en: 'D:/peruocc/peruocc-output/cache/consultas_ocurrencias'</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1026 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de SANTIAGO (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 200 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de SANTIAGO (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 87 de 200 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de WANCHAQ (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 200 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de WANCHAQ (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 95 de 200 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 300 metros (WKT: 550 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de CCORCA (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 200 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de CCORCA (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 28 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 3 de 28 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1027 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de SAN SEBASTIAN (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 200 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de SAN SEBASTIAN (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 16 de 200 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 741 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de SAYLLA (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 200 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de SAYLLA (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 29 de 200 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 448 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de POROY (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 199 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de POROY (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 12 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 5 de 12 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1340 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de SAN JERONIMO (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 199 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de SAN JERONIMO (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 143 de 200 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1153 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de CUSCO (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 199 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Animalia (Fauna).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de CUSCO (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 166 de 200 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 2141</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [RESULTADO] Consolidacion exitosa. Total de registros unificados: 381</span></span>
-<span><span class="co">#&gt;        Origen Registros</span></span>
-<span><span class="co">#&gt; 1        GBIF       200</span></span>
-<span><span class="co">#&gt; 2 iNaturalist       181</span></span>
-<span><span class="co">#&gt; 3       Total       381</span></span>
+<span><span class="co">#&gt; ── Resumen de Registros ──</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [ARCHIVO] Resultados guardados en: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042537Z_p25272_provincia_cusco_fauna.csv'</span></span>
-<span><span class="co">#&gt; [ARCHIVO] Capa espacial guardada en GeoJSON: 'D:/peruocc/peruocc-output/processed/ocurrencias_20260819T042537Z_p25272_provincia_cusco_fauna.geojson'</span></span>
-<span><span class="co">#&gt; [ARCHIVO] Manifiesto de reproducibilidad guardado en: 'D:/peruocc/peruocc-output/processed/manifiesto_20260819T042537Z_p25272_provincia_cusco_fauna.json'</span></span>
+<span><span class="co">#&gt; • GBIF: 1597 registro(s)</span></span>
+<span><span class="co">#&gt; • iNaturalist: 544 registro(s)</span></span>
+<span><span class="co">#&gt; ✔ Total consolidado: 2141 registro(s)</span></span>
 <span></span>
 <span><span class="va">res_provincia</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 381 × 24</span></span>
+<span><span class="co">#&gt; # A tibble: 2,141 × 24</span></span>
 <span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;        </span></span>
-<span><span class="co">#&gt;  1 5938271716   5938271716     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  2 5938631678   5938631678     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  3 6129873325   6129873325     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  4 6130064972   6130064972     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  5 6130410898   6130410898     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  6 6130438735   6130438735     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  7 6130955903   6130955903     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  8 6130998009   6130998009     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  9 6131276759   6131276759     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt; 10 6131426727   6131426727     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt; # ℹ 371 more rows</span></span>
+<span><span class="co">#&gt;  1 6130955903   6130955903     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  2 6147676011   6147676011     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  3 6147584943   6147584943     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  4 6147634578   6147634578     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  5 6171147726   6171147726     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  6 6452273700   6452273700     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  7 6195560404   6195560404     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  8 6414124325   6414124325     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  9 6481433622   6481433622     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; 10 5087130717   5087130717     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; # ℹ 2,131 more rows</span></span>
 <span><span class="co">#&gt; # ℹ 18 more variables: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
@@ -334,29 +404,30 @@ harmonizes Darwin Core records.
 <span>  limite_por_api <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  guardar_resultados <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; =====================================================================</span></span>
-<span><span class="co">#&gt; BUSQUEDA INTEGRADA EN DISTRITO: TAMBOPATA</span></span>
-<span><span class="co">#&gt;   Provincia: Tambopata</span></span>
-<span><span class="co">#&gt;   Departamento: Madre de Dios</span></span>
-<span><span class="co">#&gt; =====================================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [SPATIAL] Cargando limites de MADRE DE DIOS desde el cache local...</span></span>
-<span><span class="co">#&gt; [GBIF] Iniciando busqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; [SPATIAL] Poligono simplificado con exito a tolerancia de 8100 metros (WKT: 379 caracteres).</span></span>
-<span><span class="co">#&gt; [GBIF] Resolviendo taxonomia para 'Panthera onca'...</span></span>
-<span><span class="co">#&gt; [GBIF] Taxon resuelto: Panthera onca (Linnaeus, 1758) (Key: 5219426, Rank: SPECIES)</span></span>
-<span><span class="co">#&gt; [GBIF] Consultando registros dentro del poligono de 'TAMBOPATA' (limite: 100)...</span></span>
-<span><span class="co">#&gt; [GBIF] Busqueda finalizada. Se filtraron 21 registros que caen dentro del poligono seleccionado.</span></span>
-<span><span class="co">#&gt; [iNaturalist] Iniciando busqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Consultando registros dentro de la caja delimitadora de 'TAMBOPATA' (limite: 100)...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Se descargaron 100 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Busqueda finalizada. 15 de 100 registros caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; ── Búsqueda Integrada: TAMBOPATA (DISTRITO) ────────────────────────────────────</span></span>
+<span><span class="co">#&gt; • Departamento: Madre de Dios</span></span>
+<span><span class="co">#&gt; • Provincia: Tambopata</span></span>
+<span><span class="co">#&gt; • Taxón: Panthera onca</span></span>
+<span><span class="co">#&gt; ℹ Descargando límites de MADRE DE DIOS vía geoperu...</span></span>
+<span><span class="co">#&gt; ℹ Procesando 1 lote(s) espaciales. Checkpoints en: 'D:/peruocc/peruocc-output/cache/consultas_ocurrencias'</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 8100 metros (WKT: 379 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Resolviendo taxonomía para "Panthera onca"...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Taxón resuelto: Panthera onca (Linnaeus, 1758) (Key: 5219426, Rank: SPECIES)</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de TAMBOPATA (límite: "100")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 21 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de TAMBOPATA (límite: "100")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 100 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 15 de 100 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 36</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [RESULTADO] Consolidacion exitosa. Total de registros unificados: 36</span></span>
-<span><span class="co">#&gt;        Origen Registros</span></span>
-<span><span class="co">#&gt; 1        GBIF        21</span></span>
-<span><span class="co">#&gt; 2 iNaturalist        15</span></span>
-<span><span class="co">#&gt; 3       Total        36</span></span>
+<span><span class="co">#&gt; ── Resumen de Registros ──</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; • GBIF: 21 registro(s)</span></span>
+<span><span class="co">#&gt; • iNaturalist: 15 registro(s)</span></span>
+<span><span class="co">#&gt; ✔ Total consolidado: 36 registro(s)</span></span>
 <span></span>
 <span><span class="va">resultado_dist</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -391,44 +462,135 @@ harmonizes Darwin Core records.
 <span>  limite_por_api <span class="op">=</span> <span class="fl">300</span>,</span>
 <span>  guardar_resultados <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; =====================================================================</span></span>
-<span><span class="co">#&gt; BUSQUEDA INTEGRADA EN PROVINCIA: URUBAMBA</span></span>
-<span><span class="co">#&gt;   Departamento: Cusco</span></span>
-<span><span class="co">#&gt; =====================================================================</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [SPATIAL] Cargando limites de CUSCO desde el cache local...</span></span>
-<span><span class="co">#&gt; [GBIF] Iniciando busqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; [SPATIAL] Poligono simplificado con exito a tolerancia de 900 metros (WKT: 904 caracteres).</span></span>
-<span><span class="co">#&gt; [GBIF] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; [GBIF] Consultando registros dentro del poligono de 'URUBAMBA' (limite: 300)...</span></span>
-<span><span class="co">#&gt; [GBIF] Busqueda finalizada. Se filtraron 299 registros que caen dentro del poligono seleccionado.</span></span>
-<span><span class="co">#&gt; [iNaturalist] Iniciando busqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; [iNaturalist] Consultando registros dentro de la caja delimitadora de 'URUBAMBA' (limite: 300)...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; [iNaturalist] Busqueda finalizada. 276 de 300 registros caen dentro del poligono seleccionado.</span></span>
+<span><span class="co">#&gt; ── Búsqueda Integrada: URUBAMBA (PROVINCIA) ────────────────────────────────────</span></span>
+<span><span class="co">#&gt; • Departamento: Cusco</span></span>
+<span><span class="co">#&gt; • Grupo: flora</span></span>
+<span><span class="co">#&gt; ℹ Cargando límites de CUSCO desde el caché local...</span></span>
+<span><span class="co">#&gt; ℹ Cargando límites de CUSCO desde el caché local...</span></span>
+<span><span class="co">#&gt; ℹ Cargando límites de CUSCO desde el caché local...</span></span>
+<span><span class="co">#&gt; ℹ Procesando 10 lote(s) espaciales. Checkpoints en: 'D:/peruocc/peruocc-output/cache/consultas_ocurrencias'</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1213 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de MARAS (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 294 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de MARAS (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 196 de 300 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1211 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de HUAYLLABAMBA (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 300 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de HUAYLLABAMBA (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 143 de 300 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 608 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de YUCAY (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 300 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de YUCAY (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 275 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 136 de 275 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 865 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de CHINCHERO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 300 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de CHINCHERO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 229 de 300 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 300 metros (WKT: 898 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de OLLANTAYTAMBO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 195 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de OLLANTAYTAMBO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 44 de 300 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 819 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de OLLANTAYTAMBO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 300 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de OLLANTAYTAMBO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 196 de 300 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de OLLANTAYTAMBO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 126 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de OLLANTAYTAMBO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] No se encontraron ocurrencias en la caja delimitadora.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1157 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de OLLANTAYTAMBO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 300 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de OLLANTAYTAMBO (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 257 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 195 de 257 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 300 metros (WKT: 897 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de MACHUPICCHU (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 299 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de MACHUPICCHU (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 286 de 300 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1466 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de URUBAMBA (límite: "300")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 299 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de URUBAMBA (límite: "300")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 300 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 213 de 300 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 4351</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [RESULTADO] Consolidacion exitosa. Total de registros unificados: 575</span></span>
-<span><span class="co">#&gt;        Origen Registros</span></span>
-<span><span class="co">#&gt; 1        GBIF       299</span></span>
-<span><span class="co">#&gt; 2 iNaturalist       276</span></span>
-<span><span class="co">#&gt; 3       Total       575</span></span>
+<span><span class="co">#&gt; ── Resumen de Registros ──</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; • GBIF: 2713 registro(s)</span></span>
+<span><span class="co">#&gt; • iNaturalist: 1638 registro(s)</span></span>
+<span><span class="co">#&gt; ✔ Total consolidado: 4351 registro(s)</span></span>
 <span><span class="va">resultado_prov</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 575 × 24</span></span>
+<span><span class="co">#&gt; # A tibble: 4,351 × 24</span></span>
 <span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;        </span></span>
-<span><span class="co">#&gt;  1 5938503101   5938503101     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  2 6129882199   6129882199     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  3 6129928896   6129928896     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  4 6129994865   6129994865     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  5 6130002986   6130002986     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  6 6130015299   6130015299     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  7 6130027226   6130027226     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  8 6130067924   6130067924     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  9 6130290679   6130290679     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt; 10 6130302854   6130302854     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt; # ℹ 565 more rows</span></span>
+<span><span class="co">#&gt;  1 6129994865   6129994865     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  2 6133077300   6133077300     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  3 6133103490   6133103490     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  4 6133145835   6133145835     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  5 6133173410   6133173410     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  6 6133262570   6133262570     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  7 6133393442   6133393442     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  8 6133461000   6133461000     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  9 6171289527   6171289527     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; 10 6178591915   6178591915     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; # ℹ 4,341 more rows</span></span>
 <span><span class="co">#&gt; # ℹ 18 more variables: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
@@ -450,9 +612,48 @@ harmonizes Darwin Core records.
 <span>  grupo <span class="op">=</span> <span class="st">"flora"</span>,</span>
 <span>  limite_por_api <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── Búsqueda Integrada en Polígono: ZONA_MUESTREO_1 ─────────────────────────────</span></span>
+<span><span class="co">#&gt; • Grupo: flora</span></span>
+<span><span class="co">#&gt; ℹ Procesando 1 lote(s) espaciales. Checkpoints en: 'D:/peruocc/peruocc-output/cache/consultas_ocurrencias'</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "100")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 100 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de Unidad seleccionada (límite: "100")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 72 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 72 de 72 registros caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 172</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── Resumen de Registros ──</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; • GBIF: 100 registro(s)</span></span>
+<span><span class="co">#&gt; • iNaturalist: 72 registro(s)</span></span>
+<span><span class="co">#&gt; ✔ Total consolidado: 172 registro(s)</span></span>
 <span></span>
 <span><span class="va">resultado_custom</span><span class="op">$</span><span class="va">ocurrencias</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 172 × 24</span></span>
+<span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL        datasetKey license basisOfRecord</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;        </span></span>
+<span><span class="co">#&gt;  1 6273615758   6273615758     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  2 5166843306   5166843306     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  3 5215721628   5215721628     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  4 5230941804   5230941804     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  5 5935225529   5935225529     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  6 6130845716   6130845716     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  7 6178303497   6178303497     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  8 6178484421   6178484421     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  9 6178594536   6178594536     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; 10 6178747062   6178747062     https://www.gbi… 50c9509d-… http:/… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; # ℹ 162 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 18 more variables: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   species &lt;chr&gt;, recordedBy &lt;chr&gt;, coordinateUncertaintyInMeters &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   source &lt;chr&gt;, district &lt;chr&gt;, province &lt;chr&gt;, department &lt;chr&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -466,14 +667,14 @@ harmonizes Darwin Core records.
 <span>                                    guardar_mapa <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mapa_fuente</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-6-1.png" alt="" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png" alt="" width="100%"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Mapa clasificado por Reino (Plantae vs Animalia)</span></span>
 <span><span class="va">mapa_reino</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado_prov</span>,</span>
 <span>                                   color_por <span class="op">=</span> <span class="st">"kingdom"</span>, </span>
 <span>                                   guardar_mapa <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">mapa_reino</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-6-2.png" alt="" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-7-2.png" alt="" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="id_4-exportación-de-resultados-a-disco-exportar_resultados">4. Exportación de Resultados a Disco (<code>exportar_resultados</code>)<a class="anchor" aria-label="anchor" href="#id_4-exportaci%C3%B3n-de-resultados-a-disco-exportar_resultados"></a>

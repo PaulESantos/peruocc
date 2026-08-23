@@ -62,7 +62,8 @@ exacto. Para una búsqueda multifuente use <code>buscar_especies_*()</code>.</p>
 <span>  grupo <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  calidad <span class="op">=</span> <span class="st">"research"</span>,</span>
 <span>  limite <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>  reintentos <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">reintentos_api</span></span>
+<span>  reintentos <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">reintentos_api</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,6 +105,10 @@ conteo previo y solo continúa cuando iNaturalist reporta 10000 o menos.</p></dd
 <dt id="arg-reintentos">reintentos<a class="anchor" aria-label="anchor" href="#arg-reintentos"></a></dt>
 <dd><p>Entero positivo con el máximo de intentos ante fallos de
 red transitorios.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Lógico. Si es <code>TRUE</code>, muestra mensajes de progreso.</p></dd>
 
 </dl></div>
     <div class="section level2">

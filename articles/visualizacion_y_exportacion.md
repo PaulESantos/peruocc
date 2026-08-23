@@ -116,7 +116,6 @@ resultado <- buscar_especies_distrito(
 #> • Provincia: Lima
 #> • Grupo: flora
 #> ℹ Descargando límites de LIMA vía geoperu...
-#> ℹ Procesando 1 lote(s) espaciales. Checkpoints en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 822 caracteres).
 #> ℹ [GBIF] Filtrando por reino Plantae (Flora).

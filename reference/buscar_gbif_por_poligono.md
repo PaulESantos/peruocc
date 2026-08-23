@@ -15,7 +15,8 @@ buscar_gbif_por_poligono(
   grupo = NULL,
   limite = 500,
   tolerancia_simplificacion = 100,
-  reintentos = configuracion_predeterminada()$reintentos_api
+  reintentos = configuracion_predeterminada()$reintentos_api,
+  verbose = TRUE
 )
 ```
 
@@ -56,6 +57,10 @@ buscar_gbif_por_poligono(
 
   Entero positivo con intentos máximos para operaciones remotas
   transitorias, incluido el resolver taxonómico.
+
+- verbose:
+
+  Lógico. Si es `TRUE`, muestra alertas de progreso.
 
 ## Value
 

@@ -96,7 +96,6 @@ resultado_personalizado <- buscar_especies_poligono(
 #> 
 #> ── Búsqueda Integrada en Polígono: AREA_ESTUDIO_COSTA ──────────────────────────
 #> • Grupo: flora
-#> ℹ Procesando 1 lote(s) espaciales. Checkpoints en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
 #> ℹ [GBIF] Filtrando por reino Plantae (Flora).
 #> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "25")...
@@ -248,7 +247,6 @@ resultado_desde_archivo <- buscar_especies_poligono(
 #> 
 #> ── Búsqueda Integrada en Polígono: RESERVA_LOCAL ───────────────────────────────
 #> • Grupo: flora
-#> ℹ Procesando 1 lote(s) espaciales. Checkpoints en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/cache/consultas_ocurrencias
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
 #> ℹ [GBIF] Filtrando por reino Plantae (Flora).
 #> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "15")...
@@ -268,9 +266,9 @@ resultado_desde_archivo <- buscar_especies_poligono(
 
 # 3. Exportar resultados con manifiesto de reproducibilidad
 exportar_resultados(resultado_desde_archivo)
-#> ✔ Registros tabulares guardados en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T033758Z_poligono_reservalocal_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T033758Z_poligono_reservalocal_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260823T033758Z_poligono_reservalocal_flora.json
+#> ✔ Registros tabulares guardados en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T035647Z_poligono_reservalocal_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T035647Z_poligono_reservalocal_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260823T035647Z_poligono_reservalocal_flora.json
 ```
 
 ------------------------------------------------------------------------

@@ -64,7 +64,8 @@ lotes/checkpoints.</p>
 <span>  grupo <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limite <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  tolerancia_simplificacion <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  reintentos <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">reintentos_api</span></span>
+<span>  reintentos <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">reintentos_api</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,6 +105,10 @@ cuando la geometría aún es demasiado extensa.</p></dd>
 <dt id="arg-reintentos">reintentos<a class="anchor" aria-label="anchor" href="#arg-reintentos"></a></dt>
 <dd><p>Entero positivo con intentos máximos para operaciones
 remotas transitorias, incluido el resolver taxonómico.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>Lógico. Si es <code>TRUE</code>, muestra alertas de progreso.</p></dd>
 
 </dl></div>
     <div class="section level2">

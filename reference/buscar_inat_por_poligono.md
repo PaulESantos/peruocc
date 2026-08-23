@@ -16,7 +16,8 @@ buscar_inat_por_poligono(
   grupo = NULL,
   calidad = "research",
   limite = 500,
-  reintentos = configuracion_predeterminada()$reintentos_api
+  reintentos = configuracion_predeterminada()$reintentos_api,
+  verbose = TRUE
 )
 ```
 
@@ -57,6 +58,10 @@ buscar_inat_por_poligono(
 
   Entero positivo con el máximo de intentos ante fallos de red
   transitorios.
+
+- verbose:
+
+  Lógico. Si es `TRUE`, muestra mensajes de progreso.
 
 ## Value
 
