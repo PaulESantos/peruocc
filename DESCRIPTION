@@ -1,17 +1,17 @@
 Package: peruocc
-Title: Standardized Biodiversity Occurrence Queries Across Administrative Units of Peru
+Title: Query and Standardize Biodiversity Occurrences in Peru
 Version: 0.1.0
 Authors@R: 
     person("Paul Efren", "Santos Andrade",
            email = "paulefrens@gmail.com",
            role = c("aut", "cre", "cph"))
-Description: Facilitates the retrieval, spatial validation, and integration of
-    flora and fauna occurrence records across administrative scales (districts
+Description: Facilitates the retrieval, spatial validation, and integration
+    of flora and fauna occurrence records across administrative units (districts
     and provinces) in Peru. Retrieves official boundary geometries via
-    'geoperu', queries and consolidates observations from GBIF (Global
-    Biodiversity Information Facility) and iNaturalist, and standardizes Darwin
-    Core attributes into a unified object for biodiversity assessment within
-    user-defined areas of interest.
+    'geoperu', queries and consolidates observations from the Global Biodiversity
+    Information Facility ('GBIF') and 'iNaturalist', and standardizes attributes
+    into a unified 'Darwin Core' aligned structure. Designed for biodiversity
+    assessments and spatial workflows within user-defined areas of interest.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

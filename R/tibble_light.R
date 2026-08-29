@@ -7,8 +7,12 @@
 #' con clase `c("peruocc_tbl", "tbl_df", "tbl", "data.frame")`, compatible
 #' con el ecosistema tidyverse sin generar conflictos ni dependencias pesadas.
 #'
-#' @param x Un `data.frame`, lista o matriz a convertir.
-#' @param ... Argumentos adicionales ignorados para compatibilidad.
+#' @param x Un `data.frame`, lista o matriz a convertir, o un objeto `peruocc_tbl`.
+#' @param i,j Índices de filas y columnas para extracción o indexación tabular.
+#' @param drop Lógico. Si es `TRUE`, simplifica a vector cuando el resultado es unidimensional.
+#' @param n Entero positivo con el número de filas a mostrar en consola.
+#' @param width Entero con el ancho de pantalla en caracteres; si es `NULL`, toma `getOption("width")`.
+#' @param ... Argumentos adicionales pasados a otros métodos.
 #' @return Un objeto tabular con clase `c("peruocc_tbl", "tbl_df", "tbl", "data.frame")`.
 #' @examples
 #' df <- data.frame(a = 1:5, b = letters[1:5])
@@ -19,6 +23,7 @@ as_peruocc_tbl <- function(x, ...) {
   UseMethod("as_peruocc_tbl")
 }
 
+#' @rdname as_peruocc_tbl
 #' @export
 as_peruocc_tbl.data.frame <- function(x, ...) {
   if (inherits(x, "peruocc_tbl") && inherits(x, "tbl_df")) {
@@ -29,6 +34,7 @@ as_peruocc_tbl.data.frame <- function(x, ...) {
   x
 }
 
+#' @rdname as_peruocc_tbl
 #' @export
 as_peruocc_tbl.default <- function(x, ...) {
   as_peruocc_tbl.data.frame(as.data.frame(x, stringsAsFactors = FALSE))
@@ -37,6 +43,7 @@ as_peruocc_tbl.default <- function(x, ...) {
 # Alias interno para compatibilidad
 as_tibble <- as_peruocc_tbl
 
+#' @rdname as_peruocc_tbl
 #' @export
 `[.peruocc_tbl` <- function(x, i, j, drop = FALSE) {
   if (missing(i) && missing(j)) {
@@ -111,6 +118,7 @@ rellenar_celda <- function(texto, ancho, alineacion = "left") {
   if (alineacion == "right") paste0(espacios, texto) else paste0(texto, espacios)
 }
 
+#' @rdname as_peruocc_tbl
 #' @export
 print.peruocc_tbl <- function(x, n = 10L, width = NULL, ...) {
   # Si pillar o tibble estan activos en el search path, usar su formateador nativo

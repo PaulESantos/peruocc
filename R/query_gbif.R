@@ -28,6 +28,7 @@
 #' @param verbose Lógico. Si es `TRUE`, muestra alertas de progreso.
 #' @return `data.frame` con el esquema estándar de ocurrencias. Los atributos
 #'   `api_total` y `api_complete` describen la respuesta de GBIF.
+#' @noRd
 buscar_gbif_por_poligono <- function(poligono_sf, 
                                      nombre_cientifico = NULL, 
                                      grupo = NULL, 

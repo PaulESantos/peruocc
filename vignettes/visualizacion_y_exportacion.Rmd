@@ -12,8 +12,11 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width = 8,
-  fig.height = 6,
-  out.width = "100%"
+  fig.height = 5.5,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 300,
+  fig.retina = 2
 )
 ```
 
@@ -155,7 +158,7 @@ La función `graficar_ocurrencias()` produce composiciones visuales basadas en `
 
 ### Comparación por Proveedor de Datos (`source`)
 
-```{r}
+```{r mapa_fuente_viz, fig.alt = "Mapa de distribución de ocurrencias coloreado por repositorio de origen (GBIF vs iNaturalist)"}
 # Visualizar diferenciando aportes de GBIF vs iNaturalist
 mapa_fuente <- graficar_ocurrencias(
   resultado_lista = resultado,
@@ -167,7 +170,7 @@ print(mapa_fuente)
 
 ### Comparación por Reino Biológico (`kingdom`)
 
-```{r}
+```{r mapa_reino_viz, fig.alt = "Mapa de distribución de ocurrencias coloreado por reino taxonómico (Plantae vs Animalia)"}
 # Visualizar distribución por reinos (Plantae, Animalia, Fungi, etc.)
 mapa_reino <- graficar_ocurrencias(
   resultado_lista = resultado,
@@ -175,6 +178,24 @@ mapa_reino <- graficar_ocurrencias(
 )
 
 print(mapa_reino)
+```
+
+### Personalización con Capas de `ggplot2`
+
+Dado que `graficar_ocurrencias()` retorna un objeto estándar de clase `ggplot`, puedes extenderlo y personalizarlo con cualquier tema, escala o etiqueta de `ggplot2`:
+
+```{r personalizacion_mapa, fig.alt = "Mapa temático personalizado con tema minimal y títulos adicionales de ggplot2"}
+library(ggplot2)
+
+mapa_personalizado <- mapa_fuente +
+  ggplot2::theme_minimal(base_size = 12) +
+  ggplot2::labs(
+    title = "Biodiversidad en Miraflores, Lima",
+    subtitle = "Ocurrencias consolidadas vía peruocc (GBIF + iNaturalist)",
+    caption = "Fuente: Repositorios de Biodiversidad / INEI geoperu"
+  )
+
+print(mapa_personalizado)
 ```
 
 ### Exportar el Mapa Directamente a Imagen
@@ -190,7 +211,37 @@ mapa_guardado <- graficar_ocurrencias(
 
 ---
 
-## 5. Integración con SIG y Flujos Espaciales
+## 5. Auditoría Científica: Estructura del Manifiesto JSON
+
+El archivo `manifiesto_*.json` almacena metadatos críticos para publicaciones científicas y auditorías reproducibles:
+
+```json
+{
+  "timestamp_utc": "2026-08-29T15:00:00Z",
+  "paquetes": {
+    "peruocc": "0.1.0",
+    "sf": "1.0-19",
+    "rgbif": "3.8.5",
+    "rinat": "0.1.10"
+  },
+  "parametros": {
+    "unidad": "Miraflores",
+    "nivel": "distrito",
+    "departamento": "Lima",
+    "grupo": "flora",
+    "limite_por_api": 150
+  },
+  "archivos_generados": [
+    "ocurrencias_distrito_miraflores_flora.csv",
+    "ocurrencias_distrito_miraflores_flora.geojson"
+  ]
+}
+```
+
+---
+
+## 6. Integración con SIG y Flujos Espaciales
+
 
 Las capas GeoJSON generadas pueden volver a cargarse en R para análisis espaciales posteriores (como modelos de distribución de especies o buffers):
 

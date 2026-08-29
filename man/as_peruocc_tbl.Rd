@@ -2,14 +2,34 @@
 % Please edit documentation in R/tibble_light.R
 \name{as_peruocc_tbl}
 \alias{as_peruocc_tbl}
+\alias{as_peruocc_tbl.data.frame}
+\alias{as_peruocc_tbl.default}
+\alias{[.peruocc_tbl}
+\alias{print.peruocc_tbl}
 \title{Coerción a objeto tabular ligero (estilo tibble)}
 \usage{
 as_peruocc_tbl(x, ...)
+
+\method{as_peruocc_tbl}{data.frame}(x, ...)
+
+\method{as_peruocc_tbl}{default}(x, ...)
+
+\method{[}{peruocc_tbl}(x, i, j, drop = FALSE)
+
+\method{print}{peruocc_tbl}(x, n = 10L, width = NULL, ...)
 }
 \arguments{
-\item{x}{Un \code{data.frame}, lista o matriz a convertir.}
+\item{x}{Un \code{data.frame}, lista o matriz a convertir, o un objeto \code{peruocc_tbl}.}
 
-\item{...}{Argumentos adicionales ignorados para compatibilidad.}
+\item{...}{Argumentos adicionales pasados a otros métodos.}
+
+\item{i, j}{Índices de filas y columnas para extracción o indexación tabular.}
+
+\item{drop}{Lógico. Si es \code{TRUE}, simplifica a vector cuando el resultado es unidimensional.}
+
+\item{n}{Entero positivo con el número de filas a mostrar en consola.}
+
+\item{width}{Entero con el ancho de pantalla en caracteres; si es \code{NULL}, toma \code{getOption("width")}.}
 }
 \value{
 Un objeto tabular con clase \code{c("peruocc_tbl", "tbl_df", "tbl", "data.frame")}.

@@ -10,7 +10,13 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 5.5,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 300,
+  fig.retina = 2
 )
 ```
 
@@ -119,39 +125,43 @@ Garantizando que el 100% de las ocurrencias retenidas se encuentren verdaderamen
 
 ---
 
-## 5. Búsqueda con Polígonos Personalizados (Shapefile, GeoJSON, GPKG)
+## 5. Estrategias de Particionamiento Espacial para Grandes Unidades
 
-Además de los límites administrativos oficiales del Perú, `peruocc` permite suministrar cualquier delimitación espacial personalizada mediante `buscar_especies_poligono()`:
+El territorio peruano presenta provincias y distritos de enorme extensión territorial (particularmente en la cuenca amazónica, como *Maynas*, *Tambopata* o *La Convención*). Consultar estas áreas extensas en una única llamada puede provocar tiempos de espera agotados o truncamiento de registros por los límites máximos de las APIs.
 
-### Opción A: Cargar desde un archivo espacial en disco
+`peruocc` ofrece el argumento `estrategia_espacial` en `buscar_especies_peru()` y `buscar_especies_poligono()`:
 
 ```r
-# Consulta usando un archivo Shapefile o GeoJSON (por ejemplo, un Área Natural Protegida)
-resultado_anp <- buscar_especies_poligono(
-  poligono = "capas/reserva_nacional_pacaya_samiria.geojson",
-  nombre = "RN Pacaya Samiria",
-  grupo = "fauna",
-  limite_por_api = 500
+buscar_especies_peru(
+  nombre = "Tambopata",
+  nivel = "provincia",
+  departamento = "Madre de Dios",
+  estrategia_espacial = "auto",   # "auto", "segmentada" o "directa"
+  max_area_ha = 1000,             # Área objetivo por tesela
+  max_lotes = 16L                 # Límite de macro-bloques de seguridad
 )
 ```
 
-### Opción B: Usar un objeto espacial `sf` creado en R
+### Modos de Operación:
 
-```r
-library(sf)
+1. **`"auto"` (Predeterminado)**:
+   - En **provincias**, descarga distrito por distrito y consolida al final, garantizando que si un distrito falla, los demás queden guardados en checkpoints `.rds`.
+   - En **distritos o polígonos extensos** (superiores a 50,000 ha), divide la geometría automáticamente en macro-bloques de teselación espacial para realizar consultas en paralelo seguro.
+2. **`"segmentada"`**:
+   - Fuerza la división del polígono en una cuadrícula adaptativa basada en `max_area_ha`. Ideal para grandes áreas de estudio o estudios de alta densidad de registros.
+3. **`"directa"`**:
+   - Envía el polígono completo en una sola llamada sin teselar. Recomendado únicamente para distritos urbanos pequeños o geometrías de reducida extensión.
 
-# Crear un buffer de 5 km alrededor de un punto de muestreo
-punto <- sf::st_sfc(sf::st_point(c(-77.03, -12.05)), crs = 4326)
-buffer_sf <- sf::st_buffer(sf::st_transform(punto, 32718), dist = 5000)
-buffer_sf <- sf::st_transform(buffer_sf, 4326)
+### Checkpoints y Resiliencia en Lotes
 
-# Consultar biodiversidad dentro del buffer
-resultado_buffer <- buscar_especies_poligono(
-  poligono = buffer_sf,
-  nombre = "Buffer 5km Centro Lima",
-  grupo = "flora"
-)
-```
+Cada lote procesado escribe un checkpoint intermedio en el directorio de caché (`peruocc_data_dir()`). Si la conexión a internet se interrumpe durante una descarga extensa, volver a ejecutar la misma función **reanudará la extracción desde el último lote completado**, sin repetir consultas previas ni duplicar registros.
 
-La función ejecuta automáticamente la validación del sistema de coordenadas (CRS), repara geometrías no válidas y aplica el mismo filtrado espacial y consolidación que en las búsquedas distritales y provinciales.
+---
+
+## Siguientes Pasos
+
+Para consultar delimitaciones fuera del marco administrativo oficial (como Áreas Naturales Protegidas, buffers o shapefiles propios), consulta la viñeta especializada:
+
+* **[Búsqueda de Ocurrencias con Polígonos Personalizados](busqueda_poligono_usuario.html)**
+
 

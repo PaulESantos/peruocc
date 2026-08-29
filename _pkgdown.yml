@@ -97,16 +97,5 @@ reference:
     contents:
       - as_peruocc_tbl
 
-  - title: "Funciones Auxiliares y Topología Espacial"
-    desc: "Procesamiento geométrico interno, WKT, orientación CCW y consultas modulares."
-    contents:
-      - asegurar_orientacion_antihoraria
-      - corregir_poligono_ccw
-      - poligono_a_wkt
-      - simplificar_poligono
-      - simplificar_para_api
-      - buscar_gbif_por_poligono
-      - buscar_inat_por_poligono
-
 development:
   mode: auto

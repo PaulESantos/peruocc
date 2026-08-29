@@ -64,7 +64,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
         ejecutar_con_reintentos(function() {
           res <- geoperu::get_geo_peru(geography = dep_oficial, level = "dep", simplified = FALSE, showProgress = FALSE)
           if (is.null(res) || !inherits(res, c("sf", "sfc", "data.frame"))) {
-            stop("geoperu retorno un objeto vacio o nulo (posible tiempo de espera agotado)")
+            cli::cli_abort("{.pkg geoperu} retorn\u00f3 un objeto vac\u00edo o nulo (posible tiempo de espera agotado).")
           }
           if (!inherits(res, "sf")) res <- sf::st_as_sf(res)
           res
@@ -456,6 +456,7 @@ obtener_poligono_unidad <- function(nombre, nivel = c("distrito", "provincia"), 
 #'
 #' @param poly Objeto de tipo polygon de sf (lista de matrices).
 #' @return Objeto de tipo polygon corregido.
+#' @noRd
 corregir_poligono_ccw <- function(poly) {
   nuevo_poly <- list()
   for (j in seq_along(poly)) {
@@ -484,6 +485,7 @@ corregir_poligono_ccw <- function(poly) {
 #'
 #' @param sf_obj Objeto sf.
 #' @return Objeto sf con orientaciones corregidas.
+#' @noRd
 asegurar_orientacion_antihoraria <- function(sf_obj) {
   geom <- sf::st_geometry(sf_obj)
   for (i in seq_along(geom)) {
@@ -505,6 +507,7 @@ asegurar_orientacion_antihoraria <- function(sf_obj) {
 #' @param max_char Limite de caracteres WKT (def: 1500).
 #' @param tolerancia_inicial_metros Tolerancia inicial en metros para la simplificacion.
 #' @return Objeto sf simplificado (o su bbox) apto para consulta.
+#' @noRd
 simplificar_para_api <- function(sf_obj, max_char = 1500, tolerancia_inicial_metros = 100) {
   geom <- sf::st_geometry(sf_obj)
   wkt <- sf::st_as_text(geom[[1]])
@@ -547,6 +550,7 @@ simplificar_para_api <- function(sf_obj, max_char = 1500, tolerancia_inicial_met
 #' @param sf_obj Objeto sf con la geometria.
 #' @param tolerancia_metros Tolerancia de simplificacion en metros (def: 100 metros).
 #' @return Objeto sf simplificado en EPSG:4326.
+#' @noRd
 simplificar_poligono <- function(sf_obj, tolerancia_metros = 100) {
   if (tolerancia_metros <= 0) {
     return(sf_obj)
@@ -568,6 +572,7 @@ simplificar_poligono <- function(sf_obj, tolerancia_metros = 100) {
 #'
 #' @param sf_obj Objeto sf.
 #' @return Una cadena de texto en formato WKT.
+#' @noRd
 poligono_a_wkt <- function(sf_obj) {
   geom <- sf::st_geometry(sf_obj)
   geom <- sf::st_make_valid(geom)

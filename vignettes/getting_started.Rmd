@@ -11,7 +11,12 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE
+  fig.width = 8,
+  fig.height = 5.5,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 300,
+  fig.retina = 2
 )
 ```
 
@@ -27,10 +32,15 @@ El paquete integra y estandariza la información proveniente de dos de las plata
 
 ## Instalación y Configuración
 
-Puedes instalar la versión de desarrollo de `peruocc` directamente desde GitHub:
+Puedes instalar la versión oficial de `peruocc` desde CRAN:
 
 ```r
-# Instalar paquete
+install.packages("peruocc")
+```
+
+O la versión en desarrollo directamente desde GitHub:
+
+```r
 # install.packages("remotes")
 remotes::install_github("PaulESantos/peruocc")
 ```
@@ -58,13 +68,13 @@ Por defecto, las consultas se ejecutan directamente en memoria (`guardar_resulta
 
 ### 1. Búsqueda a Nivel de Distrito
 
-Para consultar registros en un distrito específico (por ejemplo, el distrito de **Miraflores**, en **Lima**):
+Para consultar registros en un distrito específico (por ejemplo, el distrito de **Cusco**, en la provincia y departamento de **Cusco**):
 
 ```{r}
-resultado_miraflores <- buscar_especies_distrito(
-  distrito = "Miraflores",
-  departamento = "Lima",
-  provincia = "Lima",
+resultado_cusco <- buscar_especies_distrito(
+  distrito = "Cusco",
+  departamento = "Cusco",
+  provincia = "Cusco",
   grupo = "flora",            # "flora", "fauna" o NULL
   limite_por_api = 150
 )
@@ -104,20 +114,22 @@ resultado_jaguar <- buscar_especies_distrito(
 Las funciones de búsqueda retornan un objeto de tipo `list` estructurado con 4 componentes clave:
 
 ```{r}
-names(resultado_miraflores)
+names(resultado_cusco)
 #> [1] "unidad_sf"   "ocurrencias" "resumen"     "parametros"
 ```
 
-1. **`unidad_sf`**: Objeto espacial (`sf`) con el polígono oficial validado y proyectado en WGS84 (EPSG:4326).
-2. **`ocurrencias`**: Dataframe estandarizado alineado con el estándar **Darwin Core**.
-3. **`resumen`**: Estadísticas de la consulta (total de registros, desglose por fuente, reinos y cobertura).
-4. **`parametros`**: Metadatos de la llamada (fechas, límites y opciones empleadas).
+| Componente | Tipo | Descripción |
+| :--- | :--- | :--- |
+| **`unidad_sf`** | `sf` (WGS84) | Polígono oficial validado y proyectado en EPSG:4326. |
+| **`ocurrencias`** | `peruocc_tbl` / `data.frame` | Registros estandarizados bajo el estándar **Darwin Core**. |
+| **`resumen`** | `list` | Estadísticas de la consulta (conteo total, por fuente, reinos). |
+| **`parametros`** | `list` | Metadatos y filtros utilizados en la llamada (fechas, límites). |
 
 ### Inspección de Registros
 
 ```{r}
 # Vista previa de las primeras ocurrencias
-head(resultado_miraflores$ocurrencias[, c("scientificName", "source", "eventDate", "decimalLatitude", "decimalLongitude")])
+head(resultado_cusco$ocurrencias[, c("scientificName", "source", "eventDate", "decimalLatitude", "decimalLongitude")])
 ```
 
 ---
@@ -130,7 +142,7 @@ Puedes generar inmediatamente un mapa temático con `ggplot2`:
 
 ```{r}
 # Visualizar mapa coloreando por repositorio de origen (GBIF vs iNaturalist)
-mapa <- graficar_ocurrencias(resultado_miraflores, color_por = "source")
+mapa <- graficar_ocurrencias(resultado_cusco, color_por = "source")
 print(mapa)
 ```
 
@@ -140,5 +152,16 @@ Para guardar los datos en formatos estándar (`CSV`, `GeoJSON` y `manifiesto JSO
 
 ```{r}
 # Exportar resultados a disco
-exportar_resultados(resultado_miraflores)
+exportar_resultados(resultado_cusco)
 ```
+
+---
+
+## Siguientes Pasos
+
+Para profundizar en las capacidades de `peruocc`, consulta las viñetas especializadas:
+
+* **[Flujo Espacial y Filtrado Topológico Riguroso](flujo_espacial.html)**: Detalles de simplificación métrica UTM, corrección CCW y estrategias de partición.
+* **[Búsqueda con Polígonos Personalizados](busqueda_poligono_usuario.html)**: Consultas con shapefiles, buffers, áreas naturales protegidas y capas vectoriales propias.
+* **[Configuración, Exportación y Visualización](visualizacion_y_exportacion.html)**: Integración con SIG (QGIS/ArcGIS), personalización de mapas con ggplot2 y manifiestos de auditoría científica.
+

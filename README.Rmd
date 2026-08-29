@@ -9,7 +9,12 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  fig.width = 8,
+  fig.height = 5.5,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 300,
+  fig.retina = 2
 )
 ```
 
@@ -24,6 +29,44 @@ knitr::opts_chunk$set(
 `peruocc` es un paquete y conjunto de herramientas en R diseñado para buscar, descargar, filtrar, validar y consolidar registros de ocurrencias de biodiversidad (**flora y fauna**) en el territorio peruano, utilizando como marco espacial las delimitaciones administrativas oficiales a escala de **distritos** y **provincias**.
 
 El paquete integra y estandariza la información disponible de dos de los mayores repositorios globales de biodiversidad: **GBIF** (*Global Biodiversity Information Facility*) e **iNaturalist**, generando un objeto unificado con atributos estandarizados y trazabilidad completa dentro del área de interés.
+
+---
+
+## ⚡ Inicio Rápido (Quickstart)
+
+```r
+library(peruocc)
+
+# Consulta en memoria: Flora en el distrito de Cusco (Cusco)
+resultado <- buscar_especies_distrito(
+  distrito = "Cusco",
+  departamento = "Cusco",
+  provincia = "Cusco",
+  grupo = "flora"
+)
+
+# 1. Ver las primeras ocurrencias tabulares (Darwin Core)
+head(resultado$ocurrencias)
+
+# 2. Generar mapa temático inmediato en ggplot2
+graficar_ocurrencias(resultado, color_por = "source")
+```
+
+---
+
+## Tabla de Referencia Rápida
+
+| Función | Propósito Principal | Tipo de Entrada |
+| :--- | :--- | :--- |
+| `buscar_especies_distrito()` | Búsqueda directa en un distrito oficial | Nombre de distrito + departamento |
+| `buscar_especies_provincia()` | Búsqueda en una provincia (distritos disueltos) | Nombre de provincia + departamento |
+| `buscar_especies_poligono()` | Búsqueda en geometrías de usuario / buffers | Objeto `sf` o archivo (`.shp`, `.geojson`) |
+| `buscar_especies_peru()` | Consulta unificada con partición adaptativa | Nivel (`"distrito"` o `"provincia"`) |
+| `obtener_poligono_distrito()` | Obtiene la geometría oficial `sf` de un distrito | Nombre de distrito + departamento |
+| `obtener_poligono_provincia()` | Obtiene la geometría disuelta `sf` de una provincia | Nombre de provincia + departamento |
+| `graficar_ocurrencias()` | Visualización cartográfica en `ggplot2` | Objeto devuelto por `buscar_especies_*` |
+| `exportar_resultados()` | Guarda en disco en formatos CSV, GeoJSON y JSON | Objeto devuelto por `buscar_especies_*` |
+| `peruocc_data_dir()` | Configura ruta central de caché y exportación | Ruta de directorio |
 
 ---
 
@@ -96,10 +139,13 @@ El paquete integra y estandariza la información disponible de dos de los mayore
 
 ## Instalación y Carga
 
-### 1. Desde GitHub:
+### 1. Instalación:
 
 ```r
-# Instalar paquete directamente desde el repositorio en GitHub
+# Instalar versión estable desde CRAN:
+install.packages("peruocc")
+
+# O instalar la versión en desarrollo desde GitHub:
 # install.packages("remotes")
 remotes::install_github("PaulESantos/peruocc")
 ```
@@ -126,19 +172,19 @@ Permite seleccionar el nivel administrativo mediante el argumento `nivel = c("di
 
 ```{r }
 
-# Consulta general a nivel distrital en memoria
+# Consulta a nivel distrital en el distrito de Cusco (Cusco)
 res_distrito <- buscar_especies_peru(
-  nombre = "Miraflores",
+  nombre = "Cusco",
   nivel = "distrito",
-  departamento = "Lima",
-  provincia = "Lima",
+  departamento = "Cusco",
+  provincia = "Cusco",
   grupo = "flora",            # "flora", "fauna" o NULL
   limite_por_api = 200
 )
 
 res_distrito$ocurrencias 
 
-# Consulta general a nivel provincial en memoria
+# Consulta a nivel provincial en la provincia de Cusco
 res_provincia <- buscar_especies_peru(
   nombre = "Cusco",
   nivel = "provincia",
@@ -266,6 +312,24 @@ Las funciones de búsqueda devuelven una lista estructurada con los siguientes e
 | `district` | `character` | Nombre del distrito correspondiente. |
 | `province` | `character` | Nombre de la provincia correspondiente. |
 | `department` | `character` | Nombre del departamento correspondiente. |
+
+---
+
+## Resolución de Homónimos Administrativos
+
+En el Perú existen múltiples distritos que comparten el mismo nombre en diferentes departamentos o provincias (por ejemplo, *Miraflores* existe en Lima y Arequipa; *San Jerónimo* existe en Cusco, Junín y Apurímac).
+
+`peruocc` resuelve automáticamente las ambigüedades mediante los argumentos opcionales `departamento` y `provincia`:
+
+```r
+# Caso 1: Distrito de San Jerónimo en Cusco
+res_cusco <- buscar_especies_distrito("San Jeronimo", departamento = "Cusco", provincia = "Cusco")
+
+# Caso 2: Distrito de San Jerónimo en Huancayo, Junín
+res_junin <- buscar_especies_distrito("San Jeronimo", departamento = "Junin", provincia = "Huancayo")
+```
+
+Si el nombre es ambiguo y no se especifica el departamento, la función se detiene e informa en consola las opciones exactas disponibles con sus departamentos y provincias correspondientes.
 
 ---
 

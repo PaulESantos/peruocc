@@ -20,3 +20,5 @@
 ^peruocc$
 ^Rplots\.pdf$
 ^vignettes/peruocc-output$
+^\.agents$
+^cran-comments\.md$

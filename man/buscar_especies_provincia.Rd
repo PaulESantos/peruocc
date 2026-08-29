@@ -46,3 +46,9 @@ estrategia predeterminada procesa los distritos de forma independiente y
 consolida al final, una opción más recuperable que consultar la provincia
 disuelta en una sola petición.
 }
+\examples{
+\dontrun{
+res <- buscar_especies_provincia("Urubamba", departamento = "Cusco", grupo = "fauna")
+head(res$ocurrencias)
+}
+}

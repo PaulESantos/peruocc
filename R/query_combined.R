@@ -349,6 +349,11 @@ buscar_especies_peru <- function(nombre,
 #'   `pausa_entre_lotes_s`.
 #' @return Lista con límite, ocurrencias, resumen y parámetros. Consulte el
 #'   valor retornado por [buscar_especies_peru()].
+#' @examples
+#' \dontrun{
+#' res <- buscar_especies_distrito("Miraflores", departamento = "Lima", grupo = "flora")
+#' head(res$ocurrencias)
+#' }
 #' @export
 buscar_especies_distrito <- function(distrito, 
                                      departamento = NULL, 
@@ -394,6 +399,11 @@ buscar_especies_distrito <- function(distrito,
 #'   Destacan `max_area_ha` para ajustar las teselas y `cache_dir` para reanudar.
 #' @return Lista con límite provincial disuelto, ocurrencias consolidadas,
 #'   resumen de lotes y parámetros de la ejecución.
+#' @examples
+#' \dontrun{
+#' res <- buscar_especies_provincia("Urubamba", departamento = "Cusco", grupo = "fauna")
+#' head(res$ocurrencias)
+#' }
 #' @export
 buscar_especies_provincia <- function(provincia, 
                                       departamento = NULL, 

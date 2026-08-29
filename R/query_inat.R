@@ -26,6 +26,7 @@
 #' @param verbose Lógico. Si es `TRUE`, muestra mensajes de progreso.
 #' @return `data.frame` estandarizado con las observaciones dentro del polígono.
 #'   Incluye los atributos `api_total` y `api_complete` cuando están disponibles.
+#' @noRd
 buscar_inat_por_poligono <- function(poligono_sf, 
                                      query = NULL, 
                                      taxon_name = NULL, 

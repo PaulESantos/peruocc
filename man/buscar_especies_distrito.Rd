@@ -49,3 +49,9 @@ valor retornado por \code{\link[=buscar_especies_peru]{buscar_especies_peru()}}.
 Atajo legible de \code{\link[=buscar_especies_peru]{buscar_especies_peru()}} con \code{nivel = "distrito"}. Acepte
 los mismos filtros y devuelve la misma estructura de resultado.
 }
+\examples{
+\dontrun{
+res <- buscar_especies_distrito("Miraflores", departamento = "Lima", grupo = "flora")
+head(res$ocurrencias)
+}
+}

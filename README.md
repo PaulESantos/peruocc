@@ -26,6 +26,44 @@ dentro del área de interés.
 
 ------------------------------------------------------------------------
 
+## ⚡ Inicio Rápido (Quickstart)
+
+``` r
+library(peruocc)
+
+# Consulta en memoria: Flora en el distrito de Cusco (Cusco)
+resultado <- buscar_especies_distrito(
+  distrito = "Cusco",
+  departamento = "Cusco",
+  provincia = "Cusco",
+  grupo = "flora"
+)
+
+# 1. Ver las primeras ocurrencias tabulares (Darwin Core)
+head(resultado$ocurrencias)
+
+# 2. Generar mapa temático inmediato en ggplot2
+graficar_ocurrencias(resultado, color_por = "source")
+```
+
+------------------------------------------------------------------------
+
+## Tabla de Referencia Rápida
+
+| Función | Propósito Principal | Tipo de Entrada |
+|:---|:---|:---|
+| `buscar_especies_distrito()` | Búsqueda directa en un distrito oficial | Nombre de distrito + departamento |
+| `buscar_especies_provincia()` | Búsqueda en una provincia (distritos disueltos) | Nombre de provincia + departamento |
+| `buscar_especies_poligono()` | Búsqueda en geometrías de usuario / buffers | Objeto `sf` o archivo (`.shp`, `.geojson`) |
+| `buscar_especies_peru()` | Consulta unificada con partición adaptativa | Nivel (`"distrito"` o `"provincia"`) |
+| `obtener_poligono_distrito()` | Obtiene la geometría oficial `sf` de un distrito | Nombre de distrito + departamento |
+| `obtener_poligono_provincia()` | Obtiene la geometría disuelta `sf` de una provincia | Nombre de provincia + departamento |
+| `graficar_ocurrencias()` | Visualización cartográfica en `ggplot2` | Objeto devuelto por `buscar_especies_*` |
+| `exportar_resultados()` | Guarda en disco en formatos CSV, GeoJSON y JSON | Objeto devuelto por `buscar_especies_*` |
+| `peruocc_data_dir()` | Configura ruta central de caché y exportación | Ruta de directorio |
+
+------------------------------------------------------------------------
+
 ## Características Principales
 
 1.  **Marco Administrativo Oficial (Distritos y Provincias)**:
@@ -122,10 +160,13 @@ dentro del área de interés.
 
 ## Instalación y Carga
 
-### 1. Desde GitHub:
+### 1. Instalación:
 
 ``` r
-# Instalar paquete directamente desde el repositorio en GitHub
+# Instalar versión estable desde CRAN:
+install.packages("peruocc")
+
+# O instalar la versión en desarrollo desde GitHub:
 # install.packages("remotes")
 remotes::install_github("PaulESantos/peruocc")
 ```
@@ -158,43 +199,53 @@ Permite seleccionar el nivel administrativo mediante el argumento
 
 ``` r
 
-# Consulta general a nivel distrital en memoria
+# Consulta a nivel distrital en el distrito de Cusco (Cusco)
 res_distrito <- buscar_especies_peru(
-  nombre = "Miraflores",
+  nombre = "Cusco",
   nivel = "distrito",
-  departamento = "Lima",
-  provincia = "Lima",
+  departamento = "Cusco",
+  provincia = "Cusco",
   grupo = "flora",            # "flora", "fauna" o NULL
   limite_por_api = 200
 )
 #> 
-#> ── Búsqueda Integrada: MIRAFLORES (DISTRITO) ───────────────────────────────────
-#> • Departamento: Lima
-#> • Provincia: Lima
+#> ── Búsqueda Integrada: CUSCO (DISTRITO) ────────────────────────────────────────
+#> • Departamento: Cusco
+#> • Provincia: Cusco
 #> • Grupo: flora
-#> ℹ Cargando límites de LIMA desde el caché local...
+#> ℹ Cargando límites de CUSCO desde el caché local...
+#> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
+#> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1153 caracteres).
+#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
+#> ℹ [GBIF] Consultando registros dentro del polígono de CUSCO (límite: "200")...
+#> ✔ [GBIF] Búsqueda finalizada. Se filtraron 200 registro(s) que caen dentro del polígono seleccionado.
+#> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
+#> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
+#> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de CUSCO (límite: "200")...
+#> ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...
+#> ✔ [iNaturalist] Búsqueda finalizada. 165 de 200 registros caen dentro del polígono seleccionado.
 #> ✔ Consolidación exitosa. Total de registros unificados: 365
 #> 
 #> ── Resumen de Registros ──
 #> 
-#> • GBIF: 198 registro(s)
-#> • iNaturalist: 167 registro(s)
+#> • GBIF: 200 registro(s)
+#> • iNaturalist: 165 registro(s)
 #> ✔ Total consolidado: 365 registro(s)
 
 res_distrito$ocurrencias 
 #> # A tibble: 365 × 24
 #>    occurrenceID sourceRecordID sourceURL datasetKey license  basisOfRecord
 #>    <chr>        <chr>          <chr>     <chr>      <chr>    <chr>        
-#>  1 6129981207   6129981207     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#>  2 6179051389   6179051389     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#>  3 6147543635   6147543635     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#>  4 6147566368   6147566368     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#>  5 6147649969   6147649969     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#>  6 6159649674   6159649674     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#>  7 6171247345   6171247345     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#>  8 6179365614   6179365614     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#>  9 6431906476   6431906476     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#> 10 6178459982   6178459982     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#>  1 5938706538   5938706538     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#>  2 6129993447   6129993447     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#>  3 6130469893   6130469893     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#>  4 6130572167   6130572167     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#>  5 6130708471   6130708471     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#>  6 6131387088   6131387088     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#>  7 6131648674   6131648674     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#>  8 6133055337   6133055337     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#>  9 6133273135   6133273135     https://… 50c9509d-… http://… HUMAN_OBSERV…
+#> 10 6159246603   6159246603     https://… 50c9509d-… http://… HUMAN_OBSERV…
 #> # ℹ 355 filas más
 #> # ℹ 18 variables más: scientificName <chr>, decimalLatitude <dbl>,
 #> #   decimalLongitude <dbl>, eventDate <chr>, taxonRank <chr>, kingdom <chr>,
@@ -203,7 +254,7 @@ res_distrito$ocurrencias
 #> #   source <chr>, district <chr>, province <chr>, department <chr>
 #> # ℹ Use `print(n = ...)` para ver más filas
 
-# Consulta general a nivel provincial en memoria
+# Consulta a nivel provincial en la provincia de Cusco
 res_provincia <- buscar_especies_peru(
   nombre = "Cusco",
   nivel = "provincia",
@@ -215,7 +266,6 @@ res_provincia <- buscar_especies_peru(
 #> ── Búsqueda Integrada: CUSCO (PROVINCIA) ───────────────────────────────────────
 #> • Departamento: Cusco
 #> • Grupo: fauna
-#> ℹ Cargando límites de CUSCO desde el caché local...
 #> ℹ Procesando 8 lotes espaciales (distritos): "SANTIAGO", "WANCHAQ", "CCORCA", "SAN SEBASTIAN", "SAYLLA", "POROY", "SAN JERONIMO", and "CUSCO"
 #> ℹ Lote 1/8 [SANTIAGO]: recuperado de checkpoint (287 registros).
 #> ℹ Lote 2/8 [WANCHAQ]: recuperado de checkpoint (295 registros).
@@ -492,6 +542,29 @@ siguientes elementos:
 | `district` | `character` | Nombre del distrito correspondiente. |
 | `province` | `character` | Nombre de la provincia correspondiente. |
 | `department` | `character` | Nombre del departamento correspondiente. |
+
+------------------------------------------------------------------------
+
+## Resolución de Homónimos Administrativos
+
+En el Perú existen múltiples distritos que comparten el mismo nombre en
+diferentes departamentos o provincias (por ejemplo, *Miraflores* existe
+en Lima y Arequipa; *San Jerónimo* existe en Cusco, Junín y Apurímac).
+
+`peruocc` resuelve automáticamente las ambigüedades mediante los
+argumentos opcionales `departamento` y `provincia`:
+
+``` r
+# Caso 1: Distrito de San Jerónimo en Cusco
+res_cusco <- buscar_especies_distrito("San Jeronimo", departamento = "Cusco", provincia = "Cusco")
+
+# Caso 2: Distrito de San Jerónimo en Huancayo, Junín
+res_junin <- buscar_especies_distrito("San Jeronimo", departamento = "Junin", provincia = "Huancayo")
+```
+
+Si el nombre es ambiguo y no se especifica el departamento, la función
+se detiene e informa en consola las opciones exactas disponibles con sus
+departamentos y provincias correspondientes.
 
 ------------------------------------------------------------------------
 
