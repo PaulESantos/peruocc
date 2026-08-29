@@ -267,7 +267,7 @@ el polígono con las observaciones:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_fuentes</span><span class="op">)</span></span></code></pre></div>
-<p><img src="busqueda_poligono_usuario_files/figure-html/mapa_fuente-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="busqueda_poligono_usuario_files/figure-html/mapa_fuente-1.png" class="r-plt" alt="Mapa de distribución de ocurrencias de flora en área de estudio personalizada coloreado por repositorio de origen (GBIF vs iNaturalist)" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="b--clasificación-por-reino-taxonómico">B. Clasificación por Reino Taxonómico<a class="anchor" aria-label="anchor" href="#b--clasificaci%C3%B3n-por-reino-taxon%C3%B3mico"></a>
@@ -279,12 +279,40 @@ el polígono con las observaciones:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mapa_reinos</span><span class="op">)</span></span></code></pre></div>
-<p><img src="busqueda_poligono_usuario_files/figure-html/mapa_reino-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="busqueda_poligono_usuario_files/figure-html/mapa_reino-1.png" class="r-plt" alt="Mapa de distribución de ocurrencias de flora en área de estudio personalizada coloreado por reino taxonómico" width="100%" style="display: block; margin: auto;"></p>
 <hr>
 </div>
 </div>
 <div class="section level2">
-<h2 id="consulta-desde-un-archivo-en-disco-shapefile-geojson">6. Consulta desde un Archivo en Disco (Shapefile / GeoJSON)<a class="anchor" aria-label="anchor" href="#consulta-desde-un-archivo-en-disco-shapefile-geojson"></a>
+<h2 id="caso-práctico-área-de-influencia-buffer-alrededor-de-un-sitio-de-muestreo">6. Caso Práctico: Área de Influencia / Buffer Alrededor de un Sitio
+de Muestreo<a class="anchor" aria-label="anchor" href="#caso-pr%C3%A1ctico-%C3%A1rea-de-influencia-buffer-alrededor-de-un-sitio-de-muestreo"></a>
+</h2>
+<p>Un escenario común en consultoría ambiental y monitoreo biológico es
+evaluar la biodiversidad en un radio o buffer de influencia alrededor de
+un punto de coordenadas (por ejemplo, una estación biológica o sitio
+arqueológico en Cusco):</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># 1. Definir coordenadas del punto central (WGS84: Longitud, Latitud)</span></span>
+<span><span class="va">punto_sitio</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">72.545</span>, <span class="op">-</span><span class="fl">13.163</span><span class="op">)</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span> <span class="co"># Valle de Urubamba / Machu Picchu</span></span>
+<span></span>
+<span><span class="co"># 2. Proyectar a UTM Zona 18S (EPSG:32718) para calcular un buffer métrico exacto de 3 km</span></span>
+<span><span class="va">buffer_3km</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">punto_sitio</span>, <span class="fl">32718</span><span class="op">)</span>, dist <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 3. Consultar directamente (peruocc retransforma automáticamente a WGS84)</span></span>
+<span><span class="co"># resultado_buffer &lt;- buscar_especies_poligono(</span></span>
+<span><span class="co">#   poligono = buffer_3km,</span></span>
+<span><span class="co">#   nombre = "Buffer_3km_Urubamba",</span></span>
+<span><span class="co">#   grupo = "flora",</span></span>
+<span><span class="co">#   limite_por_api = 50</span></span>
+<span><span class="co"># )</span></span></code></pre></div>
+<p><code>peruocc</code> detecta cualquier sistema de referencia de
+coordenadas (CRS proyectado o geográfico), repara topologías no válidas
+(<code><a href="https://r-spatial.github.io/sf/reference/valid.html" class="external-link">sf::st_make_valid</a></code>) y asegura la orientación antihoraria
+(CCW) antes de la consulta a las APIs.</p>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="consulta-desde-un-archivo-en-disco-shapefile-geojson">7. Consulta desde un Archivo en Disco (Shapefile / GeoJSON)<a class="anchor" aria-label="anchor" href="#consulta-desde-un-archivo-en-disco-shapefile-geojson"></a>
 </h2>
 <p><code><a href="../reference/buscar_especies_poligono.html">buscar_especies_poligono()</a></code> también acepta directamente
 una ruta a un archivo espacial en disco (<code>.shp</code>,
@@ -292,7 +320,7 @@ una ruta a un archivo espacial en disco (<code>.shp</code>,
 <p>Para demostrarlo, guardamos el polígono en un archivo
 <code>.geojson</code> y ejecutamos la consulta directamente desde la
 ruta:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 1. Guardar el polígono temporalmente como archivo GeoJSON</span></span>
 <span><span class="va">ruta_capa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mi_reserva.geojson"</span><span class="op">)</span></span>
 <span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_write.html" class="external-link">st_write</a></span><span class="op">(</span><span class="va">mi_zona_estudio</span>, <span class="va">ruta_capa</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, delete_dsn <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -326,19 +354,24 @@ ruta:</p>
 <span></span>
 <span><span class="co"># 3. Exportar resultados con manifiesto de reproducibilidad</span></span>
 <span><span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado_desde_archivo</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T040559Z_poligono_reservalocal_flora.csv</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T040559Z_poligono_reservalocal_flora.geojson</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260823T040559Z_poligono_reservalocal_flora.json</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260829T165142Z_poligono_reservalocal_flora.csv</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260829T165142Z_poligono_reservalocal_flora.geojson</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260829T165142Z_poligono_reservalocal_flora.json</span></span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="conclusión">Conclusión<a class="anchor" aria-label="anchor" href="#conclusi%C3%B3n"></a>
+<h2 id="siguientes-pasos">Siguientes Pasos<a class="anchor" aria-label="anchor" href="#siguientes-pasos"></a>
 </h2>
-<p>La función <code><a href="../reference/buscar_especies_poligono.html">buscar_especies_poligono()</a></code> extiende la
-versatilidad de <code>peruocc</code>, permitiendo integrar inventarios
-biológicos y análisis de biodiversidad sobre cualquier área geográfica
-en el Perú sin depender exclusivamente de límites políticos distritales
-o provinciales.</p>
+<ul>
+<li>
+<strong><a href="flujo_espacial.html">Flujo Espacial y Filtrado
+Topológico Riguroso</a></strong>: Detalles de simplificación métrica
+adaptativa y estrategias de partición.</li>
+<li>
+<strong><a href="visualizacion_y_exportacion.html">Configuración,
+Exportación y Visualización</a></strong>: Integración con SIG
+(QGIS/ArcGIS) y exportación de manifiestos.</li>
+</ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

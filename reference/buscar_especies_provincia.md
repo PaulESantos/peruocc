@@ -63,3 +63,12 @@ buscar_especies_provincia(
 
 Lista con límite provincial disuelto, ocurrencias consolidadas, resumen
 de lotes y parámetros de la ejecución.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+res <- buscar_especies_provincia("Urubamba", departamento = "Cusco", grupo = "fauna")
+head(res$ocurrencias)
+} # }
+```

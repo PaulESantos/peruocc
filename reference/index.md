@@ -61,28 +61,6 @@ Coerción y representación tabular ligera compatible con el ecosistema
 Tidyverse.
 
 - [`as_peruocc_tbl()`](https://paulesantos.github.io/peruocc/reference/as_peruocc_tbl.md)
+  [`` `[`( ``*`<peruocc_tbl>`*`)`](https://paulesantos.github.io/peruocc/reference/as_peruocc_tbl.md)
+  [`print(`*`<peruocc_tbl>`*`)`](https://paulesantos.github.io/peruocc/reference/as_peruocc_tbl.md)
   : Coerción a objeto tabular ligero (estilo tibble)
-
-## Funciones Auxiliares y Topología Espacial
-
-Procesamiento geométrico interno, WKT, orientación CCW y consultas
-modulares.
-
-- [`asegurar_orientacion_antihoraria()`](https://paulesantos.github.io/peruocc/reference/asegurar_orientacion_antihoraria.md)
-  : Asegura que todas las geometrias de un objeto sf tengan orientacion
-  antihoraria (CCW)
-- [`corregir_poligono_ccw()`](https://paulesantos.github.io/peruocc/reference/corregir_poligono_ccw.md)
-  : Corrige la orientacion de un poligono sf para que el anillo exterior
-  sea CCW y los anillos interiores (huecos) sean CW.
-- [`poligono_a_wkt()`](https://paulesantos.github.io/peruocc/reference/poligono_a_wkt.md)
-  : Convierte un objeto sf a formato WKT (Well-Known Text) para
-  consultas GBIF
-- [`simplificar_poligono()`](https://paulesantos.github.io/peruocc/reference/simplificar_poligono.md)
-  : Simplifica un poligono de tipo sf usando proyecciones UTM
-- [`simplificar_para_api()`](https://paulesantos.github.io/peruocc/reference/simplificar_para_api.md)
-  : Simplifica un poligono sf o genera su bounding box si es muy
-  complejo para cumplir con el limite de longitud de caracteres de WKT.
-- [`buscar_gbif_por_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_gbif_por_poligono.md)
-  : Busca ocurrencias de GBIF dentro de un polígono
-- [`buscar_inat_por_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_inat_por_poligono.md)
-  : Busca observaciones de iNaturalist dentro de un polígono

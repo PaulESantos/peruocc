@@ -211,46 +211,82 @@ verdaderamente dentro de la unidad territorial elegida.</p>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="búsqueda-con-polígonos-personalizados-shapefile-geojson-gpkg">5. Búsqueda con Polígonos Personalizados (Shapefile, GeoJSON,
-GPKG)<a class="anchor" aria-label="anchor" href="#b%C3%BAsqueda-con-pol%C3%ADgonos-personalizados-shapefile-geojson-gpkg"></a>
+<h2 id="estrategias-de-particionamiento-espacial-para-grandes-unidades">5. Estrategias de Particionamiento Espacial para Grandes
+Unidades<a class="anchor" aria-label="anchor" href="#estrategias-de-particionamiento-espacial-para-grandes-unidades"></a>
 </h2>
-<p>Además de los límites administrativos oficiales del Perú,
-<code>peruocc</code> permite suministrar cualquier delimitación espacial
-personalizada mediante <code><a href="../reference/buscar_especies_poligono.html">buscar_especies_poligono()</a></code>:</p>
-<div class="section level3">
-<h3 id="opción-a-cargar-desde-un-archivo-espacial-en-disco">Opción A: Cargar desde un archivo espacial en disco<a class="anchor" aria-label="anchor" href="#opci%C3%B3n-a-cargar-desde-un-archivo-espacial-en-disco"></a>
-</h3>
+<p>El territorio peruano presenta provincias y distritos de enorme
+extensión territorial (particularmente en la cuenca amazónica, como
+<em>Maynas</em>, <em>Tambopata</em> o <em>La Convención</em>). Consultar
+estas áreas extensas en una única llamada puede provocar tiempos de
+espera agotados o truncamiento de registros por los límites máximos de
+las APIs.</p>
+<p><code>peruocc</code> ofrece el argumento
+<code>estrategia_espacial</code> en <code><a href="../reference/buscar_especies_peru.html">buscar_especies_peru()</a></code>
+y <code><a href="../reference/buscar_especies_poligono.html">buscar_especies_poligono()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Consulta usando un archivo Shapefile o GeoJSON (por ejemplo, un Área Natural Protegida)</span></span>
-<span><span class="va">resultado_anp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buscar_especies_poligono.html">buscar_especies_poligono</a></span><span class="op">(</span></span>
-<span>  poligono <span class="op">=</span> <span class="st">"capas/reserva_nacional_pacaya_samiria.geojson"</span>,</span>
-<span>  nombre <span class="op">=</span> <span class="st">"RN Pacaya Samiria"</span>,</span>
-<span>  grupo <span class="op">=</span> <span class="st">"fauna"</span>,</span>
-<span>  limite_por_api <span class="op">=</span> <span class="fl">500</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/buscar_especies_peru.html">buscar_especies_peru</a></span><span class="op">(</span></span>
+<span>  nombre <span class="op">=</span> <span class="st">"Tambopata"</span>,</span>
+<span>  nivel <span class="op">=</span> <span class="st">"provincia"</span>,</span>
+<span>  departamento <span class="op">=</span> <span class="st">"Madre de Dios"</span>,</span>
+<span>  estrategia_espacial <span class="op">=</span> <span class="st">"auto"</span>,   <span class="co"># "auto", "segmentada" o "directa"</span></span>
+<span>  max_area_ha <span class="op">=</span> <span class="fl">1000</span>,             <span class="co"># Área objetivo por tesela</span></span>
+<span>  max_lotes <span class="op">=</span> <span class="fl">16L</span>                 <span class="co"># Límite de macro-bloques de seguridad</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="modos-de-operación">Modos de Operación:<a class="anchor" aria-label="anchor" href="#modos-de-operaci%C3%B3n"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li>
+<strong><code>"auto"</code> (Predeterminado)</strong>:
+<ul>
+<li>En <strong>provincias</strong>, descarga distrito por distrito y
+consolida al final, garantizando que si un distrito falla, los demás
+queden guardados en checkpoints <code>.rds</code>.</li>
+<li>En <strong>distritos o polígonos extensos</strong> (superiores a
+50,000 ha), divide la geometría automáticamente en macro-bloques de
+teselación espacial para realizar consultas en paralelo seguro.</li>
+</ul>
+</li>
+<li>
+<strong><code>"segmentada"</code></strong>:
+<ul>
+<li>Fuerza la división del polígono en una cuadrícula adaptativa basada
+en <code>max_area_ha</code>. Ideal para grandes áreas de estudio o
+estudios de alta densidad de registros.</li>
+</ul>
+</li>
+<li>
+<strong><code>"directa"</code></strong>:
+<ul>
+<li>Envía el polígono completo en una sola llamada sin teselar.
+Recomendado únicamente para distritos urbanos pequeños o geometrías de
+reducida extensión.</li>
+</ul>
+</li>
+</ol>
 </div>
 <div class="section level3">
-<h3 id="opción-b-usar-un-objeto-espacial-sf-creado-en-r">Opción B: Usar un objeto espacial <code>sf</code> creado en R<a class="anchor" aria-label="anchor" href="#opci%C3%B3n-b-usar-un-objeto-espacial-sf-creado-en-r"></a>
+<h3 id="checkpoints-y-resiliencia-en-lotes">Checkpoints y Resiliencia en Lotes<a class="anchor" aria-label="anchor" href="#checkpoints-y-resiliencia-en-lotes"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Crear un buffer de 5 km alrededor de un punto de muestreo</span></span>
-<span><span class="va">punto</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">77.03</span>, <span class="op">-</span><span class="fl">12.05</span><span class="op">)</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span>
-<span><span class="va">buffer_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">punto</span>, <span class="fl">32718</span><span class="op">)</span>, dist <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span>
-<span><span class="va">buffer_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">buffer_sf</span>, <span class="fl">4326</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Consultar biodiversidad dentro del buffer</span></span>
-<span><span class="va">resultado_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buscar_especies_poligono.html">buscar_especies_poligono</a></span><span class="op">(</span></span>
-<span>  poligono <span class="op">=</span> <span class="va">buffer_sf</span>,</span>
-<span>  nombre <span class="op">=</span> <span class="st">"Buffer 5km Centro Lima"</span>,</span>
-<span>  grupo <span class="op">=</span> <span class="st">"flora"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>La función ejecuta automáticamente la validación del sistema de
-coordenadas (CRS), repara geometrías no válidas y aplica el mismo
-filtrado espacial y consolidación que en las búsquedas distritales y
-provinciales.</p>
+<p>Cada lote procesado escribe un checkpoint intermedio en el directorio
+de caché (<code><a href="../reference/peruocc_data_dir.html">peruocc_data_dir()</a></code>). Si la conexión a internet se
+interrumpe durante una descarga extensa, volver a ejecutar la misma
+función <strong>reanudará la extracción desde el último lote
+completado</strong>, sin repetir consultas previas ni duplicar
+registros.</p>
+<hr>
 </div>
+</div>
+<div class="section level2">
+<h2 id="siguientes-pasos">Siguientes Pasos<a class="anchor" aria-label="anchor" href="#siguientes-pasos"></a>
+</h2>
+<p>Para consultar delimitaciones fuera del marco administrativo oficial
+(como Áreas Naturales Protegidas, buffers o shapefiles propios),
+consulta la viñeta especializada:</p>
+<ul>
+<li><strong><a href="busqueda_poligono_usuario.html">Búsqueda de
+Ocurrencias con Polígonos Personalizados</a></strong></li>
+</ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -146,7 +146,7 @@ summary(resultado$ocurrencias)
 #>                                                                  
 #>       license      basisOfRecord   scientificName decimalLatitude 
 #>  Length   :281   Length   :281   Length   :281    Min.   :-12.14  
-#>  N.unique :  8   N.unique :  2   N.unique :120    1st Qu.:-12.13  
+#>  N.unique :  8   N.unique :  2   N.unique :119    1st Qu.:-12.13  
 #>  N.blank  : 19   N.blank  :  0   N.blank  :  0    Median :-12.12  
 #>  Min.nchar:  0   Min.nchar: 16   Min.nchar: 11    Mean   :-12.12  
 #>  Max.nchar: 58   Max.nchar: 17   Max.nchar: 58    3rd Qu.:-12.12  
@@ -154,7 +154,7 @@ summary(resultado$ocurrencias)
 #>                                                                   
 #>  decimalLongitude     eventDate       taxonRank        kingdom   
 #>  Min.   :-77.05   Length   :281   Length   :281   Length   :281  
-#>  1st Qu.:-77.04   N.unique :234   N.unique :  1   N.unique :  1  
+#>  1st Qu.:-77.04   N.unique :233   N.unique :  1   N.unique :  1  
 #>  Median :-77.03   N.blank  :  0   N.blank  :  0   N.blank  :  0  
 #>  Mean   :-77.03   Min.nchar: 10   Min.nchar:  7   Min.nchar:  7  
 #>  3rd Qu.:-77.03   Max.nchar: 20   Max.nchar:  7   Max.nchar:  7  
@@ -162,7 +162,7 @@ summary(resultado$ocurrencias)
 #>                                                                  
 #>        phylum          class           order           family   
 #>  Length   :281   Length   :281   Length   :281   Length   :281  
-#>  N.unique :  2   N.unique :  4   N.unique : 20   N.unique : 34  
+#>  N.unique :  2   N.unique :  4   N.unique : 21   N.unique : 35  
 #>  N.blank  :  0   N.blank  :  0   N.blank  :  0   N.blank  :  0  
 #>  Min.nchar: 10   Min.nchar:  9   Min.nchar:  6   Min.nchar:  7  
 #>  Max.nchar: 12   Max.nchar: 15   Max.nchar: 14   Max.nchar: 16  
@@ -170,12 +170,12 @@ summary(resultado$ocurrencias)
 #>                                                                 
 #>        genus          species        recordedBy  coordinateUncertaintyInMeters
 #>  Length   :281   Length   :281   Length   :281   Min.   :   2.0               
-#>  N.unique : 54   N.unique : 64   N.unique :120   1st Qu.:  12.0               
+#>  N.unique : 53   N.unique : 63   N.unique :119   1st Qu.:  12.0               
 #>  N.blank  :  0   N.blank  :  0   N.blank  :  0   Median :  21.0               
-#>  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 333.6               
+#>  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 334.2               
 #>  Max.nchar: 16   Max.nchar: 28   Max.nchar: 30   3rd Qu.:  30.0               
-#>  NAs      :133   NAs      :133   NAs      : 11   Max.   :3945.0               
-#>                                                  NAs    :53                   
+#>  NAs      :133   NAs      :133   NAs      : 10   Max.   :3945.0               
+#>                                                  NAs    :54                   
 #>        source         district        province       department 
 #>  Length   :281   Length   :281   Length   :281   Length   :281  
 #>  N.unique :  2   N.unique :  1   N.unique :  1   N.unique :  1  
@@ -272,7 +272,9 @@ mapa_fuente <- graficar_ocurrencias(
 print(mapa_fuente)
 ```
 
-![](visualizacion_y_exportacion_files/figure-html/unnamed-chunk-4-1.png)
+![Mapa de distribución de ocurrencias coloreado por repositorio de
+origen (GBIF vs
+iNaturalist)](visualizacion_y_exportacion_files/figure-html/mapa_fuente_viz-1.png)
 
 ### Comparación por Reino Biológico (`kingdom`)
 
@@ -287,7 +289,34 @@ mapa_reino <- graficar_ocurrencias(
 print(mapa_reino)
 ```
 
-![](visualizacion_y_exportacion_files/figure-html/unnamed-chunk-5-1.png)
+![Mapa de distribución de ocurrencias coloreado por reino taxonómico
+(Plantae vs
+Animalia)](visualizacion_y_exportacion_files/figure-html/mapa_reino_viz-1.png)
+
+### Personalización con Capas de `ggplot2`
+
+Dado que
+[`graficar_ocurrencias()`](https://paulesantos.github.io/peruocc/reference/graficar_ocurrencias.md)
+retorna un objeto estándar de clase `ggplot`, puedes extenderlo y
+personalizarlo con cualquier tema, escala o etiqueta de `ggplot2`:
+
+``` r
+
+library(ggplot2)
+
+mapa_personalizado <- mapa_fuente +
+  ggplot2::theme_minimal(base_size = 12) +
+  ggplot2::labs(
+    title = "Biodiversidad en Miraflores, Lima",
+    subtitle = "Ocurrencias consolidadas vía peruocc (GBIF + iNaturalist)",
+    caption = "Fuente: Repositorios de Biodiversidad / INEI geoperu"
+  )
+
+print(mapa_personalizado)
+```
+
+![Mapa temático personalizado con tema minimal y títulos adicionales de
+ggplot2](visualizacion_y_exportacion_files/figure-html/personalizacion_mapa-1.png)
 
 ### Exportar el Mapa Directamente a Imagen
 
@@ -303,7 +332,37 @@ mapa_guardado <- graficar_ocurrencias(
 
 ------------------------------------------------------------------------
 
-## 5. Integración con SIG y Flujos Espaciales
+## 5. Auditoría Científica: Estructura del Manifiesto JSON
+
+El archivo `manifiesto_*.json` almacena metadatos críticos para
+publicaciones científicas y auditorías reproducibles:
+
+``` json
+{
+  "timestamp_utc": "2026-08-29T15:00:00Z",
+  "paquetes": {
+    "peruocc": "0.1.0",
+    "sf": "1.0-19",
+    "rgbif": "3.8.5",
+    "rinat": "0.1.10"
+  },
+  "parametros": {
+    "unidad": "Miraflores",
+    "nivel": "distrito",
+    "departamento": "Lima",
+    "grupo": "flora",
+    "limite_por_api": 150
+  },
+  "archivos_generados": [
+    "ocurrencias_distrito_miraflores_flora.csv",
+    "ocurrencias_distrito_miraflores_flora.geojson"
+  ]
+}
+```
+
+------------------------------------------------------------------------
+
+## 6. Integración con SIG y Flujos Espaciales
 
 Las capas GeoJSON generadas pueden volver a cargarse en R para análisis
 espaciales posteriores (como modelos de distribución de especies o

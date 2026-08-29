@@ -72,3 +72,12 @@ buscar_especies_distrito(
 Lista con límite, ocurrencias, resumen y parámetros. Consulte el valor
 retornado por
 [`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md).
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+res <- buscar_especies_distrito("Miraflores", departamento = "Lima", grupo = "flora")
+head(res$ocurrencias)
+} # }
+```

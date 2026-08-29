@@ -204,7 +204,9 @@ mapa_fuentes <- graficar_ocurrencias(
 print(mapa_fuentes)
 ```
 
-![](busqueda_poligono_usuario_files/figure-html/mapa_fuente-1.png)
+![Mapa de distribución de ocurrencias de flora en área de estudio
+personalizada coloreado por repositorio de origen (GBIF vs
+iNaturalist)](busqueda_poligono_usuario_files/figure-html/mapa_fuente-1.png)
 
 ### B. Clasificación por Reino Taxonómico
 
@@ -218,11 +220,45 @@ mapa_reinos <- graficar_ocurrencias(
 print(mapa_reinos)
 ```
 
-![](busqueda_poligono_usuario_files/figure-html/mapa_reino-1.png)
+![Mapa de distribución de ocurrencias de flora en área de estudio
+personalizada coloreado por reino
+taxonómico](busqueda_poligono_usuario_files/figure-html/mapa_reino-1.png)
 
 ------------------------------------------------------------------------
 
-## 6. Consulta desde un Archivo en Disco (Shapefile / GeoJSON)
+## 6. Caso Práctico: Área de Influencia / Buffer Alrededor de un Sitio de Muestreo
+
+Un escenario común en consultoría ambiental y monitoreo biológico es
+evaluar la biodiversidad en un radio o buffer de influencia alrededor de
+un punto de coordenadas (por ejemplo, una estación biológica o sitio
+arqueológico en Cusco):
+
+``` r
+
+# 1. Definir coordenadas del punto central (WGS84: Longitud, Latitud)
+punto_sitio <- sf::st_sfc(sf::st_point(c(-72.545, -13.163)), crs = 4326) # Valle de Urubamba / Machu Picchu
+
+# 2. Proyectar a UTM Zona 18S (EPSG:32718) para calcular un buffer métrico exacto de 3 km
+buffer_3km <- sf::st_buffer(sf::st_transform(punto_sitio, 32718), dist = 3000)
+
+# 3. Consultar directamente (peruocc retransforma automáticamente a WGS84)
+# resultado_buffer <- buscar_especies_poligono(
+#   poligono = buffer_3km,
+#   nombre = "Buffer_3km_Urubamba",
+#   grupo = "flora",
+#   limite_por_api = 50
+# )
+```
+
+`peruocc` detecta cualquier sistema de referencia de coordenadas (CRS
+proyectado o geográfico), repara topologías no válidas
+([`sf::st_make_valid`](https://r-spatial.github.io/sf/reference/valid.html))
+y asegura la orientación antihoraria (CCW) antes de la consulta a las
+APIs.
+
+------------------------------------------------------------------------
+
+## 7. Consulta desde un Archivo en Disco (Shapefile / GeoJSON)
 
 [`buscar_especies_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_poligono.md)
 también acepta directamente una ruta a un archivo espacial en disco
@@ -266,18 +302,19 @@ resultado_desde_archivo <- buscar_especies_poligono(
 
 # 3. Exportar resultados con manifiesto de reproducibilidad
 exportar_resultados(resultado_desde_archivo)
-#> ✔ Registros tabulares guardados en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T040559Z_poligono_reservalocal_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260823T040559Z_poligono_reservalocal_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260823T040559Z_poligono_reservalocal_flora.json
+#> ✔ Registros tabulares guardados en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260829T165142Z_poligono_reservalocal_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260829T165142Z_poligono_reservalocal_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260829T165142Z_poligono_reservalocal_flora.json
 ```
 
 ------------------------------------------------------------------------
 
-## Conclusión
+## Siguientes Pasos
 
-La función
-[`buscar_especies_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_poligono.md)
-extiende la versatilidad de `peruocc`, permitiendo integrar inventarios
-biológicos y análisis de biodiversidad sobre cualquier área geográfica
-en el Perú sin depender exclusivamente de límites políticos distritales
-o provinciales.
+- **[Flujo Espacial y Filtrado Topológico
+  Riguroso](https://paulesantos.github.io/peruocc/articles/flujo_espacial.md)**:
+  Detalles de simplificación métrica adaptativa y estrategias de
+  partición.
+- **[Configuración, Exportación y
+  Visualización](https://paulesantos.github.io/peruocc/articles/visualizacion_y_exportacion.md)**:
+  Integración con SIG (QGIS/ArcGIS) y exportación de manifiestos.

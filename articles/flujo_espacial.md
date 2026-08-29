@@ -152,46 +152,66 @@ verdaderamente dentro de la unidad territorial elegida.
 
 ------------------------------------------------------------------------
 
-## 5. Búsqueda con Polígonos Personalizados (Shapefile, GeoJSON, GPKG)
+## 5. Estrategias de Particionamiento Espacial para Grandes Unidades
 
-Además de los límites administrativos oficiales del Perú, `peruocc`
-permite suministrar cualquier delimitación espacial personalizada
-mediante
+El territorio peruano presenta provincias y distritos de enorme
+extensión territorial (particularmente en la cuenca amazónica, como
+*Maynas*, *Tambopata* o *La Convención*). Consultar estas áreas extensas
+en una única llamada puede provocar tiempos de espera agotados o
+truncamiento de registros por los límites máximos de las APIs.
+
+`peruocc` ofrece el argumento `estrategia_espacial` en
+[`buscar_especies_peru()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.md)
+y
 [`buscar_especies_poligono()`](https://paulesantos.github.io/peruocc/reference/buscar_especies_poligono.md):
 
-### Opción A: Cargar desde un archivo espacial en disco
-
 ``` r
 
-# Consulta usando un archivo Shapefile o GeoJSON (por ejemplo, un Área Natural Protegida)
-resultado_anp <- buscar_especies_poligono(
-  poligono = "capas/reserva_nacional_pacaya_samiria.geojson",
-  nombre = "RN Pacaya Samiria",
-  grupo = "fauna",
-  limite_por_api = 500
+buscar_especies_peru(
+  nombre = "Tambopata",
+  nivel = "provincia",
+  departamento = "Madre de Dios",
+  estrategia_espacial = "auto",   # "auto", "segmentada" o "directa"
+  max_area_ha = 1000,             # Área objetivo por tesela
+  max_lotes = 16L                 # Límite de macro-bloques de seguridad
 )
 ```
 
-### Opción B: Usar un objeto espacial `sf` creado en R
+### Modos de Operación:
 
-``` r
+1.  **`"auto"` (Predeterminado)**:
+    - En **provincias**, descarga distrito por distrito y consolida al
+      final, garantizando que si un distrito falla, los demás queden
+      guardados en checkpoints `.rds`.
+    - En **distritos o polígonos extensos** (superiores a 50,000 ha),
+      divide la geometría automáticamente en macro-bloques de teselación
+      espacial para realizar consultas en paralelo seguro.
+2.  **`"segmentada"`**:
+    - Fuerza la división del polígono en una cuadrícula adaptativa
+      basada en `max_area_ha`. Ideal para grandes áreas de estudio o
+      estudios de alta densidad de registros.
+3.  **`"directa"`**:
+    - Envía el polígono completo en una sola llamada sin teselar.
+      Recomendado únicamente para distritos urbanos pequeños o
+      geometrías de reducida extensión.
 
-library(sf)
+### Checkpoints y Resiliencia en Lotes
 
-# Crear un buffer de 5 km alrededor de un punto de muestreo
-punto <- sf::st_sfc(sf::st_point(c(-77.03, -12.05)), crs = 4326)
-buffer_sf <- sf::st_buffer(sf::st_transform(punto, 32718), dist = 5000)
-buffer_sf <- sf::st_transform(buffer_sf, 4326)
+Cada lote procesado escribe un checkpoint intermedio en el directorio de
+caché
+([`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md)).
+Si la conexión a internet se interrumpe durante una descarga extensa,
+volver a ejecutar la misma función **reanudará la extracción desde el
+último lote completado**, sin repetir consultas previas ni duplicar
+registros.
 
-# Consultar biodiversidad dentro del buffer
-resultado_buffer <- buscar_especies_poligono(
-  poligono = buffer_sf,
-  nombre = "Buffer 5km Centro Lima",
-  grupo = "flora"
-)
-```
+------------------------------------------------------------------------
 
-La función ejecuta automáticamente la validación del sistema de
-coordenadas (CRS), repara geometrías no válidas y aplica el mismo
-filtrado espacial y consolidación que en las búsquedas distritales y
-provinciales.
+## Siguientes Pasos
+
+Para consultar delimitaciones fuera del marco administrativo oficial
+(como Áreas Naturales Protegidas, buffers o shapefiles propios),
+consulta la viñeta especializada:
+
+- **[Búsqueda de Ocurrencias con Polígonos
+  Personalizados](https://paulesantos.github.io/peruocc/articles/busqueda_poligono_usuario.md)**

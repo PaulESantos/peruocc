@@ -76,6 +76,94 @@ harmonizes Darwin Core records.
 <p>El paquete integra y estandariza la información disponible de dos de los mayores repositorios globales de biodiversidad: <strong>GBIF</strong> (<em>Global Biodiversity Information Facility</em>) e <strong>iNaturalist</strong>, generando un objeto unificado con atributos estandarizados y trazabilidad completa dentro del área de interés.</p>
 <hr>
 <div class="section level2">
+<h2 id="zap-inicio-rápido-quickstart">⚡ Inicio Rápido (Quickstart)<a class="anchor" aria-label="anchor" href="#zap-inicio-r%C3%A1pido-quickstart"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Consulta en memoria: Flora en el distrito de Cusco (Cusco)</span></span>
+<span><span class="va">resultado</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span></span>
+<span>  distrito <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
+<span>  departamento <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
+<span>  provincia <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
+<span>  grupo <span class="op">=</span> <span class="st">"flora"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 1. Ver las primeras ocurrencias tabulares (Darwin Core)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">resultado</span><span class="op">$</span><span class="va">ocurrencias</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 2. Generar mapa temático inmediato en ggplot2</span></span>
+<span><span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado</span>, color_por <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="tabla-de-referencia-rápida">Tabla de Referencia Rápida<a class="anchor" aria-label="anchor" href="#tabla-de-referencia-r%C3%A1pida"></a>
+</h2>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr>
+<th align="left">Función</th>
+<th align="left">Propósito Principal</th>
+<th align="left">Tipo de Entrada</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="left"><code><a href="reference/buscar_especies_distrito.html">buscar_especies_distrito()</a></code></td>
+<td align="left">Búsqueda directa en un distrito oficial</td>
+<td align="left">Nombre de distrito + departamento</td>
+</tr>
+<tr>
+<td align="left"><code><a href="reference/buscar_especies_provincia.html">buscar_especies_provincia()</a></code></td>
+<td align="left">Búsqueda en una provincia (distritos disueltos)</td>
+<td align="left">Nombre de provincia + departamento</td>
+</tr>
+<tr>
+<td align="left"><code><a href="reference/buscar_especies_poligono.html">buscar_especies_poligono()</a></code></td>
+<td align="left">Búsqueda en geometrías de usuario / buffers</td>
+<td align="left">Objeto <code>sf</code> o archivo (<code>.shp</code>, <code>.geojson</code>)</td>
+</tr>
+<tr>
+<td align="left"><code><a href="reference/buscar_especies_peru.html">buscar_especies_peru()</a></code></td>
+<td align="left">Consulta unificada con partición adaptativa</td>
+<td align="left">Nivel (<code>"distrito"</code> o <code>"provincia"</code>)</td>
+</tr>
+<tr>
+<td align="left"><code><a href="reference/obtener_poligono_distrito.html">obtener_poligono_distrito()</a></code></td>
+<td align="left">Obtiene la geometría oficial <code>sf</code> de un distrito</td>
+<td align="left">Nombre de distrito + departamento</td>
+</tr>
+<tr>
+<td align="left"><code><a href="reference/obtener_poligono_provincia.html">obtener_poligono_provincia()</a></code></td>
+<td align="left">Obtiene la geometría disuelta <code>sf</code> de una provincia</td>
+<td align="left">Nombre de provincia + departamento</td>
+</tr>
+<tr>
+<td align="left"><code><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias()</a></code></td>
+<td align="left">Visualización cartográfica en <code>ggplot2</code>
+</td>
+<td align="left">Objeto devuelto por <code>buscar_especies_*</code>
+</td>
+</tr>
+<tr>
+<td align="left"><code><a href="reference/exportar_resultados.html">exportar_resultados()</a></code></td>
+<td align="left">Guarda en disco en formatos CSV, GeoJSON y JSON</td>
+<td align="left">Objeto devuelto por <code>buscar_especies_*</code>
+</td>
+</tr>
+<tr>
+<td align="left"><code><a href="reference/peruocc_data_dir.html">peruocc_data_dir()</a></code></td>
+<td align="left">Configura ruta central de caché y exportación</td>
+<td align="left">Ruta de directorio</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="section level2">
 <h2 id="características-principales">Características Principales<a class="anchor" aria-label="anchor" href="#caracter%C3%ADsticas-principales"></a>
 </h2>
 <ol style="list-style-type: decimal">
@@ -175,17 +263,20 @@ harmonizes Darwin Core records.
 <h2 id="instalación-y-carga">Instalación y Carga<a class="anchor" aria-label="anchor" href="#instalaci%C3%B3n-y-carga"></a>
 </h2>
 <div class="section level3">
-<h3 id="id_1-desde-github">1. Desde GitHub:<a class="anchor" aria-label="anchor" href="#id_1-desde-github"></a>
+<h3 id="id_1-instalación">1. Instalación:<a class="anchor" aria-label="anchor" href="#id_1-instalaci%C3%B3n"></a>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Instalar paquete directamente desde el repositorio en GitHub</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Instalar versión estable desde CRAN:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"peruocc"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># O instalar la versión en desarrollo desde GitHub:</span></span>
 <span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"PaulESantos/peruocc"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_2-configuración-de-directorio-de-trabajo">2. Configuración de directorio de trabajo:<a class="anchor" aria-label="anchor" href="#id_2-configuraci%C3%B3n-de-directorio-de-trabajo"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; ── Cargando peruocc ────────────────────────────────────────────────── v0.1.0 ──</span></span>
 <span><span class="co">#&gt; ✔ geoperu 0.0.2   • Límites cartográficos oficiales del Perú</span></span>
@@ -206,45 +297,55 @@ harmonizes Darwin Core records.
 <h3 id="id_1-consulta-unificada-buscar_especies_peru">1. Consulta Unificada (<code>buscar_especies_peru</code>)<a class="anchor" aria-label="anchor" href="#id_1-consulta-unificada-buscar_especies_peru"></a>
 </h3>
 <p>Permite seleccionar el nivel administrativo mediante el argumento <code>nivel = c("distrito", "provincia")</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="co"># Consulta general a nivel distrital en memoria</span></span>
+<span><span class="co"># Consulta a nivel distrital en el distrito de Cusco (Cusco)</span></span>
 <span><span class="va">res_distrito</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_peru.html">buscar_especies_peru</a></span><span class="op">(</span></span>
-<span>  nombre <span class="op">=</span> <span class="st">"Miraflores"</span>,</span>
+<span>  nombre <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
 <span>  nivel <span class="op">=</span> <span class="st">"distrito"</span>,</span>
-<span>  departamento <span class="op">=</span> <span class="st">"Lima"</span>,</span>
-<span>  provincia <span class="op">=</span> <span class="st">"Lima"</span>,</span>
+<span>  departamento <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
+<span>  provincia <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
 <span>  grupo <span class="op">=</span> <span class="st">"flora"</span>,            <span class="co"># "flora", "fauna" o NULL</span></span>
 <span>  limite_por_api <span class="op">=</span> <span class="fl">200</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── Búsqueda Integrada: MIRAFLORES (DISTRITO) ───────────────────────────────────</span></span>
-<span><span class="co">#&gt; • Departamento: Lima</span></span>
-<span><span class="co">#&gt; • Provincia: Lima</span></span>
+<span><span class="co">#&gt; ── Búsqueda Integrada: CUSCO (DISTRITO) ────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; • Departamento: Cusco</span></span>
+<span><span class="co">#&gt; • Provincia: Cusco</span></span>
 <span><span class="co">#&gt; • Grupo: flora</span></span>
-<span><span class="co">#&gt; ℹ Cargando límites de LIMA desde el caché local...</span></span>
+<span><span class="co">#&gt; ℹ Cargando límites de CUSCO desde el caché local...</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1153 caracteres).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de CUSCO (límite: "200")...</span></span>
+<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 200 registro(s) que caen dentro del polígono seleccionado.</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de CUSCO (límite: "200")...</span></span>
+<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
+<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 165 de 200 registros caen dentro del polígono seleccionado.</span></span>
 <span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 365</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── Resumen de Registros ──</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; • GBIF: 198 registro(s)</span></span>
-<span><span class="co">#&gt; • iNaturalist: 167 registro(s)</span></span>
+<span><span class="co">#&gt; • GBIF: 200 registro(s)</span></span>
+<span><span class="co">#&gt; • iNaturalist: 165 registro(s)</span></span>
 <span><span class="co">#&gt; ✔ Total consolidado: 365 registro(s)</span></span>
 <span></span>
 <span><span class="va">res_distrito</span><span class="op">$</span><span class="va">ocurrencias</span> </span>
 <span><span class="co">#&gt; # A tibble: 365 × 24</span></span>
 <span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL datasetKey license  basisOfRecord</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;        </span></span>
-<span><span class="co">#&gt;  1 6129981207   6129981207     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  2 6179051389   6179051389     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  3 6147543635   6147543635     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  4 6147566368   6147566368     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  5 6147649969   6147649969     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  6 6159649674   6159649674     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  7 6171247345   6171247345     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  8 6179365614   6179365614     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt;  9 6431906476   6431906476     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt; 10 6178459982   6178459982     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  1 5938706538   5938706538     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  2 6129993447   6129993447     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  3 6130469893   6130469893     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  4 6130572167   6130572167     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  5 6130708471   6130708471     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  6 6131387088   6131387088     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  7 6131648674   6131648674     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  8 6133055337   6133055337     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt;  9 6133273135   6133273135     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
+<span><span class="co">#&gt; 10 6159246603   6159246603     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
 <span><span class="co">#&gt; # ℹ 355 filas más</span></span>
 <span><span class="co">#&gt; # ℹ 18 variables más: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
@@ -253,7 +354,7 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt; #   source &lt;chr&gt;, district &lt;chr&gt;, province &lt;chr&gt;, department &lt;chr&gt;</span></span>
 <span><span class="co">#&gt; # ℹ Use `print(n = ...)` para ver más filas</span></span>
 <span></span>
-<span><span class="co"># Consulta general a nivel provincial en memoria</span></span>
+<span><span class="co"># Consulta a nivel provincial en la provincia de Cusco</span></span>
 <span><span class="va">res_provincia</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_peru.html">buscar_especies_peru</a></span><span class="op">(</span></span>
 <span>  nombre <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
 <span>  nivel <span class="op">=</span> <span class="st">"provincia"</span>,</span>
@@ -265,7 +366,6 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt; ── Búsqueda Integrada: CUSCO (PROVINCIA) ───────────────────────────────────────</span></span>
 <span><span class="co">#&gt; • Departamento: Cusco</span></span>
 <span><span class="co">#&gt; • Grupo: fauna</span></span>
-<span><span class="co">#&gt; ℹ Cargando límites de CUSCO desde el caché local...</span></span>
 <span><span class="co">#&gt; ℹ Procesando 8 lotes espaciales (distritos): "SANTIAGO", "WANCHAQ", "CCORCA", "SAN SEBASTIAN", "SAYLLA", "POROY", "SAN JERONIMO", and "CUSCO"</span></span>
 <span><span class="co">#&gt; ℹ Lote 1/8 [SANTIAGO]: recuperado de checkpoint (287 registros).</span></span>
 <span><span class="co">#&gt; ℹ Lote 2/8 [WANCHAQ]: recuperado de checkpoint (295 registros).</span></span>
@@ -311,7 +411,7 @@ harmonizes Darwin Core records.
 <div class="section level4">
 <h4 id="a-a-nivel-de-distrito-buscar_especies_distrito">A. A nivel de Distrito (<code>buscar_especies_distrito</code>)<a class="anchor" aria-label="anchor" href="#a-a-nivel-de-distrito-buscar_especies_distrito"></a>
 </h4>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resultado_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span></span>
 <span>  distrito <span class="op">=</span> <span class="st">"Tambopata"</span>,</span>
 <span>  departamento <span class="op">=</span> <span class="st">"Madre de Dios"</span>,</span>
@@ -359,7 +459,7 @@ harmonizes Darwin Core records.
 <div class="section level4">
 <h4 id="b-a-nivel-de-provincia-buscar_especies_provincia">B. A nivel de Provincia (<code>buscar_especies_provincia</code>)<a class="anchor" aria-label="anchor" href="#b-a-nivel-de-provincia-buscar_especies_provincia"></a>
 </h4>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resultado_prov</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_provincia.html">buscar_especies_provincia</a></span><span class="op">(</span></span>
 <span>  provincia <span class="op">=</span> <span class="st">"Urubamba"</span>,</span>
 <span>  departamento <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
@@ -415,7 +515,7 @@ harmonizes Darwin Core records.
 <h4 id="c-con-polígonos-personalizados--shapefile-buscar_especies_poligono">C. Con Polígonos Personalizados / Shapefile (<code>buscar_especies_poligono</code>)<a class="anchor" aria-label="anchor" href="#c-con-pol%C3%ADgonos-personalizados--shapefile-buscar_especies_poligono"></a>
 </h4>
 <p>Permite realizar consultas sobre cualquier delimitación espacial provista por el usuario (objeto <code>sf</code> o archivo <code>.shp</code>, <code>.geojson</code>, <code>.gpkg</code>, <code>.kml</code>):</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Crear un polígono de muestreo en EPSG:4326</span></span>
 <span><span class="va">poly_coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">77.04</span>, <span class="op">-</span><span class="fl">12.06</span>, <span class="op">-</span><span class="fl">77.00</span>, <span class="op">-</span><span class="fl">12.06</span>, <span class="op">-</span><span class="fl">77.00</span>, <span class="op">-</span><span class="fl">12.02</span>, <span class="op">-</span><span class="fl">77.04</span>, <span class="op">-</span><span class="fl">12.02</span>, <span class="op">-</span><span class="fl">77.04</span>, <span class="op">-</span><span class="fl">12.06</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">zona_estudio</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">poly_coords</span><span class="op">)</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span><span class="op">)</span></span>
@@ -464,7 +564,7 @@ harmonizes Darwin Core records.
 <h3 id="id_3-visualización-cartográfica-graficar_ocurrencias">3. Visualización Cartográfica (<code>graficar_ocurrencias</code>)<a class="anchor" aria-label="anchor" href="#id_3-visualizaci%C3%B3n-cartogr%C3%A1fica-graficar_ocurrencias"></a>
 </h3>
 <p>Genera mapas temáticos con <code>ggplot2</code> coloreando según la base de datos de origen (<code>source</code>) o reino taxonómico (<code>kingdom</code>):</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Mapa clasificado por fuente de datos (GBIF vs iNaturalist)</span></span>
 <span><span class="va">mapa_fuente</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado_prov</span>, </span>
 <span>                                    color_por <span class="op">=</span> <span class="st">"source"</span>, </span>
@@ -472,7 +572,7 @@ harmonizes Darwin Core records.
 <span></span>
 <span><span class="va">mapa_fuente</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png" alt="" width="100%"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Mapa clasificado por Reino (Plantae vs Animalia)</span></span>
 <span><span class="va">mapa_reino</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado_prov</span>,</span>
 <span>                                   color_por <span class="op">=</span> <span class="st">"kingdom"</span>, </span>
@@ -484,7 +584,7 @@ harmonizes Darwin Core records.
 <h3 id="id_4-exportación-de-resultados-a-disco-exportar_resultados">4. Exportación de Resultados a Disco (<code>exportar_resultados</code>)<a class="anchor" aria-label="anchor" href="#id_4-exportaci%C3%B3n-de-resultados-a-disco-exportar_resultados"></a>
 </h3>
 <p>Guarda los registros consolidados en formatos CSV, capas vectoriales GeoJSON y manifiestos JSON de reproducibilidad:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Exportar todos los formatos</span></span>
 <span><span class="fu"><a href="reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado_prov</span><span class="op">)</span></span>
 <span></span>
@@ -619,6 +719,20 @@ harmonizes Darwin Core records.
 </table>
 <hr>
 </div>
+</div>
+<div class="section level2">
+<h2 id="resolución-de-homónimos-administrativos">Resolución de Homónimos Administrativos<a class="anchor" aria-label="anchor" href="#resoluci%C3%B3n-de-hom%C3%B3nimos-administrativos"></a>
+</h2>
+<p>En el Perú existen múltiples distritos que comparten el mismo nombre en diferentes departamentos o provincias (por ejemplo, <em>Miraflores</em> existe en Lima y Arequipa; <em>San Jerónimo</em> existe en Cusco, Junín y Apurímac).</p>
+<p><code>peruocc</code> resuelve automáticamente las ambigüedades mediante los argumentos opcionales <code>departamento</code> y <code>provincia</code>:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Caso 1: Distrito de San Jerónimo en Cusco</span></span>
+<span><span class="va">res_cusco</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span><span class="st">"San Jeronimo"</span>, departamento <span class="op">=</span> <span class="st">"Cusco"</span>, provincia <span class="op">=</span> <span class="st">"Cusco"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Caso 2: Distrito de San Jerónimo en Huancayo, Junín</span></span>
+<span><span class="va">res_junin</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span><span class="st">"San Jeronimo"</span>, departamento <span class="op">=</span> <span class="st">"Junin"</span>, provincia <span class="op">=</span> <span class="st">"Huancayo"</span><span class="op">)</span></span></code></pre></div>
+<p>Si el nombre es ambiguo y no se especifica el departamento, la función se detiene e informa en consola las opciones exactas disponibles con sus departamentos y provincias correspondientes.</p>
+<hr>
 </div>
 <div class="section level2">
 <h2 id="trazabilidad-y-reproducibilidad">Trazabilidad y Reproducibilidad<a class="anchor" aria-label="anchor" href="#trazabilidad-y-reproducibilidad"></a>
