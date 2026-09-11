@@ -11,6 +11,7 @@ buscar_especies_poligono(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
+  dir_salida = NULL,
   tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
   estrategia_espacial = c("auto", "directa", "segmentada"),
   max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
@@ -40,6 +41,8 @@ solamente si los límites técnicos de ambas APIs lo permiten.}
 
 \item{guardar_resultados}{Lógico. Con \code{TRUE} exporta los resultados en la
 carpeta \verb{processed/} configurada con \code{\link[=peruocc_data_dir]{peruocc_data_dir()}}.}
+
+\item{dir_salida}{Ruta de destino si \code{guardar_resultados = TRUE}.}
 
 \item{tolerancia_simplificacion}{Número no negativo, en metros, usado para
 acortar la geometría WKT de GBIF. El filtro espacial final usa siempre la

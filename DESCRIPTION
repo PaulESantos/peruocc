@@ -2,16 +2,17 @@ Package: peruocc
 Title: Query and Standardize Biodiversity Occurrences in Peru
 Version: 0.1.0
 Authors@R: 
-    person("Paul Efren", "Santos Andrade",
-           email = "paulefrens@gmail.com",
-           role = c("aut", "cre", "cph"))
+    person("Paul E.", "Santos Andrade", , 
+    "paulefrens@gmail.com", role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0002-6635-0375"))
 Description: Facilitates the retrieval, spatial validation, and integration
     of flora and fauna occurrence records across administrative units (districts
     and provinces) in Peru. Retrieves official boundary geometries via
     'geoperu', queries and consolidates observations from the Global Biodiversity
-    Information Facility ('GBIF') and 'iNaturalist', and standardizes attributes
-    into a unified 'Darwin Core' aligned structure. Designed for biodiversity
-    assessments and spatial workflows within user-defined areas of interest.
+    Information Facility (GBIF, <https://www.gbif.org/>) and 'iNaturalist'
+    (<https://www.inaturalist.org/>), and standardizes attributes into a unified
+    Darwin Core aligned structure. Designed for biodiversity assessments and
+    spatial workflows within user-defined areas of interest.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -35,4 +36,4 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://paulesantos.github.io/peruocc/
 BugReports: https://github.com/PaulESantos/peruocc/issues
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0

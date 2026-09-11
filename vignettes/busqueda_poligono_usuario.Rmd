@@ -42,9 +42,6 @@ Cargamos `peruocc` y `sf` para el manejo de geometrías vectoriales:
 library(peruocc)
 library(sf)
 library(ggplot2)
-
-# Configurar el directorio de trabajo para artefactos y caché
-peruocc_data_dir("peruocc-output")
 ```
 
 ---
@@ -181,8 +178,8 @@ resultado_desde_archivo <- buscar_especies_poligono(
   limite_por_api = 15
 )
 
-# 3. Exportar resultados con manifiesto de reproducibilidad
-exportar_resultados(resultado_desde_archivo)
+# 3. Exportar resultados con manifiesto de reproducibilidad en directorio temporal
+archivos_exportados <- exportar_resultados(resultado_desde_archivo, dir_salida = tempdir())
 ```
 
 ---

@@ -56,14 +56,12 @@ Uno de los principales retos al consultar APIs globales de biodiversidad mediant
 
 ---
 
-## 1. Extracción de Geometrías y Caché Departamental
+## 1. Extracción de Geometrías y Caché en Memoria
 
-Para evitar descargas repetitivas y lentas desde la infraestructura de datos espaciales, `peruocc` descarga los límites departamentales una sola vez y los almacena en archivos locales binarios `.rds`:
+Para optimizar las consultas y evitar descargas repetitivas desde la infraestructura de datos espaciales, `peruocc` descarga los límites departamentales una sola vez y los almacena en memoria RAM durante la sesión:
 
 ```{r}
 library(peruocc)
-# Configurar directorio donde se guardarán caché, resultados y manifiestos
-peruocc_data_dir("peruocc-output")
 
 # Obtener la geometría oficial de un distrito
 distrito_sf <- obtener_poligono_distrito(

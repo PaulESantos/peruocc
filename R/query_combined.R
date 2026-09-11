@@ -20,7 +20,9 @@ consolidar_ocurrencias <- function(resultados_lista) {
 consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limite,
                                        tolerancia_simplificacion, cache_dir, reintentos,
                                        pausa_entre_lotes_s, clave_ejecucion) {
-  dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
+  if (!is.null(cache_dir)) {
+    dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
+  }
   resultados <- list()
   fallos <- character()
   total_lotes <- nrow(lotes_sf)
@@ -53,9 +55,9 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
     checkpoint_inat <- FALSE
     
     for (fuente in c("gbif", "inat")) {
-      archivo_cache <- file.path(cache_dir, sprintf("%s_lote_%05d_%s.rds", clave_ejecucion, i, fuente))
+      archivo_cache <- if (!is.null(cache_dir)) file.path(cache_dir, sprintf("%s_lote_%05d_%s.rds", clave_ejecucion, i, fuente)) else NULL
       resultado <- NULL
-      if (file.exists(archivo_cache)) {
+      if (!is.null(archivo_cache) && file.exists(archivo_cache)) {
         resultado <- tryCatch(readRDS(archivo_cache), error = function(e) NULL)
         if (!is.null(resultado)) {
           if (fuente == "gbif") checkpoint_gbif <- TRUE else checkpoint_inat <- TRUE
@@ -76,7 +78,7 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
           fallos <<- c(fallos, sprintf("lote %d %s: %s", i, fuente, e$message))
           NULL
         })
-        if (!is.null(resultado)) saveRDS(resultado, archivo_cache)
+        if (!is.null(resultado) && !is.null(archivo_cache)) saveRDS(resultado, archivo_cache)
       }
       if (!is.null(resultado)) {
         resultados[[length(resultados) + 1L]] <- resultado
@@ -175,10 +177,10 @@ preparar_lotes_espaciales <- function(unidad_sf, nivel, nombre, departamento,
 #' @param limite_por_api Entero entre 1 y 10000, o `NULL`. Es el máximo por
 #'   fuente y lote, no el máximo final consolidado. `NULL` solicita descarga
 #'   completa solo cuando cada API informa un conteo dentro de su capacidad;
-#'   puede ser lento y detenerse para consultas demasiado grandes.
 #' @param guardar_resultados Lógico. Si es `TRUE`, ejecuta
 #'   [exportar_resultados()] al final. No sobrescribe resultados previos porque
 #'   genera un identificador temporal nuevo.
+#' @param dir_salida Ruta de destino si `guardar_resultados = TRUE`.
 #' @param tolerancia_simplificacion Distancia en metros para simplificar WKT en
 #'   GBIF si supera el límite de longitud de la API.
 #' @param estrategia_espacial Estrategia de particionamiento (`"auto"`, `"directa"`
@@ -215,6 +217,7 @@ buscar_especies_peru <- function(nombre,
                                  grupo = NULL,
                                  limite_por_api = configuracion_predeterminada()$limite_por_api,
                                  guardar_resultados = FALSE,
+                                 dir_salida = NULL,
                                  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
                                  estrategia_espacial = c("auto", "directa", "segmentada"),
                                  max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
@@ -321,7 +324,7 @@ buscar_especies_peru <- function(nombre,
   
   # 6. Guardar Resultados en Archivos si se solicita explicitamente
   if (isTRUE(guardar_resultados) && nrow(ocurrencias_combinadas) > 0) {
-    exportar_resultados(resultado_obj)
+    exportar_resultados(resultado_obj, dir_salida = dir_salida)
   }
   
   return(resultado_obj)
@@ -449,6 +452,7 @@ buscar_especies_provincia <- function(provincia,
 #'   solamente si los límites técnicos de ambas APIs lo permiten.
 #' @param guardar_resultados Lógico. Con `TRUE` exporta los resultados en la
 #'   carpeta `processed/` configurada con [peruocc_data_dir()].
+#' @param dir_salida Ruta de destino si `guardar_resultados = TRUE`.
 #' @param tolerancia_simplificacion Número no negativo, en metros, usado para
 #'   acortar la geometría WKT de GBIF. El filtro espacial final usa siempre la
 #'   geometría original.
@@ -483,6 +487,7 @@ buscar_especies_poligono <- function(poligono,
                                      grupo = NULL,
                                      limite_por_api = configuracion_predeterminada()$limite_por_api,
                                      guardar_resultados = FALSE,
+                                     dir_salida = NULL,
                                      tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
                                      estrategia_espacial = c("auto", "directa", "segmentada"),
                                      max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
@@ -580,7 +585,7 @@ buscar_especies_poligono <- function(poligono,
   
   # 6. Guardar Resultados en Archivos si se solicita explicitamente
   if (isTRUE(guardar_resultados) && nrow(ocurrencias_combinadas) > 0) {
-    exportar_resultados(resultado_obj)
+    exportar_resultados(resultado_obj, dir_salida = dir_salida)
   }
   
   return(resultado_obj)

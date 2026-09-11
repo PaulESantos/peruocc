@@ -15,7 +15,11 @@
 #'   admitidos son `"source"` (GBIF/iNaturalist, predeterminado) y `"kingdom"`
 #'   (Plantae/Animalia cuando está disponible).
 #' @param guardar_mapa Lógico de longitud uno. Si es `TRUE`, además devuelve el
-#'   gráfico y lo guarda como PNG en `results/` dentro de [peruocc_data_dir()].
+#'   gráfico y lo guarda como PNG. Requiere especificar `ruta_salida` o haber
+#'   configurado [peruocc_data_dir()].
+#' @param ruta_salida Ruta completa de archivo donde guardar la imagen PNG
+#'   cuando `guardar_mapa = TRUE`. Si es `NULL` y `peruocc_data_dir()` está
+#'   configurado, se genera automáticamente en la subcarpeta `results/`.
 #' @return Un objeto de clase `ggplot`. Puede añadirse capas o temas de
 #'   `ggplot2` antes de imprimirlo.
 #' @examples
@@ -24,7 +28,7 @@
 #' graficar_ocurrencias(resultado, color_por = "source")
 #' }
 #' @export
-graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_mapa = FALSE) {
+graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_mapa = FALSE, ruta_salida = NULL) {
   unidad_sf <- if (!is.null(resultado_lista$unidad_sf)) resultado_lista$unidad_sf else resultado_lista$distrito_sf
   ocurrencias <- resultado_lista$ocurrencias
   resumen <- resultado_lista$resumen
@@ -101,11 +105,18 @@ graficar_ocurrencias <- function(resultado_lista, color_por = "source", guardar_
     )
   
   # Guardar el grafico si esta solicitado y hay datos
-  if (guardar_mapa) {
-    dir.create(ruta_peruocc("results"), recursive = TRUE, showWarnings = FALSE)
-    
-    unidad_clean <- gsub(" ", "_", tolower(normalizar_texto(nombre_unidad)))
-    nombre_img <- ruta_peruocc("results", sprintf("mapa_%s_%s_%s.png", unidad_clean, color_por, format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")))
+  if (isTRUE(guardar_mapa)) {
+    if (!is.null(ruta_salida)) {
+      nombre_img <- ruta_salida
+      dir.create(dirname(nombre_img), recursive = TRUE, showWarnings = FALSE)
+    } else if (!is.null(peruocc_data_dir())) {
+      dir_results <- file.path(peruocc_data_dir(), "results")
+      dir.create(dir_results, recursive = TRUE, showWarnings = FALSE)
+      unidad_clean <- gsub(" ", "_", tolower(normalizar_texto(nombre_unidad)))
+      nombre_img <- file.path(dir_results, sprintf("mapa_%s_%s_%s.png", unidad_clean, color_por, format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")))
+    } else {
+      cli::cli_abort("Debe especificar {.arg ruta_salida} (por ejemplo, {.code file.path(tempdir(), 'mapa.png')}) o configurar previamente {.fn peruocc_data_dir}.")
+    }
     
     tryCatch({
       ggplot2::ggsave(nombre_img, plot = g, width = 8, height = 7, dpi = 300, bg = "white")

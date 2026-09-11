@@ -48,7 +48,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
     rds_path <- ruta_cache(sprintf("distritos_%s.rds", dep_clean))
     
     mapa <- NULL
-    if (file.exists(rds_path)) {
+    if (!is.null(rds_path) && file.exists(rds_path)) {
       mapa <- tryCatch(readRDS(rds_path), error = function(e) NULL)
       if (is.null(mapa) || !inherits(mapa, "sf")) {
         unlink(rds_path)
@@ -72,7 +72,7 @@ cargar_mapa_departamental <- function(departamento = NULL) {
       }, error = function(e) {
         cli::cli_abort("No se pudieron descargar los l\u00edmites de {.strong {dep_oficial}} desde {.pkg geoperu}: {e$message}")
       })
-      if (!is.null(mapa) && inherits(mapa, "sf")) {
+      if (!is.null(mapa) && inherits(mapa, "sf") && !is.null(rds_path)) {
         saveRDS(mapa, rds_path)
       }
     }
@@ -83,35 +83,50 @@ cargar_mapa_departamental <- function(departamento = NULL) {
     return(mapa)
   }
   
-  # Si no se especifica departamento, buscar primero en cache
-  dir_c <- ruta_cache()
-  archivos_cache <- list.files(dir_c, pattern = "^distritos_.*\\.rds$", full.names = TRUE)
-  archivos_cache <- archivos_cache[!grepl("distritos_peru_completo.rds$", archivos_cache)]
-  
-  if (length(archivos_cache) > 0) {
-    cli::cli_alert_info("Cargando datos disponibles desde cach\u00e9 local...")
-    lista_mapas <- lapply(archivos_cache, readRDS)
-    mapa_acumulado <- do.call(rbind, lista_mapas)
-    if (!inherits(mapa_acumulado, "sf")) mapa_acumulado <- sf::st_as_sf(mapa_acumulado)
-    return(mapa_acumulado)
+  # Si no se especifica departamento, revisar memoria primero
+  if (exists("peru_completo", envir = .peruocc_mem_cache, inherits = FALSE)) {
+    return(get("peru_completo", envir = .peruocc_mem_cache))
   }
   
-  rds_completo <- ruta_cache("distritos_peru_completo.rds")
-  if (file.exists(rds_completo)) {
-    cli::cli_alert_info("Cargando base de datos completa desde cach\u00e9 local...")
-    mapa <- readRDS(rds_completo)
-    if (!inherits(mapa, "sf")) mapa <- sf::st_as_sf(mapa)
-    return(mapa)
+  # Buscar en cache de disco si esta configurado
+  dir_c <- ruta_cache()
+  if (!is.null(dir_c) && dir.exists(dir_c)) {
+    archivos_cache <- list.files(dir_c, pattern = "^distritos_.*\\.rds$", full.names = TRUE)
+    archivos_cache <- archivos_cache[!grepl("distritos_peru_completo.rds$", archivos_cache)]
+    
+    if (length(archivos_cache) > 0) {
+      cli::cli_alert_info("Cargando datos disponibles desde cach\u00e9 local...")
+      lista_mapas <- lapply(archivos_cache, readRDS)
+      mapa_acumulado <- do.call(rbind, lista_mapas)
+      if (!inherits(mapa_acumulado, "sf")) mapa_acumulado <- sf::st_as_sf(mapa_acumulado)
+      assign("peru_completo", mapa_acumulado, envir = .peruocc_mem_cache)
+      return(mapa_acumulado)
+    }
+    
+    rds_completo <- ruta_cache("distritos_peru_completo.rds")
+    if (!is.null(rds_completo) && file.exists(rds_completo)) {
+      cli::cli_alert_info("Cargando base de datos completa desde cach\u00e9 local...")
+      mapa <- readRDS(rds_completo)
+      if (!inherits(mapa, "sf")) mapa <- sf::st_as_sf(mapa)
+      assign("peru_completo", mapa, envir = .peruocc_mem_cache)
+      return(mapa)
+    }
   }
   
   cli::cli_alert_info("Departamento no especificado. Descargando l\u00edmites distritales del Per\u00fa v\u00eda {.pkg geoperu}...")
   lista_todos <- list()
   for (dep in deps_oficiales) {
     dep_clean <- gsub(" ", "_", tolower(normalizar_texto(dep)))
+    if (exists(dep_clean, envir = .peruocc_mem_cache, inherits = FALSE)) {
+      lista_todos[[dep]] <- get(dep_clean, envir = .peruocc_mem_cache)
+      next
+    }
     rds_path <- ruta_cache(sprintf("distritos_%s.rds", dep_clean))
     
-    if (file.exists(rds_path)) {
-      lista_todos[[dep]] <- readRDS(rds_path)
+    if (!is.null(rds_path) && file.exists(rds_path)) {
+      dep_sf <- readRDS(rds_path)
+      assign(dep_clean, dep_sf, envir = .peruocc_mem_cache)
+      lista_todos[[dep]] <- dep_sf
     } else {
       cli::cli_alert_info("Descargando departamento: {.strong {dep}}...")
       dep_sf <- tryCatch({
@@ -121,15 +136,20 @@ cargar_mapa_departamental <- function(departamento = NULL) {
         NULL
       })
       if (!is.null(dep_sf)) {
-        saveRDS(dep_sf, rds_path)
+        if (!inherits(dep_sf, "sf")) dep_sf <- sf::st_as_sf(dep_sf)
+        if (!is.null(rds_path)) saveRDS(dep_sf, rds_path)
+        assign(dep_clean, dep_sf, envir = .peruocc_mem_cache)
         lista_todos[[dep]] <- dep_sf
       }
     }
   }
   mapa <- do.call(rbind, lista_todos)
-  saveRDS(mapa, rds_completo)
-  cli::cli_alert_success("Cach\u00e9 local completo creado con \u00e9xito.")
+  if (!is.null(dir_c)) {
+    rds_completo <- ruta_cache("distritos_peru_completo.rds")
+    if (!is.null(rds_completo)) saveRDS(mapa, rds_completo)
+  }
   if (!inherits(mapa, "sf")) mapa <- sf::st_as_sf(mapa)
+  assign("peru_completo", mapa, envir = .peruocc_mem_cache)
   return(mapa)
 }
 

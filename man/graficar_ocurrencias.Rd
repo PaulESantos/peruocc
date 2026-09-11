@@ -7,7 +7,8 @@
 graficar_ocurrencias(
   resultado_lista,
   color_por = "source",
-  guardar_mapa = FALSE
+  guardar_mapa = FALSE,
+  ruta_salida = NULL
 )
 }
 \arguments{
@@ -21,7 +22,12 @@ admitidos son \code{"source"} (GBIF/iNaturalist, predeterminado) y \code{"kingdo
 (Plantae/Animalia cuando está disponible).}
 
 \item{guardar_mapa}{Lógico de longitud uno. Si es \code{TRUE}, además devuelve el
-gráfico y lo guarda como PNG en \verb{results/} dentro de \code{\link[=peruocc_data_dir]{peruocc_data_dir()}}.}
+gráfico y lo guarda como PNG. Requiere especificar \code{ruta_salida} o haber
+configurado \code{\link[=peruocc_data_dir]{peruocc_data_dir()}}.}
+
+\item{ruta_salida}{Ruta completa de archivo donde guardar la imagen PNG
+cuando \code{guardar_mapa = TRUE}. Si es \code{NULL} y \code{peruocc_data_dir()} está
+configurado, se genera automáticamente en la subcarpeta \verb{results/}.}
 }
 \value{
 Un objeto de clase \code{ggplot}. Puede añadirse capas o temas de

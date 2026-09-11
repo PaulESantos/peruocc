@@ -11,24 +11,23 @@ peruspecies_data_dir(path = NULL)
 }
 \arguments{
 \item{path}{Cadena de longitud uno con una ruta existente o por crear. Debe
-apuntar a una ubicación con permisos de escritura. Si es \code{NULL}, usa la
-opción ya configurada y, si no existe, crea \verb{peruocc/} bajo el directorio
-de trabajo actual.}
+apuntar a una ubicación con permisos de escritura. Si es \code{NULL}, devuelve la
+ruta configurada actualmente (o \code{NULL} si no se ha configurado ninguna).}
 }
 \value{
-Invisiblemente, la ruta absoluta normalizada que quedó activa.
+Invisiblemente, la ruta absoluta normalizada activa, o \code{NULL} si no
+se ha definido un directorio.
 }
 \description{
 Define el directorio raíz donde el paquete guarda resultados exportados y,
 cuando se configura explícitamente, los límites y checkpoints de consultas.
 La configuración se conserva durante la sesión de R mediante la opción
-\code{peruocc.data_dir}; no modifica archivos de configuración permanentes.
+\code{peruocc.data_dir}; no modifica archivos de configuración permanentes ni crea
+directorios por defecto en el espacio de trabajo del usuario.
 }
 \details{
-Los resultados se escriben en \verb{processed/} y los límites o
-checkpoints en \verb{cache/} dentro de este directorio. Configure una ruta fuera
-del repositorio cuando ejecute viñetas o análisis reproducibles para evitar
-incorporar artefactos generados al paquete.
+Cuando está configurado, los resultados se escriben en \verb{processed/}
+y los checkpoints en \verb{cache/} dentro de este directorio.
 }
 \examples{
 dir_temporal <- file.path(tempdir(), "peruocc-ejemplo")

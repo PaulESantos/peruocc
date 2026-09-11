@@ -15,9 +15,9 @@ exportar_resultados(
 \item{resultado}{Lista producida por una función \verb{buscar_especies_*()}. Debe
 contener al menos \code{ocurrencias}, \code{resumen}, \code{parametros} y \code{unidad_sf}.}
 
-\item{dir_salida}{Ruta de destino. Si es \code{NULL}, usa
-\verb{processed/} dentro de \code{\link[=peruocc_data_dir]{peruocc_data_dir()}}. Se crea junto con sus padres si
-no existe.}
+\item{dir_salida}{Ruta del directorio de destino. Si es \code{NULL}, usa
+\verb{processed/} dentro de \code{\link[=peruocc_data_dir]{peruocc_data_dir()}}. Si no se ha configurado un
+directorio, debe especificarse explícitamente (por ejemplo, \code{tempdir()}).}
 
 \item{prefijo}{Cadena opcional para el identificador de archivos. Con \code{NULL}
 se forma uno con fecha UTC, nivel, unidad y grupo. No incluya extensión:
@@ -40,6 +40,6 @@ archivo si \code{resultado$ocurrencias} no contiene filas.
 \examples{
 \dontrun{
 resultado <- buscar_especies_distrito("Miraflores", departamento = "Lima")
-exportar_resultados(resultado, formatos = c("csv", "manifiesto"))
+exportar_resultados(resultado, dir_salida = tempdir(), formatos = c("csv", "manifiesto"))
 }
 }

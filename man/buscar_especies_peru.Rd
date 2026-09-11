@@ -13,6 +13,7 @@ buscar_especies_peru(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
+  dir_salida = NULL,
   tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
   estrategia_espacial = c("auto", "directa", "segmentada"),
   max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
@@ -45,12 +46,13 @@ traduce a Plantae o Animalia. Puede combinarse con \code{nombre_cientifico}.}
 
 \item{limite_por_api}{Entero entre 1 y 10000, o \code{NULL}. Es el máximo por
 fuente y lote, no el máximo final consolidado. \code{NULL} solicita descarga
-completa solo cuando cada API informa un conteo dentro de su capacidad;
-puede ser lento y detenerse para consultas demasiado grandes.}
+completa solo cuando cada API informa un conteo dentro de su capacidad;}
 
 \item{guardar_resultados}{Lógico. Si es \code{TRUE}, ejecuta
 \code{\link[=exportar_resultados]{exportar_resultados()}} al final. No sobrescribe resultados previos porque
 genera un identificador temporal nuevo.}
+
+\item{dir_salida}{Ruta de destino si \code{guardar_resultados = TRUE}.}
 
 \item{tolerancia_simplificacion}{Distancia en metros para simplificar WKT en
 GBIF si supera el límite de longitud de la API.}

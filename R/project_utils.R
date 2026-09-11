@@ -88,8 +88,10 @@ validar_entrada_busqueda <- function(unidad, grupo = NULL, limite = NULL, nivel 
 }
 
 crear_directorios_proyecto <- function() {
+  base_dir <- peruocc_data_dir()
+  if (is.null(base_dir)) return(invisible(NULL))
   for (ruta in c("raw", "cache", "processed", "results")) {
-    dir.create(ruta_peruocc(ruta), recursive = TRUE, showWarnings = FALSE)
+    dir.create(file.path(base_dir, ruta), recursive = TRUE, showWarnings = FALSE)
   }
 }
 
@@ -146,9 +148,9 @@ escribir_manifiesto <- function(run_id, parametros, unidad_sf, resumen, archivos
 #'
 #' @param resultado Lista producida por una función `buscar_especies_*()`. Debe
 #'   contener al menos `ocurrencias`, `resumen`, `parametros` y `unidad_sf`.
-#' @param dir_salida Ruta de destino. Si es `NULL`, usa
-#'   `processed/` dentro de [peruocc_data_dir()]. Se crea junto con sus padres si
-#'   no existe.
+#' @param dir_salida Ruta del directorio de destino. Si es `NULL`, usa
+#'   `processed/` dentro de [peruocc_data_dir()]. Si no se ha configurado un
+#'   directorio, debe especificarse explícitamente (por ejemplo, `tempdir()`).
 #' @param prefijo Cadena opcional para el identificador de archivos. Con `NULL`
 #'   se forma uno con fecha UTC, nivel, unidad y grupo. No incluya extensión:
 #'   esta función añade `.csv`, `.geojson` o `.json`.
@@ -160,7 +162,7 @@ escribir_manifiesto <- function(run_id, parametros, unidad_sf, resumen, archivos
 #' @examples
 #' \dontrun{
 #' resultado <- buscar_especies_distrito("Miraflores", departamento = "Lima")
-#' exportar_resultados(resultado, formatos = c("csv", "manifiesto"))
+#' exportar_resultados(resultado, dir_salida = tempdir(), formatos = c("csv", "manifiesto"))
 #' }
 #' @export
 exportar_resultados <- function(resultado, dir_salida = NULL, prefijo = NULL, formatos = c("csv", "geojson", "manifiesto")) {
@@ -180,6 +182,9 @@ exportar_resultados <- function(resultado, dir_salida = NULL, prefijo = NULL, fo
   
   if (is.null(dir_salida)) {
     dir_salida <- ruta_peruocc("processed")
+  }
+  if (is.null(dir_salida)) {
+    cli::cli_abort("Debe especificar {.arg dir_salida} (por ejemplo, {.code dir_salida = tempdir()}) o configurar previamente {.fn peruocc_data_dir}.")
   }
   dir.create(dir_salida, recursive = TRUE, showWarnings = FALSE)
   
