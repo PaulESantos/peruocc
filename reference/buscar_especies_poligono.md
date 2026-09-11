@@ -17,6 +17,7 @@ buscar_especies_poligono(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
+  dir_salida = NULL,
   tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
   estrategia_espacial = c("auto", "directa", "segmentada"),
   max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
@@ -60,6 +61,10 @@ buscar_especies_poligono(
   Lógico. Con `TRUE` exporta los resultados en la carpeta `processed/`
   configurada con
   [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md).
+
+- dir_salida:
+
+  Ruta de destino si `guardar_resultados = TRUE`.
 
 - tolerancia_simplificacion:
 

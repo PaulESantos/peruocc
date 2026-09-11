@@ -39,11 +39,12 @@ flujo espacial en 5 fases:
 
 ------------------------------------------------------------------------
 
-## 1. Extracción de Geometrías y Caché Departamental
+## 1. Extracción de Geometrías y Caché en Memoria
 
-Para evitar descargas repetitivas y lentas desde la infraestructura de
-datos espaciales, `peruocc` descarga los límites departamentales una
-sola vez y los almacena en archivos locales binarios `.rds`:
+Para optimizar las consultas y evitar descargas repetitivas desde la
+infraestructura de datos espaciales, `peruocc` descarga los límites
+departamentales una sola vez y los almacena en memoria RAM durante la
+sesión:
 
 ``` r
 
@@ -53,8 +54,6 @@ library(peruocc)
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
 #> ✔ sf      1.1.2   • Operaciones geométricas y filtros espaciales
-# Configurar directorio donde se guardarán caché, resultados y manifiestos
-peruocc_data_dir("peruocc-output")
 
 # Obtener la geometría oficial de un distrito
 distrito_sf <- obtener_poligono_distrito(
@@ -62,7 +61,7 @@ distrito_sf <- obtener_poligono_distrito(
   departamento = "Cusco",
   provincia = "Urubamba"
 )
-#> ℹ Cargando límites de CUSCO desde el caché local...
+#> ℹ Descargando límites de CUSCO vía geoperu...
 
 distrito_sf
 #> Simple feature collection with 1 feature and 4 fields
@@ -87,7 +86,7 @@ provincia_sf <- obtener_poligono_provincia(
   provincia = "Tambopata",
   departamento = "Madre de Dios"
 )
-#> ℹ Cargando límites de MADRE DE DIOS desde el caché local...
+#> ℹ Descargando límites de MADRE DE DIOS vía geoperu...
 
 provincia_sf
 #> Simple feature collection with 1 feature and 3 fields

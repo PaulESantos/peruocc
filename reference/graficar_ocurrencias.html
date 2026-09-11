@@ -55,7 +55,8 @@ exploratoria y control de calidad de coordenadas, no para cartografía final.</p
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">graficar_ocurrencias</span><span class="op">(</span></span>
 <span>  <span class="va">resultado_lista</span>,</span>
 <span>  color_por <span class="op">=</span> <span class="st">"source"</span>,</span>
-<span>  guardar_mapa <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  guardar_mapa <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ruta_salida <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -78,7 +79,14 @@ admitidos son <code>"source"</code> (GBIF/iNaturalist, predeterminado) y <code>"
 
 <dt id="arg-guardar-mapa">guardar_mapa<a class="anchor" aria-label="anchor" href="#arg-guardar-mapa"></a></dt>
 <dd><p>Lógico de longitud uno. Si es <code>TRUE</code>, además devuelve el
-gráfico y lo guarda como PNG en <code>results/</code> dentro de <code><a href="peruocc_data_dir.html">peruocc_data_dir()</a></code>.</p></dd>
+gráfico y lo guarda como PNG. Requiere especificar <code>ruta_salida</code> o haber
+configurado <code><a href="peruocc_data_dir.html">peruocc_data_dir()</a></code>.</p></dd>
+
+
+<dt id="arg-ruta-salida">ruta_salida<a class="anchor" aria-label="anchor" href="#arg-ruta-salida"></a></dt>
+<dd><p>Ruta completa de archivo donde guardar la imagen PNG
+cuando <code>guardar_mapa = TRUE</code>. Si es <code>NULL</code> y <code><a href="peruocc_data_dir.html">peruocc_data_dir()</a></code> está
+configurado, se genera automáticamente en la subcarpeta <code>results/</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -100,7 +108,7 @@ gráfico y lo guarda como PNG en <code>results/</code> dentro de <code><a href="
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Paul Efren Santos Andrade.</p>
+  <p>Developed by <a href="https://paulefrensa.rbind.io/" class="external-link">Paul E. Santos Andrade</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

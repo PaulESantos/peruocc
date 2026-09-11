@@ -67,6 +67,7 @@ de nuevo.</p>
 <span>  grupo <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limite_por_api <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">limite_por_api</span>,</span>
 <span>  guardar_resultados <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  dir_salida <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tolerancia_simplificacion <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">tolerancia_simplificacion_m</span>,</span>
 <span>  estrategia_espacial <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"directa"</span>, <span class="st">"segmentada"</span><span class="op">)</span>,</span>
 <span>  max_area_ha <span class="op">=</span> <span class="fu">configuracion_predeterminada</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">max_area_ha_por_lote</span>,</span>
@@ -116,14 +117,17 @@ traduce a Plantae o Animalia. Puede combinarse con <code>nombre_cientifico</code
 <dt id="arg-limite-por-api">limite_por_api<a class="anchor" aria-label="anchor" href="#arg-limite-por-api"></a></dt>
 <dd><p>Entero entre 1 y 10000, o <code>NULL</code>. Es el máximo por
 fuente y lote, no el máximo final consolidado. <code>NULL</code> solicita descarga
-completa solo cuando cada API informa un conteo dentro de su capacidad;
-puede ser lento y detenerse para consultas demasiado grandes.</p></dd>
+completa solo cuando cada API informa un conteo dentro de su capacidad;</p></dd>
 
 
 <dt id="arg-guardar-resultados">guardar_resultados<a class="anchor" aria-label="anchor" href="#arg-guardar-resultados"></a></dt>
 <dd><p>Lógico. Si es <code>TRUE</code>, ejecuta
 <code><a href="exportar_resultados.html">exportar_resultados()</a></code> al final. No sobrescribe resultados previos porque
 genera un identificador temporal nuevo.</p></dd>
+
+
+<dt id="arg-dir-salida">dir_salida<a class="anchor" aria-label="anchor" href="#arg-dir-salida"></a></dt>
+<dd><p>Ruta de destino si <code>guardar_resultados = TRUE</code>.</p></dd>
 
 
 <dt id="arg-tolerancia-simplificacion">tolerancia_simplificacion<a class="anchor" aria-label="anchor" href="#arg-tolerancia-simplificacion"></a></dt>
@@ -189,7 +193,7 @@ completa.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Paul Efren Santos Andrade.</p>
+  <p>Developed by <a href="https://paulefrensa.rbind.io/" class="external-link">Paul E. Santos Andrade</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

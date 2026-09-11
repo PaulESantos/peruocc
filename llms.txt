@@ -631,7 +631,7 @@ entorno de trabajo y almacenamiento en caché.
 - [`verificar_y_configurar_entorno()`](https://paulesantos.github.io/peruocc/reference/verificar_y_configurar_entorno.md)
   :
 
-  Verifica y, opcionalmente, instala las dependencias de `peruocc`
+  Verifica las dependencias de `peruocc`
 
 - [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md)
   [`peruspecies_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md)

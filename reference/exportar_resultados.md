@@ -25,9 +25,12 @@ exportar_resultados(
 
 - dir_salida:
 
-  Ruta de destino. Si es `NULL`, usa `processed/` dentro de
+  Ruta del directorio de destino. Si es `NULL`, usa `processed/` dentro
+  de
   [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md).
-  Se crea junto con sus padres si no existe.
+  Si no se ha configurado un directorio, debe especificarse
+  explícitamente (por ejemplo,
+  [`tempdir()`](https://rdrr.io/r/base/tempfile.html)).
 
 - prefijo:
 
@@ -51,6 +54,6 @@ posibles son `csv`, `geojson` y `manifiesto`.
 ``` r
 if (FALSE) { # \dontrun{
 resultado <- buscar_especies_distrito("Miraflores", departamento = "Lima")
-exportar_resultados(resultado, formatos = c("csv", "manifiesto"))
+exportar_resultados(resultado, dir_salida = tempdir(), formatos = c("csv", "manifiesto"))
 } # }
 ```

@@ -73,9 +73,9 @@ contener al menos <code>ocurrencias</code>, <code>resumen</code>, <code>parametr
 
 
 <dt id="arg-dir-salida">dir_salida<a class="anchor" aria-label="anchor" href="#arg-dir-salida"></a></dt>
-<dd><p>Ruta de destino. Si es <code>NULL</code>, usa
-<code>processed/</code> dentro de <code><a href="peruocc_data_dir.html">peruocc_data_dir()</a></code>. Se crea junto con sus padres si
-no existe.</p></dd>
+<dd><p>Ruta del directorio de destino. Si es <code>NULL</code>, usa
+<code>processed/</code> dentro de <code><a href="peruocc_data_dir.html">peruocc_data_dir()</a></code>. Si no se ha configurado un
+directorio, debe especificarse explícitamente (por ejemplo, <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code>).</p></dd>
 
 
 <dt id="arg-prefijo">prefijo<a class="anchor" aria-label="anchor" href="#arg-prefijo"></a></dt>
@@ -100,7 +100,7 @@ posibles son <code>csv</code>, <code>geojson</code> y <code>manifiesto</code>.</
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">resultado</span> <span class="op">&lt;-</span> <span class="fu"><a href="buscar_especies_distrito.html">buscar_especies_distrito</a></span><span class="op">(</span><span class="st">"Miraflores"</span>, departamento <span class="op">=</span> <span class="st">"Lima"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">exportar_resultados</span><span class="op">(</span><span class="va">resultado</span>, formatos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"csv"</span>, <span class="st">"manifiesto"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">exportar_resultados</span><span class="op">(</span><span class="va">resultado</span>, dir_salida <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, formatos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"csv"</span>, <span class="st">"manifiesto"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
@@ -109,7 +109,7 @@ posibles son <code>csv</code>, <code>geojson</code> y <code>manifiesto</code>.</
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Paul Efren Santos Andrade.</p>
+  <p>Developed by <a href="https://paulefrensa.rbind.io/" class="external-link">Paul E. Santos Andrade</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

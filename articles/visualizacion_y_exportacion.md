@@ -23,8 +23,9 @@ reproducibilidad). 4. La visualización cartográfica con
 
 La función
 [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md)
-centraliza la ubicación en el disco donde se almacenarán tanto las capas
-espaciales descargadas en caché como los resultados exportados.
+permite centralizar opcionalmente la ubicación en el disco donde se
+almacenarán capas espaciales descargadas en caché y los resultados
+exportados.
 
 ``` r
 
@@ -34,34 +35,38 @@ library(peruocc)
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
 #> ✔ sf      1.1.2   • Operaciones geométricas y filtros espaciales
+```
 
-# Configurar el directorio raíz del proyecto para artefactos
-peruocc_data_dir("peruocc-output")
+``` r
+
+# Configurar el directorio raíz del proyecto para artefactos (opcional)
+peruocc_data_dir("mi-carpeta-proyecto")
 ```
 
 ### ¿Por qué es útil y cómo funciona?
 
 - **Control y Orden del Proyecto**: Mantiene todas las salidas y capas
-  auxiliares organizadas en una única carpeta (por ejemplo,
-  `./peruocc-output/`) en lugar de dispersarlas en la raíz de trabajo.
-- **Caché Inteligente de Geometrías**: Al descargar límites distritales
-  o departamentales oficiales (vía `geoperu`), el paquete guarda copias
-  `.rds` en `peruocc-output/cache/`. Las siguientes consultas a esa
-  misma zona cargarán la geometría instantáneamente sin volver a
-  descargarla de internet.
+  auxiliares organizadas en una única carpeta personalizada en lugar de
+  dispersarlas en la raíz de trabajo.
+- **Caché Opcional de Geometrías**: Al configurar una ruta, el paquete
+  guarda copias `.rds` en `cache/`. Las siguientes consultas a esa misma
+  zona cargarán la geometría instantáneamente sin volver a descargarla
+  de internet.
 - **Configuración Global Transparente**: Al ejecutar
-  `peruocc_data_dir("peruocc-output")`, la ruta se guarda en las
-  opciones de R (`options(peruocc.data_dir = ...)`). Todas las demás
-  funciones del paquete sabrán automáticamente dónde leer y escribir.
+  [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md),
+  la ruta se guarda en las opciones de R
+  (`options(peruocc.data_dir = ...)`).
 
 ### ¿Qué ocurre si NO ejecuto `peruocc_data_dir()`?
 
 **No habrá ningún error y las consultas funcionarán con normalidad.** \*
-**Caché**: `peruocc` recurrirá de forma transparente al directorio
-estándar de caché del sistema operativo
-(`tools::R_user_dir("peruocc", which = "cache")`). \* **Exportaciones**:
-Si decides exportar archivos más adelante, se creará por defecto la
-carpeta `./peruocc/processed/` en tu directorio de trabajo.
+**Caché**: `peruocc` almacena las capas en la memoria RAM de la sesión
+(`.peruocc_mem_cache`), garantizando cero escrituras en disco no
+solicitadas. \* **Exportaciones**: Si decides exportar archivos más
+adelante con
+[`exportar_resultados()`](https://paulesantos.github.io/peruocc/reference/exportar_resultados.md),
+simplemente indica la carpeta deseada mediante el argumento `dir_salida`
+(por ejemplo, `dir_salida = tempdir()`).
 
 ------------------------------------------------------------------------
 

@@ -30,9 +30,6 @@ library(peruocc)
 #> ✔ sf      1.1.2   • Operaciones geométricas y filtros espaciales
 library(sf)
 library(ggplot2)
-
-# Configurar el directorio de trabajo para artefactos y caché
-peruocc_data_dir("peruocc-output")
 ```
 
 ------------------------------------------------------------------------
@@ -300,11 +297,11 @@ resultado_desde_archivo <- buscar_especies_poligono(
 #> • iNaturalist: 15 registro(s)
 #> ✔ Total consolidado: 30 registro(s)
 
-# 3. Exportar resultados con manifiesto de reproducibilidad
-exportar_resultados(resultado_desde_archivo)
-#> ✔ Registros tabulares guardados en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260829T165142Z_poligono_reservalocal_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260829T165142Z_poligono_reservalocal_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260829T165142Z_poligono_reservalocal_flora.json
+# 3. Exportar resultados con manifiesto de reproducibilidad en directorio temporal
+archivos_exportados <- exportar_resultados(resultado_desde_archivo, dir_salida = tempdir())
+#> ✔ Registros tabulares guardados en: /tmp/RtmpalcRIP/ocurrencias_20260911T030604Z_poligono_reservalocal_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpalcRIP/ocurrencias_20260911T030604Z_poligono_reservalocal_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /tmp/RtmpalcRIP/manifiesto_20260911T030604Z_poligono_reservalocal_flora.json
 ```
 
 ------------------------------------------------------------------------

@@ -11,7 +11,8 @@ cartografía final.
 graficar_ocurrencias(
   resultado_lista,
   color_por = "source",
-  guardar_mapa = FALSE
+  guardar_mapa = FALSE,
+  ruta_salida = NULL
 )
 ```
 
@@ -36,8 +37,17 @@ graficar_ocurrencias(
 - guardar_mapa:
 
   Lógico de longitud uno. Si es `TRUE`, además devuelve el gráfico y lo
-  guarda como PNG en `results/` dentro de
+  guarda como PNG. Requiere especificar `ruta_salida` o haber
+  configurado
   [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md).
+
+- ruta_salida:
+
+  Ruta completa de archivo donde guardar la imagen PNG cuando
+  `guardar_mapa = TRUE`. Si es `NULL` y
+  [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md)
+  está configurado, se genera automáticamente en la subcarpeta
+  `results/`.
 
 ## Value
 

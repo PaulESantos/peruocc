@@ -2,7 +2,9 @@
 
 ## Authors
 
-- **Paul Efren Santos Andrade**. Author, maintainer, copyright holder.
+- **[Paul E. Santos Andrade](https://paulefrensa.rbind.io/)**. Author,
+  maintainer, copyright holder.
+  [](https://orcid.org/0000-0002-6635-0375)
 
 ## Citation
 
@@ -15,7 +17,7 @@ Occurrences in Peru*. R package version 0.1.0,
 
     @Manual{,
       title = {peruocc: Query and Standardize Biodiversity Occurrences in Peru},
-      author = {Paul Efren {Santos Andrade}},
+      author = {Paul E. {Santos Andrade}},
       year = {2026},
       note = {R package version 0.1.0},
       url = {https://paulesantos.github.io/peruocc/},

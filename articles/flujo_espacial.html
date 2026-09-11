@@ -109,12 +109,12 @@ topológica y los falsos positivos en los bordes perimetrales.
 <hr>
 </div>
 <div class="section level2">
-<h2 id="extracción-de-geometrías-y-caché-departamental">1. Extracción de Geometrías y Caché Departamental<a class="anchor" aria-label="anchor" href="#extracci%C3%B3n-de-geometr%C3%ADas-y-cach%C3%A9-departamental"></a>
+<h2 id="extracción-de-geometrías-y-caché-en-memoria">1. Extracción de Geometrías y Caché en Memoria<a class="anchor" aria-label="anchor" href="#extracci%C3%B3n-de-geometr%C3%ADas-y-cach%C3%A9-en-memoria"></a>
 </h2>
-<p>Para evitar descargas repetitivas y lentas desde la infraestructura
-de datos espaciales, <code>peruocc</code> descarga los límites
-departamentales una sola vez y los almacena en archivos locales binarios
-<code>.rds</code>:</p>
+<p>Para optimizar las consultas y evitar descargas repetitivas desde la
+infraestructura de datos espaciales, <code>peruocc</code> descarga los
+límites departamentales una sola vez y los almacena en memoria RAM
+durante la sesión:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Cargando peruocc</span> ────────────────────────────────────────────────── v0.1.0 ──</span></span>
@@ -122,8 +122,6 @@ departamentales una sola vez y los almacena en archivos locales binarios
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rgbif  </span> 3.8.5   <span style="color: #555555;">• Extracción de ocurrencias desde GBIF</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rinat  </span> 0.1.10  <span style="color: #555555;">• Observaciones ciudadanas de iNaturalist</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">sf     </span> 1.1.2   <span style="color: #555555;">• Operaciones geométricas y filtros espaciales</span></span></span>
-<span><span class="co"># Configurar directorio donde se guardarán caché, resultados y manifiestos</span></span>
-<span><span class="fu"><a href="../reference/peruocc_data_dir.html">peruocc_data_dir</a></span><span class="op">(</span><span class="st">"peruocc-output"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Obtener la geometría oficial de un distrito</span></span>
 <span><span class="va">distrito_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/obtener_poligono_distrito.html">obtener_poligono_distrito</a></span><span class="op">(</span></span>
@@ -131,7 +129,7 @@ departamentales una sola vez y los almacena en archivos locales binarios
 <span>  departamento <span class="op">=</span> <span class="st">"Cusco"</span>,</span>
 <span>  provincia <span class="op">=</span> <span class="st">"Urubamba"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Cargando límites de <span style="font-weight: bold;">CUSCO</span> desde el caché local...</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Descargando límites de <span style="font-weight: bold;">CUSCO</span> vía <span style="color: #0000BB;">geoperu</span>...</span></span>
 <span></span>
 <span><span class="va">distrito_sf</span></span>
 <span><span class="co">#&gt; Simple feature collection with 1 feature and 4 fields</span></span>
@@ -153,7 +151,7 @@ constituyentes y realiza una unión espacial
 <span>  provincia <span class="op">=</span> <span class="st">"Tambopata"</span>,</span>
 <span>  departamento <span class="op">=</span> <span class="st">"Madre de Dios"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Cargando límites de <span style="font-weight: bold;">MADRE DE DIOS</span> desde el caché local...</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Descargando límites de <span style="font-weight: bold;">MADRE DE DIOS</span> vía <span style="color: #0000BB;">geoperu</span>...</span></span>
 <span></span>
 <span><span class="va">provincia_sf</span></span>
 <span><span class="co">#&gt; Simple feature collection with 1 feature and 3 fields</span></span>
@@ -295,7 +293,7 @@ Ocurrencias con Polígonos Personalizados</a></strong></li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Paul Efren Santos Andrade.</p>
+  <p>Developed by <a href="https://paulefrensa.rbind.io/" class="external-link">Paul E. Santos Andrade</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -101,10 +101,7 @@ geometrías vectoriales:</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rinat  </span> 0.1.10  <span style="color: #555555;">• Observaciones ciudadanas de iNaturalist</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">sf     </span> 1.1.2   <span style="color: #555555;">• Operaciones geométricas y filtros espaciales</span></span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Configurar el directorio de trabajo para artefactos y caché</span></span>
-<span><span class="fu"><a href="../reference/peruocc_data_dir.html">peruocc_data_dir</a></span><span class="op">(</span><span class="st">"peruocc-output"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -352,11 +349,11 @@ ruta:</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> iNaturalist: <span style="color: #0000BB;">15</span> registro(s)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Total consolidado: <span style="font-weight: bold;">30</span> registro(s)</span></span>
 <span></span>
-<span><span class="co"># 3. Exportar resultados con manifiesto de reproducibilidad</span></span>
-<span><span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado_desde_archivo</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260829T165142Z_poligono_reservalocal_flora.csv</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/ocurrencias_20260829T165142Z_poligono_reservalocal_flora.geojson</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/home/runner/work/peruocc/peruocc/vignettes/peruocc-output/processed/manifiesto_20260829T165142Z_poligono_reservalocal_flora.json</span></span></span></code></pre></div>
+<span><span class="co"># 3. Exportar resultados con manifiesto de reproducibilidad en directorio temporal</span></span>
+<span><span class="va">archivos_exportados</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado_desde_archivo</span>, dir_salida <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/tmp/RtmpalcRIP/ocurrencias_20260911T030604Z_poligono_reservalocal_flora.csv</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/tmp/RtmpalcRIP/ocurrencias_20260911T030604Z_poligono_reservalocal_flora.geojson</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/tmp/RtmpalcRIP/manifiesto_20260911T030604Z_poligono_reservalocal_flora.json</span></span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -380,7 +377,7 @@ Exportación y Visualización</a></strong>: Integración con SIG
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Paul Efren Santos Andrade.</p>
+  <p>Developed by <a href="https://paulefrensa.rbind.io/" class="external-link">Paul E. Santos Andrade</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

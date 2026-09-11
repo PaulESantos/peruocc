@@ -18,6 +18,7 @@ buscar_especies_peru(
   grupo = NULL,
   limite_por_api = configuracion_predeterminada()$limite_por_api,
   guardar_resultados = FALSE,
+  dir_salida = NULL,
   tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
   estrategia_espacial = c("auto", "directa", "segmentada"),
   max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
@@ -66,8 +67,7 @@ buscar_especies_peru(
 
   Entero entre 1 y 10000, o `NULL`. Es el máximo por fuente y lote, no
   el máximo final consolidado. `NULL` solicita descarga completa solo
-  cuando cada API informa un conteo dentro de su capacidad; puede ser
-  lento y detenerse para consultas demasiado grandes.
+  cuando cada API informa un conteo dentro de su capacidad;
 
 - guardar_resultados:
 
@@ -75,6 +75,10 @@ buscar_especies_peru(
   [`exportar_resultados()`](https://paulesantos.github.io/peruocc/reference/exportar_resultados.md)
   al final. No sobrescribe resultados previos porque genera un
   identificador temporal nuevo.
+
+- dir_salida:
+
+  Ruta de destino si `guardar_resultados = TRUE`.
 
 - tolerancia_simplificacion:
 
