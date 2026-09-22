@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peruocc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -175,7 +175,7 @@ disuelve automáticamente las geometrías distritales):</p>
 <span><span class="co">#&gt; • Grupo: fauna</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Procesando 10 lotes espaciales (distritos): <span style="color: #0000BB;">"MARAS"</span>, <span style="color: #0000BB;">"HUAYLLABAMBA"</span>, <span style="color: #0000BB;">"YUCAY"</span>, <span style="color: #0000BB;">"CHINCHERO"</span>, <span style="color: #0000BB;">"OLLANTAYTAMBO"</span>, <span style="color: #0000BB;">"MACHUPICCHU"</span>, and <span style="color: #0000BB;">"URUBAMBA"</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1213 caracteres).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 1/10 [MARAS]: 190 (GBIF) + 96 (iNat) = 286 registros.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 1/10 [MARAS]: 190 (GBIF) + 97 (iNat) = 287 registros.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1211 caracteres).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 2/10 [HUAYLLABAMBA]: 200 (GBIF) + 102 (iNat) = 302 registros.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 608 caracteres).</span></span>
@@ -193,13 +193,13 @@ disuelve automáticamente las geometrías distritales):</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 9/10 [MACHUPICCHU]: 200 (GBIF) + 191 (iNat) = 391 registros.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1466 caracteres).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 10/10 [URUBAMBA]: 200 (GBIF) + 175 (iNat) = 375 registros.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Consolidación exitosa. Total de registros unificados: <span style="font-weight: bold;">2818</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Consolidación exitosa. Total de registros unificados: <span style="font-weight: bold;">2819</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Resumen de Registros</span> ──</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> GBIF: <span style="color: #0000BB;">1763</span> registro(s)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> iNaturalist: <span style="color: #0000BB;">1055</span> registro(s)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Total consolidado: <span style="font-weight: bold;">2818</span> registro(s)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> iNaturalist: <span style="color: #0000BB;">1056</span> registro(s)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Total consolidado: <span style="font-weight: bold;">2819</span> registro(s)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="filtro-por-especie-o-taxón-específico">3. Filtro por Especie o Taxón Específico<a class="anchor" aria-label="anchor" href="#filtro-por-especie-o-tax%C3%B3n-espec%C3%ADfico"></a>
@@ -332,9 +332,9 @@ reproducibilidad), especifica el directorio de destino mediante
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Exportar resultados a un directorio (por ejemplo, temporal para la viñeta)</span></span>
 <span><span class="va">archivos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado_cusco</span>, dir_salida <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/tmp/RtmpLhSpvi/ocurrencias_20260922T022624Z_distrito_cusco_flora.csv</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/tmp/RtmpLhSpvi/ocurrencias_20260922T022624Z_distrito_cusco_flora.geojson</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/tmp/RtmpLhSpvi/manifiesto_20260922T022624Z_distrito_cusco_flora.json</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/tmp/Rtmpf1tpM7/ocurrencias_20260922T033706Z_distrito_cusco_flora.csv</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/tmp/Rtmpf1tpM7/ocurrencias_20260922T033706Z_distrito_cusco_flora.geojson</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/tmp/Rtmpf1tpM7/manifiesto_20260922T033706Z_distrito_cusco_flora.json</span></span></span></code></pre></div>
 <hr>
 </div>
 </div>

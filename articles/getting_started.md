@@ -111,7 +111,7 @@ resultado_urubamba <- buscar_especies_provincia(
 #> • Grupo: fauna
 #> ℹ Procesando 10 lotes espaciales (distritos): "MARAS", "HUAYLLABAMBA", "YUCAY", "CHINCHERO", "OLLANTAYTAMBO", "MACHUPICCHU", and "URUBAMBA"
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1213 caracteres).
-#> ✔ Lote 1/10 [MARAS]: 190 (GBIF) + 96 (iNat) = 286 registros.
+#> ✔ Lote 1/10 [MARAS]: 190 (GBIF) + 97 (iNat) = 287 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1211 caracteres).
 #> ✔ Lote 2/10 [HUAYLLABAMBA]: 200 (GBIF) + 102 (iNat) = 302 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 608 caracteres).
@@ -129,13 +129,13 @@ resultado_urubamba <- buscar_especies_provincia(
 #> ✔ Lote 9/10 [MACHUPICCHU]: 200 (GBIF) + 191 (iNat) = 391 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1466 caracteres).
 #> ✔ Lote 10/10 [URUBAMBA]: 200 (GBIF) + 175 (iNat) = 375 registros.
-#> ✔ Consolidación exitosa. Total de registros unificados: 2818
+#> ✔ Consolidación exitosa. Total de registros unificados: 2819
 #> 
 #> ── Resumen de Registros ──
 #> 
 #> • GBIF: 1763 registro(s)
-#> • iNaturalist: 1055 registro(s)
-#> ✔ Total consolidado: 2818 registro(s)
+#> • iNaturalist: 1056 registro(s)
+#> ✔ Total consolidado: 2819 registro(s)
 ```
 
 ### 3. Filtro por Especie o Taxón Específico
@@ -242,9 +242,9 @@ destino mediante `dir_salida`:
 
 # Exportar resultados a un directorio (por ejemplo, temporal para la viñeta)
 archivos <- exportar_resultados(resultado_cusco, dir_salida = tempdir())
-#> ✔ Registros tabulares guardados en: /tmp/RtmpLhSpvi/ocurrencias_20260922T022624Z_distrito_cusco_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpLhSpvi/ocurrencias_20260922T022624Z_distrito_cusco_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /tmp/RtmpLhSpvi/manifiesto_20260922T022624Z_distrito_cusco_flora.json
+#> ✔ Registros tabulares guardados en: /tmp/Rtmpf1tpM7/ocurrencias_20260922T033706Z_distrito_cusco_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /tmp/Rtmpf1tpM7/ocurrencias_20260922T033706Z_distrito_cusco_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /tmp/Rtmpf1tpM7/manifiesto_20260922T033706Z_distrito_cusco_flora.json
 ```
 
 ------------------------------------------------------------------------

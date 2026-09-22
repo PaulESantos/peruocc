@@ -299,9 +299,9 @@ resultado_desde_archivo <- buscar_especies_poligono(
 
 # 3. Exportar resultados con manifiesto de reproducibilidad en directorio temporal
 archivos_exportados <- exportar_resultados(resultado_desde_archivo, dir_salida = tempdir())
-#> ✔ Registros tabulares guardados en: /tmp/RtmpStvpPo/ocurrencias_20260922T022527Z_poligono_reservalocal_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpStvpPo/ocurrencias_20260922T022527Z_poligono_reservalocal_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /tmp/RtmpStvpPo/manifiesto_20260922T022527Z_poligono_reservalocal_flora.json
+#> ✔ Registros tabulares guardados en: /tmp/RtmpJfPRRS/ocurrencias_20260922T033610Z_poligono_reservalocal_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpJfPRRS/ocurrencias_20260922T033610Z_poligono_reservalocal_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /tmp/RtmpJfPRRS/manifiesto_20260922T033610Z_poligono_reservalocal_flora.json
 ```
 
 ------------------------------------------------------------------------
