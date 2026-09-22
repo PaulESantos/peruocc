@@ -6,10 +6,14 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/PaulESantos/peruocc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/PaulESantos/peruocc/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/PaulESantos/peruocc/branch/main/graph/badge.svg)](https://app.codecov.io/gh/PaulESantos/peruocc?branch=main)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/peruocc)](https://CRAN.R-project.org/package=peruocc)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/peruocc?color=green)](https://cran.r-project.org/package=peruocc)
+[![](https://cranlogs.r-pkg.org/badges/last-week/peruocc?color=green)](https://cran.r-project.org/package=peruocc)
 <!-- badges: end -->
 
 `peruocc` es un paquete y conjunto de herramientas en R diseñado para
@@ -26,7 +30,7 @@ dentro del área de interés.
 
 ------------------------------------------------------------------------
 
-## ⚡ Inicio Rápido (Quickstart)
+## Inicio Rápido
 
 ``` r
 library(peruocc)
@@ -179,7 +183,7 @@ library(peruocc)
 #> ✔ geoperu 0.0.2   • Límites cartográficos oficiales del Perú
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
-#> ✔ sf      1.1.1   • Operaciones geométricas y filtros espaciales
+#> ✔ sf      1.1.3   • Operaciones geométricas y filtros espaciales
 
 # Configurar directorio donde se guardarán caché, resultados y manifiestos
 peruocc_data_dir("peruocc-output")
@@ -214,26 +218,16 @@ res_distrito <- buscar_especies_peru(
 #> • Provincia: Cusco
 #> • Grupo: flora
 #> ℹ Cargando límites de CUSCO desde el caché local...
-#> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
-#> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1153 caracteres).
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
-#> ℹ [GBIF] Consultando registros dentro del polígono de CUSCO (límite: "200")...
-#> ✔ [GBIF] Búsqueda finalizada. Se filtraron 200 registro(s) que caen dentro del polígono seleccionado.
-#> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
-#> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
-#> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de CUSCO (límite: "200")...
-#> ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 165 de 200 registros caen dentro del polígono seleccionado.
-#> ✔ Consolidación exitosa. Total de registros unificados: 365
+#> ✔ Consolidación exitosa. Total de registros unificados: 362
 #> 
 #> ── Resumen de Registros ──
 #> 
 #> • GBIF: 200 registro(s)
-#> • iNaturalist: 165 registro(s)
-#> ✔ Total consolidado: 365 registro(s)
+#> • iNaturalist: 162 registro(s)
+#> ✔ Total consolidado: 362 registro(s)
 
 res_distrito$ocurrencias 
-#> # A tibble: 365 × 24
+#> # A tibble: 362 × 24
 #>    occurrenceID sourceRecordID sourceURL datasetKey license  basisOfRecord
 #>    <chr>        <chr>          <chr>     <chr>      <chr>    <chr>        
 #>  1 5938706538   5938706538     https://… 50c9509d-… http://… HUMAN_OBSERV…
@@ -246,7 +240,7 @@ res_distrito$ocurrencias
 #>  8 6133055337   6133055337     https://… 50c9509d-… http://… HUMAN_OBSERV…
 #>  9 6133273135   6133273135     https://… 50c9509d-… http://… HUMAN_OBSERV…
 #> 10 6159246603   6159246603     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#> # ℹ 355 filas más
+#> # ℹ 352 filas más
 #> # ℹ 18 variables más: scientificName <chr>, decimalLatitude <dbl>,
 #> #   decimalLongitude <dbl>, eventDate <chr>, taxonRank <chr>, kingdom <chr>,
 #> #   phylum <chr>, class <chr>, order <chr>, family <chr>, genus <chr>,
@@ -267,24 +261,24 @@ res_provincia <- buscar_especies_peru(
 #> • Departamento: Cusco
 #> • Grupo: fauna
 #> ℹ Procesando 8 lotes espaciales (distritos): "SANTIAGO", "WANCHAQ", "CCORCA", "SAN SEBASTIAN", "SAYLLA", "POROY", "SAN JERONIMO", and "CUSCO"
-#> ℹ Lote 1/8 [SANTIAGO]: recuperado de checkpoint (287 registros).
-#> ℹ Lote 2/8 [WANCHAQ]: recuperado de checkpoint (295 registros).
+#> ℹ Lote 1/8 [SANTIAGO]: recuperado de checkpoint (276 registros).
+#> ℹ Lote 2/8 [WANCHAQ]: recuperado de checkpoint (302 registros).
 #> ℹ Lote 3/8 [CCORCA]: recuperado de checkpoint (203 registros).
 #> ℹ Lote 4/8 [SAN SEBASTIAN]: recuperado de checkpoint (216 registros).
-#> ℹ Lote 5/8 [SAYLLA]: recuperado de checkpoint (229 registros).
+#> ℹ Lote 5/8 [SAYLLA]: recuperado de checkpoint (231 registros).
 #> ℹ Lote 6/8 [POROY]: recuperado de checkpoint (204 registros).
-#> ℹ Lote 7/8 [SAN JERONIMO]: recuperado de checkpoint (342 registros).
-#> ℹ Lote 8/8 [CUSCO]: recuperado de checkpoint (365 registros).
-#> ✔ Consolidación exitosa. Total de registros unificados: 2141
+#> ℹ Lote 7/8 [SAN JERONIMO]: recuperado de checkpoint (344 registros).
+#> ℹ Lote 8/8 [CUSCO]: recuperado de checkpoint (371 registros).
+#> ✔ Consolidación exitosa. Total de registros unificados: 2147
 #> 
 #> ── Resumen de Registros ──
 #> 
 #> • GBIF: 1597 registro(s)
-#> • iNaturalist: 544 registro(s)
-#> ✔ Total consolidado: 2141 registro(s)
+#> • iNaturalist: 550 registro(s)
+#> ✔ Total consolidado: 2147 registro(s)
 
 res_provincia$ocurrencias 
-#> # A tibble: 2,141 × 24
+#> # A tibble: 2,147 × 24
 #>    occurrenceID sourceRecordID sourceURL datasetKey license  basisOfRecord
 #>    <chr>        <chr>          <chr>     <chr>      <chr>    <chr>        
 #>  1 6130955903   6130955903     https://… 50c9509d-… http://… HUMAN_OBSERV…
@@ -297,7 +291,7 @@ res_provincia$ocurrencias
 #>  8 6414124325   6414124325     https://… 50c9509d-… http://… HUMAN_OBSERV…
 #>  9 6481433622   6481433622     https://… 50c9509d-… http://… HUMAN_OBSERV…
 #> 10 5087130717   5087130717     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#> # ℹ 2,131 filas más
+#> # ℹ 2,137 filas más
 #> # ℹ 18 variables más: scientificName <chr>, decimalLatitude <dbl>,
 #> #   decimalLongitude <dbl>, eventDate <chr>, taxonRank <chr>, kingdom <chr>,
 #> #   phylum <chr>, class <chr>, order <chr>, family <chr>, genus <chr>,
@@ -371,25 +365,25 @@ resultado_prov <- buscar_especies_provincia(
 #> • Departamento: Cusco
 #> • Grupo: flora
 #> ℹ Procesando 10 lotes espaciales (distritos): "MARAS", "HUAYLLABAMBA", "YUCAY", "CHINCHERO", "OLLANTAYTAMBO", "MACHUPICCHU", and "URUBAMBA"
-#> ℹ Lote 1/10 [MARAS]: recuperado de checkpoint (490 registros).
-#> ℹ Lote 2/10 [HUAYLLABAMBA]: recuperado de checkpoint (443 registros).
-#> ℹ Lote 3/10 [YUCAY]: recuperado de checkpoint (436 registros).
-#> ℹ Lote 4/10 [CHINCHERO]: recuperado de checkpoint (529 registros).
-#> ℹ Lote 5/10 [OLLANTAYTAMBO]: recuperado de checkpoint (239 registros).
-#> ℹ Lote 6/10 [OLLANTAYTAMBO]: recuperado de checkpoint (496 registros).
+#> ℹ Lote 1/10 [MARAS]: recuperado de checkpoint (493 registros).
+#> ℹ Lote 2/10 [HUAYLLABAMBA]: recuperado de checkpoint (441 registros).
+#> ℹ Lote 3/10 [YUCAY]: recuperado de checkpoint (437 registros).
+#> ℹ Lote 4/10 [CHINCHERO]: recuperado de checkpoint (525 registros).
+#> ℹ Lote 5/10 [OLLANTAYTAMBO]: recuperado de checkpoint (261 registros).
+#> ℹ Lote 6/10 [OLLANTAYTAMBO]: recuperado de checkpoint (511 registros).
 #> ℹ Lote 7/10 [OLLANTAYTAMBO]: recuperado de checkpoint (126 registros).
-#> ℹ Lote 8/10 [OLLANTAYTAMBO]: recuperado de checkpoint (495 registros).
-#> ℹ Lote 9/10 [MACHUPICCHU]: recuperado de checkpoint (585 registros).
-#> ℹ Lote 10/10 [URUBAMBA]: recuperado de checkpoint (512 registros).
-#> ✔ Consolidación exitosa. Total de registros unificados: 4351
+#> ℹ Lote 8/10 [OLLANTAYTAMBO]: recuperado de checkpoint (496 registros).
+#> ℹ Lote 9/10 [MACHUPICCHU]: recuperado de checkpoint (579 registros).
+#> ℹ Lote 10/10 [URUBAMBA]: recuperado de checkpoint (511 registros).
+#> ✔ Consolidación exitosa. Total de registros unificados: 4380
 #> 
 #> ── Resumen de Registros ──
 #> 
-#> • GBIF: 2713 registro(s)
-#> • iNaturalist: 1638 registro(s)
-#> ✔ Total consolidado: 4351 registro(s)
+#> • GBIF: 2726 registro(s)
+#> • iNaturalist: 1654 registro(s)
+#> ✔ Total consolidado: 4380 registro(s)
 resultado_prov$ocurrencias
-#> # A tibble: 4,351 × 24
+#> # A tibble: 4,380 × 24
 #>    occurrenceID sourceRecordID sourceURL datasetKey license  basisOfRecord
 #>    <chr>        <chr>          <chr>     <chr>      <chr>    <chr>        
 #>  1 6129994865   6129994865     https://… 50c9509d-… http://… HUMAN_OBSERV…
@@ -402,7 +396,7 @@ resultado_prov$ocurrencias
 #>  8 6133461000   6133461000     https://… 50c9509d-… http://… HUMAN_OBSERV…
 #>  9 6171289527   6171289527     https://… 50c9509d-… http://… HUMAN_OBSERV…
 #> 10 6178591915   6178591915     https://… 50c9509d-… http://… HUMAN_OBSERV…
-#> # ℹ 4,341 filas más
+#> # ℹ 4,370 filas más
 #> # ℹ 18 variables más: scientificName <chr>, decimalLatitude <dbl>,
 #> #   decimalLongitude <dbl>, eventDate <chr>, taxonRank <chr>, kingdom <chr>,
 #> #   phylum <chr>, class <chr>, order <chr>, family <chr>, genus <chr>,
@@ -476,7 +470,7 @@ mapa_fuente <- graficar_ocurrencias(resultado_prov,
 mapa_fuente
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" style="display: block; margin: auto;" />
 
 ``` r
 # Mapa clasificado por Reino (Plantae vs Animalia)
@@ -486,7 +480,7 @@ mapa_reino <- graficar_ocurrencias(resultado_prov,
 mapa_reino
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-2.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-2.png" alt="" width="100%" style="display: block; margin: auto;" />
 
 ### 4. Exportación de Resultados a Disco (`exportar_resultados`)
 

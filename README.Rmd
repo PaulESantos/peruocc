@@ -21,9 +21,12 @@ knitr::opts_chunk$set(
 # peruocc: Recuperación y Consolidación de Ocurrencias de Biodiversidad en Unidades Administrativas del Perú
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/PaulESantos/peruocc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/PaulESantos/peruocc/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/PaulESantos/peruocc/branch/main/graph/badge.svg)](https://app.codecov.io/gh/PaulESantos/peruocc?branch=main)
+[![CRAN status](https://www.r-pkg.org/badges/version/peruocc)](https://CRAN.R-project.org/package=peruocc)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/peruocc?color=green)](https://cran.r-project.org/package=peruocc)
+[![](https://cranlogs.r-pkg.org/badges/last-week/peruocc?color=green)](https://cran.r-project.org/package=peruocc)
 <!-- badges: end -->
 
 `peruocc` es un paquete y conjunto de herramientas en R diseñado para buscar, descargar, filtrar, validar y consolidar registros de ocurrencias de biodiversidad (**flora y fauna**) en el territorio peruano, utilizando como marco espacial las delimitaciones administrativas oficiales a escala de **distritos** y **provincias**.
@@ -32,7 +35,7 @@ El paquete integra y estandariza la información disponible de dos de los mayore
 
 ---
 
-## ⚡ Inicio Rápido (Quickstart)
+## Inicio Rápido
 
 ```r
 library(peruocc)
