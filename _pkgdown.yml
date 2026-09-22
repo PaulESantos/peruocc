@@ -7,6 +7,8 @@ home:
     official administrative units (districts and provinces) in Peru. Integrates
     boundary geometries via 'geoperu', performs exact spatial filtering, and
     harmonizes Darwin Core records.
+  sidebar:
+    structure: [links, license, community, citation, authors, dev]
 
 authors:
   Paul E. Santos Andrade:
@@ -98,4 +100,4 @@ reference:
       - as_peruocc_tbl
 
 development:
-  mode: auto
+  mode: default
