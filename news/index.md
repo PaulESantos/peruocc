@@ -2,6 +2,8 @@
 
 ## peruocc 0.1.0
 
+CRAN release: 2026-09-21
+
 - Initial release to CRAN.
 - Provides functions to query and standardize biodiversity occurrence
   records in Peru across administrative levels (districts and provinces)

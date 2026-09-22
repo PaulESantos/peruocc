@@ -26,7 +26,7 @@ library(peruocc)
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
-#> ✔ sf      1.1.2   • Operaciones geométricas y filtros espaciales
+#> ✔ sf      1.1.3   • Operaciones geométricas y filtros espaciales
 ```
 
 ### Configuración del Directorio de Trabajo (Opcional)
@@ -82,14 +82,14 @@ resultado_cusco <- buscar_especies_distrito(
 #> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
 #> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de CUSCO (límite: "150")...
 #> ℹ [iNaturalist] Se descargaron 150 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 120 de 150 registros caen dentro del polígono seleccionado.
-#> ✔ Consolidación exitosa. Total de registros unificados: 270
+#> ✔ [iNaturalist] Búsqueda finalizada. 121 de 150 registros caen dentro del polígono seleccionado.
+#> ✔ Consolidación exitosa. Total de registros unificados: 271
 #> 
 #> ── Resumen de Registros ──
 #> 
 #> • GBIF: 150 registro(s)
-#> • iNaturalist: 120 registro(s)
-#> ✔ Total consolidado: 270 registro(s)
+#> • iNaturalist: 121 registro(s)
+#> ✔ Total consolidado: 271 registro(s)
 ```
 
 ### 2. Búsqueda a Nivel de Provincia
@@ -111,9 +111,9 @@ resultado_urubamba <- buscar_especies_provincia(
 #> • Grupo: fauna
 #> ℹ Procesando 10 lotes espaciales (distritos): "MARAS", "HUAYLLABAMBA", "YUCAY", "CHINCHERO", "OLLANTAYTAMBO", "MACHUPICCHU", and "URUBAMBA"
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1213 caracteres).
-#> ✔ Lote 1/10 [MARAS]: 190 (GBIF) + 94 (iNat) = 284 registros.
+#> ✔ Lote 1/10 [MARAS]: 190 (GBIF) + 96 (iNat) = 286 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1211 caracteres).
-#> ✔ Lote 2/10 [HUAYLLABAMBA]: 200 (GBIF) + 101 (iNat) = 301 registros.
+#> ✔ Lote 2/10 [HUAYLLABAMBA]: 200 (GBIF) + 102 (iNat) = 302 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 608 caracteres).
 #> ✔ Lote 3/10 [YUCAY]: 200 (GBIF) + 84 (iNat) = 284 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 865 caracteres).
@@ -121,21 +121,21 @@ resultado_urubamba <- buscar_especies_provincia(
 #> ✔ Polígono simplificado con éxito a tolerancia de 300 metros (WKT: 898 caracteres).
 #> ✔ Lote 5/10 [OLLANTAYTAMBO]: 166 (GBIF) + 15 (iNat) = 181 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 819 caracteres).
-#> ✔ Lote 6/10 [OLLANTAYTAMBO]: 200 (GBIF) + 113 (iNat) = 313 registros.
+#> ✔ Lote 6/10 [OLLANTAYTAMBO]: 200 (GBIF) + 86 (iNat) = 286 registros.
 #> ✔ Lote 7/10 [OLLANTAYTAMBO]: 7 (GBIF) + 0 (iNat) = 7 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1157 caracteres).
 #> ✔ Lote 8/10 [OLLANTAYTAMBO]: 200 (GBIF) + 120 (iNat) = 320 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 300 metros (WKT: 897 caracteres).
-#> ✔ Lote 9/10 [MACHUPICCHU]: 200 (GBIF) + 192 (iNat) = 392 registros.
+#> ✔ Lote 9/10 [MACHUPICCHU]: 200 (GBIF) + 191 (iNat) = 391 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1466 caracteres).
-#> ✔ Lote 10/10 [URUBAMBA]: 200 (GBIF) + 178 (iNat) = 378 registros.
-#> ✔ Consolidación exitosa. Total de registros unificados: 2846
+#> ✔ Lote 10/10 [URUBAMBA]: 200 (GBIF) + 175 (iNat) = 375 registros.
+#> ✔ Consolidación exitosa. Total de registros unificados: 2818
 #> 
 #> ── Resumen de Registros ──
 #> 
 #> • GBIF: 1763 registro(s)
-#> • iNaturalist: 1083 registro(s)
-#> ✔ Total consolidado: 2846 registro(s)
+#> • iNaturalist: 1055 registro(s)
+#> ✔ Total consolidado: 2818 registro(s)
 ```
 
 ### 3. Filtro por Especie o Taxón Específico
@@ -167,14 +167,14 @@ resultado_jaguar <- buscar_especies_distrito(
 #> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
 #> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de TAMBOPATA (límite: "50")...
 #> ℹ [iNaturalist] Se descargaron 50 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 8 de 50 registros caen dentro del polígono seleccionado.
-#> ✔ Consolidación exitosa. Total de registros unificados: 29
+#> ✔ [iNaturalist] Búsqueda finalizada. 7 de 50 registros caen dentro del polígono seleccionado.
+#> ✔ Consolidación exitosa. Total de registros unificados: 28
 #> 
 #> ── Resumen de Registros ──
 #> 
 #> • GBIF: 21 registro(s)
-#> • iNaturalist: 8 registro(s)
-#> ✔ Total consolidado: 29 registro(s)
+#> • iNaturalist: 7 registro(s)
+#> ✔ Total consolidado: 28 registro(s)
 ```
 
 ------------------------------------------------------------------------
@@ -242,9 +242,9 @@ destino mediante `dir_salida`:
 
 # Exportar resultados a un directorio (por ejemplo, temporal para la viñeta)
 archivos <- exportar_resultados(resultado_cusco, dir_salida = tempdir())
-#> ✔ Registros tabulares guardados en: /tmp/RtmpCD1FQX/ocurrencias_20260911T030700Z_distrito_cusco_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpCD1FQX/ocurrencias_20260911T030700Z_distrito_cusco_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /tmp/RtmpCD1FQX/manifiesto_20260911T030700Z_distrito_cusco_flora.json
+#> ✔ Registros tabulares guardados en: /tmp/RtmpLhSpvi/ocurrencias_20260922T022624Z_distrito_cusco_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpLhSpvi/ocurrencias_20260922T022624Z_distrito_cusco_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /tmp/RtmpLhSpvi/manifiesto_20260922T022624Z_distrito_cusco_flora.json
 ```
 
 ------------------------------------------------------------------------

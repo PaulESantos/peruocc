@@ -53,7 +53,7 @@ library(peruocc)
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
-#> ✔ sf      1.1.2   • Operaciones geométricas y filtros espaciales
+#> ✔ sf      1.1.3   • Operaciones geométricas y filtros espaciales
 
 # Obtener la geometría oficial de un distrito
 distrito_sf <- obtener_poligono_distrito(

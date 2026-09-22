@@ -76,7 +76,7 @@ harmonizes Darwin Core records.
 <p>El paquete integra y estandariza la información disponible de dos de los mayores repositorios globales de biodiversidad: <strong>GBIF</strong> (<em>Global Biodiversity Information Facility</em>) e <strong>iNaturalist</strong>, generando un objeto unificado con atributos estandarizados y trazabilidad completa dentro del área de interés.</p>
 <hr>
 <div class="section level2">
-<h2 id="zap-inicio-rápido-quickstart">⚡ Inicio Rápido (Quickstart)<a class="anchor" aria-label="anchor" href="#zap-inicio-r%C3%A1pido-quickstart"></a>
+<h2 id="inicio-rápido">Inicio Rápido<a class="anchor" aria-label="anchor" href="#inicio-r%C3%A1pido"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
@@ -282,7 +282,7 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt; ✔ geoperu 0.0.2   • Límites cartográficos oficiales del Perú</span></span>
 <span><span class="co">#&gt; ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF</span></span>
 <span><span class="co">#&gt; ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist</span></span>
-<span><span class="co">#&gt; ✔ sf      1.1.1   • Operaciones geométricas y filtros espaciales</span></span>
+<span><span class="co">#&gt; ✔ sf      1.1.3   • Operaciones geométricas y filtros espaciales</span></span>
 <span></span>
 <span><span class="co"># Configurar directorio donde se guardarán caché, resultados y manifiestos</span></span>
 <span><span class="fu"><a href="reference/peruocc_data_dir.html">peruocc_data_dir</a></span><span class="op">(</span><span class="st">"peruocc-output"</span><span class="op">)</span></span></code></pre></div>
@@ -314,26 +314,16 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt; • Provincia: Cusco</span></span>
 <span><span class="co">#&gt; • Grupo: flora</span></span>
 <span><span class="co">#&gt; ℹ Cargando límites de CUSCO desde el caché local...</span></span>
-<span><span class="co">#&gt; ℹ [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1153 caracteres).</span></span>
-<span><span class="co">#&gt; ℹ [GBIF] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; ℹ [GBIF] Consultando registros dentro del polígono de CUSCO (límite: "200")...</span></span>
-<span><span class="co">#&gt; ✔ [GBIF] Búsqueda finalizada. Se filtraron 200 registro(s) que caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
-<span><span class="co">#&gt; ℹ [iNaturalist] Filtrando por reino Plantae (Flora).</span></span>
-<span><span class="co">#&gt; ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de CUSCO (límite: "200")...</span></span>
-<span><span class="co">#&gt; ℹ [iNaturalist] Se descargaron 200 registros en la caja delimitadora. Aplicando filtro espacial...</span></span>
-<span><span class="co">#&gt; ✔ [iNaturalist] Búsqueda finalizada. 165 de 200 registros caen dentro del polígono seleccionado.</span></span>
-<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 365</span></span>
+<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 362</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── Resumen de Registros ──</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; • GBIF: 200 registro(s)</span></span>
-<span><span class="co">#&gt; • iNaturalist: 165 registro(s)</span></span>
-<span><span class="co">#&gt; ✔ Total consolidado: 365 registro(s)</span></span>
+<span><span class="co">#&gt; • iNaturalist: 162 registro(s)</span></span>
+<span><span class="co">#&gt; ✔ Total consolidado: 362 registro(s)</span></span>
 <span></span>
 <span><span class="va">res_distrito</span><span class="op">$</span><span class="va">ocurrencias</span> </span>
-<span><span class="co">#&gt; # A tibble: 365 × 24</span></span>
+<span><span class="co">#&gt; # A tibble: 362 × 24</span></span>
 <span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL datasetKey license  basisOfRecord</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;        </span></span>
 <span><span class="co">#&gt;  1 5938706538   5938706538     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
@@ -346,7 +336,7 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt;  8 6133055337   6133055337     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
 <span><span class="co">#&gt;  9 6133273135   6133273135     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
 <span><span class="co">#&gt; 10 6159246603   6159246603     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt; # ℹ 355 filas más</span></span>
+<span><span class="co">#&gt; # ℹ 352 filas más</span></span>
 <span><span class="co">#&gt; # ℹ 18 variables más: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
@@ -367,24 +357,24 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt; • Departamento: Cusco</span></span>
 <span><span class="co">#&gt; • Grupo: fauna</span></span>
 <span><span class="co">#&gt; ℹ Procesando 8 lotes espaciales (distritos): "SANTIAGO", "WANCHAQ", "CCORCA", "SAN SEBASTIAN", "SAYLLA", "POROY", "SAN JERONIMO", and "CUSCO"</span></span>
-<span><span class="co">#&gt; ℹ Lote 1/8 [SANTIAGO]: recuperado de checkpoint (287 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 2/8 [WANCHAQ]: recuperado de checkpoint (295 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 1/8 [SANTIAGO]: recuperado de checkpoint (276 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 2/8 [WANCHAQ]: recuperado de checkpoint (302 registros).</span></span>
 <span><span class="co">#&gt; ℹ Lote 3/8 [CCORCA]: recuperado de checkpoint (203 registros).</span></span>
 <span><span class="co">#&gt; ℹ Lote 4/8 [SAN SEBASTIAN]: recuperado de checkpoint (216 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 5/8 [SAYLLA]: recuperado de checkpoint (229 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 5/8 [SAYLLA]: recuperado de checkpoint (231 registros).</span></span>
 <span><span class="co">#&gt; ℹ Lote 6/8 [POROY]: recuperado de checkpoint (204 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 7/8 [SAN JERONIMO]: recuperado de checkpoint (342 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 8/8 [CUSCO]: recuperado de checkpoint (365 registros).</span></span>
-<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 2141</span></span>
+<span><span class="co">#&gt; ℹ Lote 7/8 [SAN JERONIMO]: recuperado de checkpoint (344 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 8/8 [CUSCO]: recuperado de checkpoint (371 registros).</span></span>
+<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 2147</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── Resumen de Registros ──</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; • GBIF: 1597 registro(s)</span></span>
-<span><span class="co">#&gt; • iNaturalist: 544 registro(s)</span></span>
-<span><span class="co">#&gt; ✔ Total consolidado: 2141 registro(s)</span></span>
+<span><span class="co">#&gt; • iNaturalist: 550 registro(s)</span></span>
+<span><span class="co">#&gt; ✔ Total consolidado: 2147 registro(s)</span></span>
 <span></span>
 <span><span class="va">res_provincia</span><span class="op">$</span><span class="va">ocurrencias</span> </span>
-<span><span class="co">#&gt; # A tibble: 2,141 × 24</span></span>
+<span><span class="co">#&gt; # A tibble: 2,147 × 24</span></span>
 <span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL datasetKey license  basisOfRecord</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;        </span></span>
 <span><span class="co">#&gt;  1 6130955903   6130955903     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
@@ -397,7 +387,7 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt;  8 6414124325   6414124325     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
 <span><span class="co">#&gt;  9 6481433622   6481433622     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
 <span><span class="co">#&gt; 10 5087130717   5087130717     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt; # ℹ 2,131 filas más</span></span>
+<span><span class="co">#&gt; # ℹ 2,137 filas más</span></span>
 <span><span class="co">#&gt; # ℹ 18 variables más: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
@@ -472,25 +462,25 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt; • Departamento: Cusco</span></span>
 <span><span class="co">#&gt; • Grupo: flora</span></span>
 <span><span class="co">#&gt; ℹ Procesando 10 lotes espaciales (distritos): "MARAS", "HUAYLLABAMBA", "YUCAY", "CHINCHERO", "OLLANTAYTAMBO", "MACHUPICCHU", and "URUBAMBA"</span></span>
-<span><span class="co">#&gt; ℹ Lote 1/10 [MARAS]: recuperado de checkpoint (490 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 2/10 [HUAYLLABAMBA]: recuperado de checkpoint (443 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 3/10 [YUCAY]: recuperado de checkpoint (436 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 4/10 [CHINCHERO]: recuperado de checkpoint (529 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 5/10 [OLLANTAYTAMBO]: recuperado de checkpoint (239 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 6/10 [OLLANTAYTAMBO]: recuperado de checkpoint (496 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 1/10 [MARAS]: recuperado de checkpoint (493 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 2/10 [HUAYLLABAMBA]: recuperado de checkpoint (441 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 3/10 [YUCAY]: recuperado de checkpoint (437 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 4/10 [CHINCHERO]: recuperado de checkpoint (525 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 5/10 [OLLANTAYTAMBO]: recuperado de checkpoint (261 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 6/10 [OLLANTAYTAMBO]: recuperado de checkpoint (511 registros).</span></span>
 <span><span class="co">#&gt; ℹ Lote 7/10 [OLLANTAYTAMBO]: recuperado de checkpoint (126 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 8/10 [OLLANTAYTAMBO]: recuperado de checkpoint (495 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 9/10 [MACHUPICCHU]: recuperado de checkpoint (585 registros).</span></span>
-<span><span class="co">#&gt; ℹ Lote 10/10 [URUBAMBA]: recuperado de checkpoint (512 registros).</span></span>
-<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 4351</span></span>
+<span><span class="co">#&gt; ℹ Lote 8/10 [OLLANTAYTAMBO]: recuperado de checkpoint (496 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 9/10 [MACHUPICCHU]: recuperado de checkpoint (579 registros).</span></span>
+<span><span class="co">#&gt; ℹ Lote 10/10 [URUBAMBA]: recuperado de checkpoint (511 registros).</span></span>
+<span><span class="co">#&gt; ✔ Consolidación exitosa. Total de registros unificados: 4380</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── Resumen de Registros ──</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; • GBIF: 2713 registro(s)</span></span>
-<span><span class="co">#&gt; • iNaturalist: 1638 registro(s)</span></span>
-<span><span class="co">#&gt; ✔ Total consolidado: 4351 registro(s)</span></span>
+<span><span class="co">#&gt; • GBIF: 2726 registro(s)</span></span>
+<span><span class="co">#&gt; • iNaturalist: 1654 registro(s)</span></span>
+<span><span class="co">#&gt; ✔ Total consolidado: 4380 registro(s)</span></span>
 <span><span class="va">resultado_prov</span><span class="op">$</span><span class="va">ocurrencias</span></span>
-<span><span class="co">#&gt; # A tibble: 4,351 × 24</span></span>
+<span><span class="co">#&gt; # A tibble: 4,380 × 24</span></span>
 <span><span class="co">#&gt;    occurrenceID sourceRecordID sourceURL datasetKey license  basisOfRecord</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;        </span></span>
 <span><span class="co">#&gt;  1 6129994865   6129994865     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
@@ -503,7 +493,7 @@ harmonizes Darwin Core records.
 <span><span class="co">#&gt;  8 6133461000   6133461000     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
 <span><span class="co">#&gt;  9 6171289527   6171289527     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
 <span><span class="co">#&gt; 10 6178591915   6178591915     https://… 50c9509d-… http://… HUMAN_OBSERV…</span></span>
-<span><span class="co">#&gt; # ℹ 4,341 filas más</span></span>
+<span><span class="co">#&gt; # ℹ 4,370 filas más</span></span>
 <span><span class="co">#&gt; # ℹ 18 variables más: scientificName &lt;chr&gt;, decimalLatitude &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   decimalLongitude &lt;dbl&gt;, eventDate &lt;chr&gt;, taxonRank &lt;chr&gt;, kingdom &lt;chr&gt;,</span></span>
 <span><span class="co">#&gt; #   phylum &lt;chr&gt;, class &lt;chr&gt;, order &lt;chr&gt;, family &lt;chr&gt;, genus &lt;chr&gt;,</span></span>
@@ -571,14 +561,14 @@ harmonizes Darwin Core records.
 <span>                                    guardar_mapa <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mapa_fuente</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-7-1.png" alt="" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Mapa clasificado por Reino (Plantae vs Animalia)</span></span>
 <span><span class="va">mapa_reino</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graficar_ocurrencias.html">graficar_ocurrencias</a></span><span class="op">(</span><span class="va">resultado_prov</span>,</span>
 <span>                                   color_por <span class="op">=</span> <span class="st">"kingdom"</span>, </span>
 <span>                                   guardar_mapa <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">mapa_reino</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-7-2.png" alt="" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-7-2.png" alt="" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="id_4-exportación-de-resultados-a-disco-exportar_resultados">4. Exportación de Resultados a Disco (<code>exportar_resultados</code>)<a class="anchor" aria-label="anchor" href="#id_4-exportaci%C3%B3n-de-resultados-a-disco-exportar_resultados"></a>
@@ -753,6 +743,7 @@ harmonizes Darwin Core records.
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=peruocc" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/PaulESantos/peruocc/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/PaulESantos/peruocc/issues" class="external-link">Report a bug</a></li>
 </ul>

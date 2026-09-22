@@ -27,7 +27,7 @@ library(peruocc)
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
-#> ✔ sf      1.1.2   • Operaciones geométricas y filtros espaciales
+#> ✔ sf      1.1.3   • Operaciones geométricas y filtros espaciales
 library(sf)
 library(ggplot2)
 ```
@@ -299,9 +299,9 @@ resultado_desde_archivo <- buscar_especies_poligono(
 
 # 3. Exportar resultados con manifiesto de reproducibilidad en directorio temporal
 archivos_exportados <- exportar_resultados(resultado_desde_archivo, dir_salida = tempdir())
-#> ✔ Registros tabulares guardados en: /tmp/RtmpalcRIP/ocurrencias_20260911T030604Z_poligono_reservalocal_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpalcRIP/ocurrencias_20260911T030604Z_poligono_reservalocal_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /tmp/RtmpalcRIP/manifiesto_20260911T030604Z_poligono_reservalocal_flora.json
+#> ✔ Registros tabulares guardados en: /tmp/RtmpStvpPo/ocurrencias_20260922T022527Z_poligono_reservalocal_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpStvpPo/ocurrencias_20260922T022527Z_poligono_reservalocal_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /tmp/RtmpStvpPo/manifiesto_20260922T022527Z_poligono_reservalocal_flora.json
 ```
 
 ------------------------------------------------------------------------

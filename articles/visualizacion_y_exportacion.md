@@ -34,7 +34,7 @@ library(peruocc)
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
-#> ✔ sf      1.1.2   • Operaciones geométricas y filtros espaciales
+#> ✔ sf      1.1.3   • Operaciones geométricas y filtros espaciales
 ```
 
 ``` r
@@ -174,13 +174,13 @@ summary(resultado$ocurrencias)
 #>  NAs      :133   NAs      :133   NAs      :133   NAs      :133  
 #>                                                                 
 #>        genus          species        recordedBy  coordinateUncertaintyInMeters
-#>  Length   :281   Length   :281   Length   :281   Min.   :   2.0               
-#>  N.unique : 53   N.unique : 63   N.unique :119   1st Qu.:  12.0               
-#>  N.blank  :  0   N.blank  :  0   N.blank  :  0   Median :  21.0               
-#>  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 334.2               
-#>  Max.nchar: 16   Max.nchar: 28   Max.nchar: 30   3rd Qu.:  30.0               
-#>  NAs      :133   NAs      :133   NAs      : 10   Max.   :3945.0               
-#>                                                  NAs    :54                   
+#>  Length   :281   Length   :281   Length   :281   Min.   :   2.00              
+#>  N.unique : 53   N.unique : 63   N.unique :121   1st Qu.:  12.00              
+#>  N.blank  :  0   N.blank  :  0   N.blank  :  0   Median :  21.00              
+#>  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 287.01              
+#>  Max.nchar: 16   Max.nchar: 28   Max.nchar: 30   3rd Qu.:  27.75              
+#>  NAs      :133   NAs      :133   NAs      : 10   Max.   :3945.00              
+#>                                                  NAs    :55                   
 #>        source         district        province       department 
 #>  Length   :281   Length   :281   Length   :281   Length   :281  
 #>  N.unique :  2   N.unique :  1   N.unique :  1   N.unique :  1  
