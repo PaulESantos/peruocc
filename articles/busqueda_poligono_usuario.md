@@ -23,7 +23,7 @@ Cargamos `peruocc` y `sf` para el manejo de geometrías vectoriales:
 ``` r
 
 library(peruocc)
-#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.0 ──
+#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.1 ──
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
@@ -299,9 +299,9 @@ resultado_desde_archivo <- buscar_especies_poligono(
 
 # 3. Exportar resultados con manifiesto de reproducibilidad en directorio temporal
 archivos_exportados <- exportar_resultados(resultado_desde_archivo, dir_salida = tempdir())
-#> ✔ Registros tabulares guardados en: /tmp/RtmpJfPRRS/ocurrencias_20260922T033610Z_poligono_reservalocal_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpJfPRRS/ocurrencias_20260922T033610Z_poligono_reservalocal_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /tmp/RtmpJfPRRS/manifiesto_20260922T033610Z_poligono_reservalocal_flora.json
+#> ✔ Registros tabulares guardados en: /tmp/RtmpzufhA6/ocurrencias_20261006T025533Z_poligono_reservalocal_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpzufhA6/ocurrencias_20261006T025533Z_poligono_reservalocal_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /tmp/RtmpzufhA6/manifiesto_20261006T025533Z_poligono_reservalocal_flora.json
 ```
 
 ------------------------------------------------------------------------

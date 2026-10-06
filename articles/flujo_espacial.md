@@ -49,7 +49,7 @@ sesión:
 ``` r
 
 library(peruocc)
-#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.0 ──
+#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.1 ──
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist

@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peruocc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@ opcionalmente la ubicación en el disco donde se almacenarán capas
 espaciales descargadas en caché y los resultados exportados.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; ── <span style="font-weight: bold;">Cargando peruocc</span> ────────────────────────────────────────────────── v0.1.0 ──</span></span>
+<span><span class="co">#&gt; ── <span style="font-weight: bold;">Cargando peruocc</span> ────────────────────────────────────────────────── v0.1.1 ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">geoperu</span> 0.0.1   <span style="color: #555555;">• Límites cartográficos oficiales del Perú</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rgbif  </span> 3.8.5   <span style="color: #555555;">• Extracción de ocurrencias desde GBIF</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rinat  </span> 0.1.10  <span style="color: #555555;">• Observaciones ciudadanas de iNaturalist</span></span></span>
@@ -260,14 +260,14 @@ selectivamente cuando los datos estén listos:</p>
 <span><span class="co">#&gt;       license      basisOfRecord   scientificName decimalLatitude </span></span>
 <span><span class="co">#&gt;  Length   :281   Length   :281   Length   :281    Min.   :-12.14  </span></span>
 <span><span class="co">#&gt;  N.unique :  8   N.unique :  2   N.unique :119    1st Qu.:-12.13  </span></span>
-<span><span class="co">#&gt;  N.blank  : 19   N.blank  :  0   N.blank  :  0    Median :-12.12  </span></span>
+<span><span class="co">#&gt;  N.blank  : 20   N.blank  :  0   N.blank  :  0    Median :-12.12  </span></span>
 <span><span class="co">#&gt;  Min.nchar:  0   Min.nchar: 16   Min.nchar: 11    Mean   :-12.12  </span></span>
 <span><span class="co">#&gt;  Max.nchar: 58   Max.nchar: 17   Max.nchar: 58    3rd Qu.:-12.12  </span></span>
 <span><span class="co">#&gt;                                                   Max.   :-12.11  </span></span>
 <span><span class="co">#&gt;                                                                   </span></span>
 <span><span class="co">#&gt;  decimalLongitude     eventDate       taxonRank        kingdom   </span></span>
 <span><span class="co">#&gt;  Min.   :-77.05   Length   :281   Length   :281   Length   :281  </span></span>
-<span><span class="co">#&gt;  1st Qu.:-77.04   N.unique :233   N.unique :  1   N.unique :  1  </span></span>
+<span><span class="co">#&gt;  1st Qu.:-77.04   N.unique :234   N.unique :  1   N.unique :  1  </span></span>
 <span><span class="co">#&gt;  Median :-77.03   N.blank  :  0   N.blank  :  0   N.blank  :  0  </span></span>
 <span><span class="co">#&gt;  Mean   :-77.03   Min.nchar: 10   Min.nchar:  7   Min.nchar:  7  </span></span>
 <span><span class="co">#&gt;  3rd Qu.:-77.03   Max.nchar: 20   Max.nchar:  7   Max.nchar:  7  </span></span>
@@ -282,13 +282,13 @@ selectivamente cuando los datos estén listos:</p>
 <span><span class="co">#&gt;  NAs      :133   NAs      :133   NAs      :133   NAs      :133  </span></span>
 <span><span class="co">#&gt;                                                                 </span></span>
 <span><span class="co">#&gt;        genus          species        recordedBy  coordinateUncertaintyInMeters</span></span>
-<span><span class="co">#&gt;  Length   :281   Length   :281   Length   :281   Min.   :   2.00              </span></span>
-<span><span class="co">#&gt;  N.unique : 53   N.unique : 63   N.unique :121   1st Qu.:  12.00              </span></span>
-<span><span class="co">#&gt;  N.blank  :  0   N.blank  :  0   N.blank  :  0   Median :  21.00              </span></span>
-<span><span class="co">#&gt;  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 287.01              </span></span>
-<span><span class="co">#&gt;  Max.nchar: 16   Max.nchar: 28   Max.nchar: 30   3rd Qu.:  27.75              </span></span>
-<span><span class="co">#&gt;  NAs      :133   NAs      :133   NAs      : 10   Max.   :3945.00              </span></span>
-<span><span class="co">#&gt;                                                  NAs    :55                   </span></span>
+<span><span class="co">#&gt;  Length   :281   Length   :281   Length   :281   Min.   :   2.0               </span></span>
+<span><span class="co">#&gt;  N.unique : 53   N.unique : 63   N.unique :122   1st Qu.:  12.0               </span></span>
+<span><span class="co">#&gt;  N.blank  :  0   N.blank  :  0   N.blank  :  0   Median :  21.0               </span></span>
+<span><span class="co">#&gt;  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 285.8               </span></span>
+<span><span class="co">#&gt;  Max.nchar: 16   Max.nchar: 28   Max.nchar: 30   3rd Qu.:  27.5               </span></span>
+<span><span class="co">#&gt;  NAs      :133   NAs      :133   NAs      : 10   Max.   :3945.0               </span></span>
+<span><span class="co">#&gt;                                                  NAs    :54                   </span></span>
 <span><span class="co">#&gt;        source         district        province       department </span></span>
 <span><span class="co">#&gt;  Length   :281   Length   :281   Length   :281   Length   :281  </span></span>
 <span><span class="co">#&gt;  N.unique :  2   N.unique :  1   N.unique :  1   N.unique :  1  </span></span>

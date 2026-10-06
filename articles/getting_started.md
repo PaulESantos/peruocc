@@ -22,7 +22,7 @@ Carga el paquete en tu sesión de R:
 ``` r
 
 library(peruocc)
-#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.0 ──
+#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.1 ──
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
@@ -82,14 +82,14 @@ resultado_cusco <- buscar_especies_distrito(
 #> ℹ [iNaturalist] Filtrando por reino Plantae (Flora).
 #> ℹ [iNaturalist] Consultando registros dentro de la caja delimitadora de CUSCO (límite: "150")...
 #> ℹ [iNaturalist] Se descargaron 150 registros en la caja delimitadora. Aplicando filtro espacial...
-#> ✔ [iNaturalist] Búsqueda finalizada. 121 de 150 registros caen dentro del polígono seleccionado.
-#> ✔ Consolidación exitosa. Total de registros unificados: 271
+#> ✔ [iNaturalist] Búsqueda finalizada. 119 de 150 registros caen dentro del polígono seleccionado.
+#> ✔ Consolidación exitosa. Total de registros unificados: 269
 #> 
 #> ── Resumen de Registros ──
 #> 
 #> • GBIF: 150 registro(s)
-#> • iNaturalist: 121 registro(s)
-#> ✔ Total consolidado: 271 registro(s)
+#> • iNaturalist: 119 registro(s)
+#> ✔ Total consolidado: 269 registro(s)
 ```
 
 ### 2. Búsqueda a Nivel de Provincia
@@ -111,31 +111,31 @@ resultado_urubamba <- buscar_especies_provincia(
 #> • Grupo: fauna
 #> ℹ Procesando 10 lotes espaciales (distritos): "MARAS", "HUAYLLABAMBA", "YUCAY", "CHINCHERO", "OLLANTAYTAMBO", "MACHUPICCHU", and "URUBAMBA"
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1213 caracteres).
-#> ✔ Lote 1/10 [MARAS]: 190 (GBIF) + 97 (iNat) = 287 registros.
+#> ✔ Lote 1/10 [MARAS]: 193 (GBIF) + 94 (iNat) = 287 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1211 caracteres).
-#> ✔ Lote 2/10 [HUAYLLABAMBA]: 200 (GBIF) + 102 (iNat) = 302 registros.
+#> ✔ Lote 2/10 [HUAYLLABAMBA]: 200 (GBIF) + 107 (iNat) = 307 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 608 caracteres).
 #> ✔ Lote 3/10 [YUCAY]: 200 (GBIF) + 84 (iNat) = 284 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 865 caracteres).
 #> ✔ Lote 4/10 [CHINCHERO]: 200 (GBIF) + 186 (iNat) = 386 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 300 metros (WKT: 898 caracteres).
-#> ✔ Lote 5/10 [OLLANTAYTAMBO]: 166 (GBIF) + 15 (iNat) = 181 registros.
+#> ✔ Lote 5/10 [OLLANTAYTAMBO]: 166 (GBIF) + 16 (iNat) = 182 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 819 caracteres).
-#> ✔ Lote 6/10 [OLLANTAYTAMBO]: 200 (GBIF) + 86 (iNat) = 286 registros.
+#> ✔ Lote 6/10 [OLLANTAYTAMBO]: 200 (GBIF) + 79 (iNat) = 279 registros.
 #> ✔ Lote 7/10 [OLLANTAYTAMBO]: 7 (GBIF) + 0 (iNat) = 7 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1157 caracteres).
-#> ✔ Lote 8/10 [OLLANTAYTAMBO]: 200 (GBIF) + 120 (iNat) = 320 registros.
+#> ✔ Lote 8/10 [OLLANTAYTAMBO]: 200 (GBIF) + 123 (iNat) = 323 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 300 metros (WKT: 897 caracteres).
-#> ✔ Lote 9/10 [MACHUPICCHU]: 200 (GBIF) + 191 (iNat) = 391 registros.
+#> ✔ Lote 9/10 [MACHUPICCHU]: 200 (GBIF) + 190 (iNat) = 390 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1466 caracteres).
-#> ✔ Lote 10/10 [URUBAMBA]: 200 (GBIF) + 175 (iNat) = 375 registros.
-#> ✔ Consolidación exitosa. Total de registros unificados: 2819
+#> ✔ Lote 10/10 [URUBAMBA]: 200 (GBIF) + 178 (iNat) = 378 registros.
+#> ✔ Consolidación exitosa. Total de registros unificados: 2823
 #> 
 #> ── Resumen de Registros ──
 #> 
-#> • GBIF: 1763 registro(s)
-#> • iNaturalist: 1056 registro(s)
-#> ✔ Total consolidado: 2819 registro(s)
+#> • GBIF: 1766 registro(s)
+#> • iNaturalist: 1057 registro(s)
+#> ✔ Total consolidado: 2823 registro(s)
 ```
 
 ### 3. Filtro por Especie o Taxón Específico
@@ -242,9 +242,9 @@ destino mediante `dir_salida`:
 
 # Exportar resultados a un directorio (por ejemplo, temporal para la viñeta)
 archivos <- exportar_resultados(resultado_cusco, dir_salida = tempdir())
-#> ✔ Registros tabulares guardados en: /tmp/Rtmpf1tpM7/ocurrencias_20260922T033706Z_distrito_cusco_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /tmp/Rtmpf1tpM7/ocurrencias_20260922T033706Z_distrito_cusco_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /tmp/Rtmpf1tpM7/manifiesto_20260922T033706Z_distrito_cusco_flora.json
+#> ✔ Registros tabulares guardados en: /tmp/RtmpDELZ9v/ocurrencias_20261006T025630Z_distrito_cusco_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpDELZ9v/ocurrencias_20261006T025630Z_distrito_cusco_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /tmp/RtmpDELZ9v/manifiesto_20261006T025630Z_distrito_cusco_flora.json
 ```
 
 ------------------------------------------------------------------------

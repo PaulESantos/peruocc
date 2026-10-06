@@ -1,5 +1,12 @@
 # Changelog
 
+## peruocc 0.1.1
+
+- [`peruocc_data_dir()`](https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.md)
+  now stores canonical paths after creating the requested directory,
+  ensuring consistent behavior on macOS systems where equivalent paths
+  may traverse symbolic links.
+
 ## peruocc 0.1.0
 
 CRAN release: 2026-09-21

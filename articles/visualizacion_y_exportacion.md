@@ -30,7 +30,7 @@ exportados.
 ``` r
 
 library(peruocc)
-#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.0 ──
+#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.1 ──
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
 #> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
@@ -152,14 +152,14 @@ summary(resultado$ocurrencias)
 #>       license      basisOfRecord   scientificName decimalLatitude 
 #>  Length   :281   Length   :281   Length   :281    Min.   :-12.14  
 #>  N.unique :  8   N.unique :  2   N.unique :119    1st Qu.:-12.13  
-#>  N.blank  : 19   N.blank  :  0   N.blank  :  0    Median :-12.12  
+#>  N.blank  : 20   N.blank  :  0   N.blank  :  0    Median :-12.12  
 #>  Min.nchar:  0   Min.nchar: 16   Min.nchar: 11    Mean   :-12.12  
 #>  Max.nchar: 58   Max.nchar: 17   Max.nchar: 58    3rd Qu.:-12.12  
 #>                                                   Max.   :-12.11  
 #>                                                                   
 #>  decimalLongitude     eventDate       taxonRank        kingdom   
 #>  Min.   :-77.05   Length   :281   Length   :281   Length   :281  
-#>  1st Qu.:-77.04   N.unique :233   N.unique :  1   N.unique :  1  
+#>  1st Qu.:-77.04   N.unique :234   N.unique :  1   N.unique :  1  
 #>  Median :-77.03   N.blank  :  0   N.blank  :  0   N.blank  :  0  
 #>  Mean   :-77.03   Min.nchar: 10   Min.nchar:  7   Min.nchar:  7  
 #>  3rd Qu.:-77.03   Max.nchar: 20   Max.nchar:  7   Max.nchar:  7  
@@ -174,13 +174,13 @@ summary(resultado$ocurrencias)
 #>  NAs      :133   NAs      :133   NAs      :133   NAs      :133  
 #>                                                                 
 #>        genus          species        recordedBy  coordinateUncertaintyInMeters
-#>  Length   :281   Length   :281   Length   :281   Min.   :   2.00              
-#>  N.unique : 53   N.unique : 63   N.unique :121   1st Qu.:  12.00              
-#>  N.blank  :  0   N.blank  :  0   N.blank  :  0   Median :  21.00              
-#>  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 287.01              
-#>  Max.nchar: 16   Max.nchar: 28   Max.nchar: 30   3rd Qu.:  27.75              
-#>  NAs      :133   NAs      :133   NAs      : 10   Max.   :3945.00              
-#>                                                  NAs    :55                   
+#>  Length   :281   Length   :281   Length   :281   Min.   :   2.0               
+#>  N.unique : 53   N.unique : 63   N.unique :122   1st Qu.:  12.0               
+#>  N.blank  :  0   N.blank  :  0   N.blank  :  0   Median :  21.0               
+#>  Min.nchar:  5   Min.nchar: 11   Min.nchar:  5   Mean   : 285.8               
+#>  Max.nchar: 16   Max.nchar: 28   Max.nchar: 30   3rd Qu.:  27.5               
+#>  NAs      :133   NAs      :133   NAs      : 10   Max.   :3945.0               
+#>                                                  NAs    :54                   
 #>        source         district        province       department 
 #>  Length   :281   Length   :281   Length   :281   Length   :281  
 #>  N.unique :  2   N.unique :  1   N.unique :  1   N.unique :  1  
