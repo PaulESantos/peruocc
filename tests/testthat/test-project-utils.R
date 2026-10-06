@@ -40,7 +40,7 @@ test_that("peruocc_data_dir y rutas no crean archivos por defecto", {
   
   # Al configurar una ruta valida, la retorna y la crea
   tmp <- file.path(tempdir(), "test_config_dir")
-  expect_identical(peruocc::peruocc_data_dir(tmp), normalizePath(tmp, winslash = "/", mustWork = FALSE))
+  expect_identical(peruocc::peruocc_data_dir(tmp), normalizePath(tmp, winslash = "/", mustWork = TRUE))
   expect_true(dir.exists(tmp))
   expect_true(grepl("cache", peruocc:::ruta_cache()))
 })

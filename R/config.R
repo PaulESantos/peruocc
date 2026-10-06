@@ -26,8 +26,13 @@ peruocc_data_dir <- function(path = NULL) {
   if (!is.character(path) || length(path) != 1L || !nzchar(trimws(path))) {
     cli::cli_abort("{.arg path} debe ser una cadena de texto no vac\u00eda.")
   }
-  path <- normalizePath(path, winslash = "/", mustWork = FALSE)
   dir.create(path, recursive = TRUE, showWarnings = FALSE)
+  if (!dir.exists(path)) {
+    cli::cli_abort("No se pudo crear {.arg path} o no es un directorio existente.")
+  }
+  # Canonicaliza después de crear el directorio: en macOS, rutas como /var
+  # pueden resolver a /private/var una vez que existen.
+  path <- normalizePath(path, winslash = "/", mustWork = TRUE)
   options(peruocc.data_dir = path)
   invisible(path)
 }

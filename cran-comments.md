@@ -1,6 +1,14 @@
 ## Resubmission Notes
 
-This is a resubmission. In this version, we have addressed all comments provided by the CRAN reviewer (Konstanze Lauseker):
+This is a resubmission addressing the CRAN M1mac additional issue reported on
+2026-10-05.
+
+* **Canonical paths on macOS**: `peruocc_data_dir()` now creates the requested
+  directory before calling `normalizePath(..., mustWork = TRUE)`. This resolves
+  symbolic links such as `/var` and `/private/var` to a single canonical path,
+  preventing the M1mac test failure. A regression test covers this behavior.
+
+The changes below from the previous resubmission remain in place:
 
 * **Single quotes in Description**: Ensured that only package, software, and API names are enclosed in single quotes (`'geoperu'`, `'iNaturalist'`). Removed single quotes from data standards and acronyms (`Darwin Core`, `GBIF`).
 * **Avoid writing to user home filespace and getwd()**:
@@ -14,11 +22,13 @@ This is a resubmission. In this version, we have addressed all comments provided
   - Removed all installation commands from vignettes and examples.
 
 ## Test environments
-* local Windows 11, R 4.6.1
+* local Windows 11, R 4.6.1 (targeted regression test for canonical paths)
 * GitHub Actions: Windows, macOS, Ubuntu (release, devel)
 
 ## R CMD check results
-0 errors | 0 warnings | 0 notes
+The public CRAN checks for version 0.1.0 were OK on all standard check
+platforms. This resubmission corrects the M1mac additional issue described
+above.
 
 ## Method References
 There are no published references describing the methods in this package.
