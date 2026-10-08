@@ -8,18 +8,44 @@ nombre_seguro_cache <- function(texto) {
 }
 
 consolidar_ocurrencias <- function(resultados_lista) {
-  resultados_lista <- Filter(function(x) !is.null(x) && nrow(x) > 0, resultados_lista)
-  if (length(resultados_lista) == 0) return(schema_ocurrencias())
+  resultados_lista <- Filter(
+    function(x) !is.null(x) && nrow(x) > 0,
+    resultados_lista
+  )
+  if (length(resultados_lista) == 0) {
+    return(schema_ocurrencias())
+  }
   ocurrencias <- dplyr::bind_rows(resultados_lista)
-  con_id <- dplyr::filter(ocurrencias, !is.na(sourceRecordID) & nzchar(sourceRecordID))
-  sin_id <- dplyr::filter(ocurrencias, is.na(sourceRecordID) | !nzchar(sourceRecordID))
-  res <- dplyr::bind_rows(dplyr::distinct(con_id, source, sourceRecordID, .keep_all = TRUE), sin_id)
+  con_id <- dplyr::filter(
+    ocurrencias,
+    !is.na(sourceRecordID) & nzchar(sourceRecordID)
+  )
+  sin_id <- dplyr::filter(
+    ocurrencias,
+    is.na(sourceRecordID) | !nzchar(sourceRecordID)
+  )
+  res <- dplyr::bind_rows(
+    dplyr::distinct(con_id, source, sourceRecordID, .keep_all = TRUE),
+    sin_id
+  )
   as_peruocc_tbl(res)
 }
 
-consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limite,
-                                       tolerancia_simplificacion, cache_dir, reintentos,
-                                       pausa_entre_lotes_s, clave_ejecucion) {
+consultar_lotes_espaciales <- function(
+  lotes_sf,
+  nombre_cientifico,
+  grupo,
+  limite,
+  tolerancia_simplificacion,
+  cache_dir,
+  reintentos,
+  pausa_entre_lotes_s,
+  clave_ejecucion,
+  taxonomia_gbif,
+  coincidencia_taxonomica,
+  filtros_calidad_gbif,
+  resolucion_taxonomica
+) {
   if (!is.null(cache_dir)) {
     dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
   }
@@ -27,11 +53,17 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
   fallos <- character()
   total_lotes <- nrow(lotes_sf)
   es_multi_lote <- (total_lotes > 1L)
-  
+
   if (es_multi_lote) {
-    nombres_distritos <- if ("distrito" %in% names(lotes_sf)) unique(stats::na.omit(lotes_sf$distrito)) else character()
+    nombres_distritos <- if ("distrito" %in% names(lotes_sf)) {
+      unique(stats::na.omit(lotes_sf$distrito))
+    } else {
+      character()
+    }
     if (length(nombres_distritos) > 0) {
-      cli::cli_alert_info("Procesando {total_lotes} lotes espaciales (distritos): {.val {nombres_distritos}}")
+      cli::cli_alert_info(
+        "Procesando {total_lotes} lotes espaciales (distritos): {.val {nombres_distritos}}"
+      )
     } else {
       cli::cli_alert_info("Procesando {total_lotes} lotes espaciales...")
     }
@@ -39,7 +71,9 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
 
   for (i in seq_len(total_lotes)) {
     lote <- lotes_sf[i, ]
-    nombre_lote <- if ("distrito" %in% names(lote) && !is.na(lote$distrito[1])) {
+    nombre_lote <- if (
+      "distrito" %in% names(lote) && !is.na(lote$distrito[1])
+    ) {
       lote$distrito[1]
     } else if ("provincia" %in% names(lote) && !is.na(lote$provincia[1])) {
       lote$provincia[1]
@@ -48,63 +82,116 @@ consultar_lotes_espaciales <- function(lotes_sf, nombre_cientifico, grupo, limit
     } else {
       paste0("Lote ", i)
     }
-    
+
     n_gbif <- 0L
     n_inat <- 0L
     checkpoint_gbif <- FALSE
     checkpoint_inat <- FALSE
-    
+
     for (fuente in c("gbif", "inat")) {
-      archivo_cache <- if (!is.null(cache_dir)) file.path(cache_dir, sprintf("%s_lote_%05d_%s.rds", clave_ejecucion, i, fuente)) else NULL
+      archivo_cache <- if (!is.null(cache_dir)) {
+        file.path(
+          cache_dir,
+          sprintf("%s_lote_%05d_%s.rds", clave_ejecucion, i, fuente)
+        )
+      } else {
+        NULL
+      }
       resultado <- NULL
       if (!is.null(archivo_cache) && file.exists(archivo_cache)) {
         resultado <- tryCatch(readRDS(archivo_cache), error = function(e) NULL)
         if (!is.null(resultado)) {
-          if (fuente == "gbif") checkpoint_gbif <- TRUE else checkpoint_inat <- TRUE
+          if (fuente == "gbif") {
+            checkpoint_gbif <- TRUE
+          } else {
+            checkpoint_inat <- TRUE
+          }
         }
       }
       if (is.null(resultado)) {
-        resultado <- tryCatch({
-          if (fuente == "gbif") {
-            buscar_gbif_por_poligono(lote, nombre_cientifico, grupo, limite,
-                                     tolerancia_simplificacion, reintentos,
-                                     verbose = !es_multi_lote)
-          } else {
-            buscar_inat_por_poligono(lote, taxon_name = nombre_cientifico, grupo = grupo,
-                                     limite = limite, reintentos = reintentos,
-                                     verbose = !es_multi_lote)
+        resultado <- tryCatch(
+          {
+            if (fuente == "gbif") {
+              buscar_gbif_por_poligono(
+                lote,
+                nombre_cientifico,
+                grupo,
+                limite,
+                tolerancia_simplificacion,
+                reintentos,
+                taxonomia_gbif = taxonomia_gbif,
+                coincidencia_taxonomica = coincidencia_taxonomica,
+                filtros_calidad_gbif = filtros_calidad_gbif,
+                resolucion_taxonomica = resolucion_taxonomica,
+                verbose = !es_multi_lote
+              )
+            } else {
+              buscar_inat_por_poligono(
+                lote,
+                taxon_name = nombre_cientifico,
+                grupo = grupo,
+                limite = limite,
+                reintentos = reintentos,
+                verbose = !es_multi_lote
+              )
+            }
+          },
+          error = function(e) {
+            fallos <<- c(
+              fallos,
+              sprintf("lote %d %s: %s", i, fuente, e$message)
+            )
+            NULL
           }
-        }, error = function(e) {
-          fallos <<- c(fallos, sprintf("lote %d %s: %s", i, fuente, e$message))
-          NULL
-        })
-        if (!is.null(resultado) && !is.null(archivo_cache)) saveRDS(resultado, archivo_cache)
+        )
+        if (!is.null(resultado) && !is.null(archivo_cache)) {
+          saveRDS(resultado, archivo_cache)
+        }
       }
       if (!is.null(resultado)) {
         resultados[[length(resultados) + 1L]] <- resultado
-        if (fuente == "gbif") n_gbif <- nrow(resultado) else n_inat <- nrow(resultado)
+        if (fuente == "gbif") {
+          n_gbif <- nrow(resultado)
+        } else {
+          n_inat <- nrow(resultado)
+        }
       }
     }
-    
+
     if (es_multi_lote) {
       if (checkpoint_gbif && checkpoint_inat) {
-        cli::cli_alert_info("Lote {i}/{total_lotes} [{toupper(nombre_lote)}]: recuperado de checkpoint ({n_gbif + n_inat} registros).")
+        cli::cli_alert_info(
+          "Lote {i}/{total_lotes} [{toupper(nombre_lote)}]: recuperado de checkpoint ({n_gbif + n_inat} registros)."
+        )
       } else {
-        cli::cli_alert_success("Lote {i}/{total_lotes} [{toupper(nombre_lote)}]: {n_gbif} (GBIF) + {n_inat} (iNat) = {n_gbif + n_inat} registros.")
+        cli::cli_alert_success(
+          "Lote {i}/{total_lotes} [{toupper(nombre_lote)}]: {n_gbif} (GBIF) + {n_inat} (iNat) = {n_gbif + n_inat} registros."
+        )
       }
     }
-    
-    if (i < total_lotes && pausa_entre_lotes_s > 0) Sys.sleep(pausa_entre_lotes_s)
+
+    if (i < total_lotes && pausa_entre_lotes_s > 0) {
+      Sys.sleep(pausa_entre_lotes_s)
+    }
   }
-  list(ocurrencias = consolidar_ocurrencias(resultados), fallos = fallos)
+  list(
+    ocurrencias = consolidar_ocurrencias(resultados),
+    fallos = fallos,
+    taxonomia_gbif = resolucion_taxonomica
+  )
 }
 
-preparar_lotes_espaciales <- function(unidad_sf, nivel, nombre, departamento,
-                                      estrategia_espacial,
-                                      max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
-                                      max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
-                                      nombre_cientifico = NULL,
-                                      grupo = NULL) {
+preparar_lotes_espaciales <- function(
+  unidad_sf,
+  nivel,
+  nombre,
+  departamento,
+  estrategia_espacial,
+  max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+  max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
+  nombre_cientifico = NULL,
+  grupo = NULL
+) {
   if (estrategia_espacial == "directa") {
     unidad_sf$tile_id <- 1L
     return(unidad_sf)
@@ -116,13 +203,17 @@ preparar_lotes_espaciales <- function(unidad_sf, nivel, nombre, departamento,
   }
   if (estrategia_espacial == "segmentada") {
     lotes <- lapply(seq_len(nrow(bases)), function(i) {
-      dividir_poligono_por_area(bases[i, ], max_area_ha = max_area_ha, max_lotes = max_lotes)
+      dividir_poligono_por_area(
+        bases[i, ],
+        max_area_ha = max_area_ha,
+        max_lotes = max_lotes
+      )
     })
     res <- do.call(rbind, lotes)
     res$tile_id <- seq_len(nrow(res))
     return(res)
   }
-  
+
   # En modo "auto":
   # 1. Si es búsqueda de una especie concreta, se consulta en 1 bloque directo por unidad
   # 2. Si es inventario general y la unidad es grande (> 50,000 ha),
@@ -132,12 +223,20 @@ preparar_lotes_espaciales <- function(unidad_sf, nivel, nombre, departamento,
     lotes_lista <- list()
     for (i in seq_len(nrow(bases))) {
       b_i <- bases[i, ]
-      area_ha <- tryCatch({
-        as.numeric(sf::st_area(sf::st_union(sf::st_transform(b_i, 3857)))) / 10000
-      }, error = function(e) 0)
-      
+      area_ha <- tryCatch(
+        {
+          as.numeric(sf::st_area(sf::st_union(sf::st_transform(b_i, 3857)))) /
+            10000
+        },
+        error = function(e) 0
+      )
+
       if (area_ha > umbral_macro_ha) {
-        lotes_lista[[i]] <- dividir_poligono_por_area(b_i, max_area_ha = umbral_macro_ha, max_lotes = max_lotes)
+        lotes_lista[[i]] <- dividir_poligono_por_area(
+          b_i,
+          max_area_ha = umbral_macro_ha,
+          max_lotes = max_lotes
+        )
       } else {
         b_i$tile_id <- 1L
         lotes_lista[[i]] <- b_i
@@ -147,7 +246,7 @@ preparar_lotes_espaciales <- function(unidad_sf, nivel, nombre, departamento,
     res$tile_id <- seq_len(nrow(res))
     return(res)
   }
-  
+
   bases$tile_id <- seq_len(nrow(bases))
   bases
 }
@@ -193,6 +292,22 @@ preparar_lotes_espaciales <- function(unidad_sf, nivel, nombre, departamento,
 #' @param cache_dir Directorio para guardar checkpoints `.rds` por lote y fuente.
 #' @param reintentos Entero positivo con el número de intentos para llamadas API.
 #' @param pausa_entre_lotes_s Pausa en segundos entre lotes consecutivos.
+#' @param taxonomia_gbif Taxonomía de GBIF: `"col"` (predeterminada) o
+#'   `"backbone"`. Todas las claves taxonómicas se resuelven en ella.
+#' @param coincidencia_taxonomica Política para coincidencias no exactas:
+#'   `"exacta"`, `"permitir_fuzzy"` o `"permitir_rango_superior"`.
+#' @param filtros_calidad_gbif Lista de filtros; use
+#'   [filtros_calidad_gbif_predeterminados()] como punto de partida.
+#' @param excluir_incidentes_geoespaciales,solo_ocurrencias_presentes Atajos
+#'   lógicos para los filtros de calidad más habituales. Con `NULL` conservan
+#'   la política de `filtros_calidad_gbif`.
+#' @param excluir_fosiles,excluir_especimenes_vivos Atajos lógicos para
+#'   incluir o excluir esos tipos de registros.
+#' @param incertidumbre_max_m,distancia_min_centroide_m Umbrales espaciales en
+#'   metros. Con `NULL` no modifican la política de calidad.
+#' @param permitir_incertidumbre_desconocida Conserva registros sin una
+#'   incertidumbre declarada al usar `incertidumbre_max_m`.
+#' @param licencias_gbif Una licencia o vector de licencias admitidas.
 #' @return Objeto con clase `peruocc_resultado` (lista con límite `unidad_sf`,
 #'   tibble de `ocurrencias`, `resumen` estadístico y `parametros`).
 #' @details La deduplicación usa `source` y `sourceRecordID`; un mismo registro
@@ -209,69 +324,185 @@ preparar_lotes_espaciales <- function(unidad_sf, nivel, nombre, departamento,
 #' head(resultado$ocurrencias)
 #' }
 #' @export
-buscar_especies_peru <- function(nombre,
-                                 nivel = c("distrito", "provincia"),
-                                 departamento = NULL,
-                                 provincia = NULL,
-                                 nombre_cientifico = NULL,
-                                 grupo = NULL,
-                                 limite_por_api = configuracion_predeterminada()$limite_por_api,
-                                 guardar_resultados = FALSE,
-                                 dir_salida = NULL,
-                                 tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
-                                 estrategia_espacial = c("auto", "directa", "segmentada"),
-                                 max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
-                                 max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
-                                 cache_dir = ruta_cache("consultas_ocurrencias"),
-                                 reintentos = configuracion_predeterminada()$reintentos_api,
-                                 pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s) {
+buscar_especies_peru <- function(
+  nombre,
+  nivel = c("distrito", "provincia"),
+  departamento = NULL,
+  provincia = NULL,
+  nombre_cientifico = NULL,
+  grupo = NULL,
+  limite_por_api = configuracion_predeterminada()$limite_por_api,
+  guardar_resultados = FALSE,
+  dir_salida = NULL,
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  estrategia_espacial = c("auto", "directa", "segmentada"),
+  max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+  max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
+  cache_dir = ruta_cache("consultas_ocurrencias"),
+  reintentos = configuracion_predeterminada()$reintentos_api,
+  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s,
+  taxonomia_gbif = c("col", "backbone"),
+  coincidencia_taxonomica = c(
+    "exacta",
+    "permitir_fuzzy",
+    "permitir_rango_superior"
+  ),
+  filtros_calidad_gbif = filtros_calidad_gbif_predeterminados(),
+  excluir_incidentes_geoespaciales = NULL,
+  solo_ocurrencias_presentes = NULL,
+  excluir_fosiles = NULL,
+  excluir_especimenes_vivos = NULL,
+  incertidumbre_max_m = NULL,
+  permitir_incertidumbre_desconocida = NULL,
+  distancia_min_centroide_m = NULL,
+  licencias_gbif = NULL
+) {
   nivel <- match.arg(nivel)
   estrategia_espacial <- match.arg(estrategia_espacial)
-  validar_entrada_busqueda(unidad = nombre, grupo = grupo, limite = limite_por_api, nivel = nivel)
-  
+  taxonomia_gbif <- match.arg(taxonomia_gbif)
+  coincidencia_taxonomica <- match.arg(coincidencia_taxonomica)
+  validar_entrada_busqueda(
+    unidad = nombre,
+    grupo = grupo,
+    limite = limite_por_api,
+    nivel = nivel
+  )
+  filtros_calidad_gbif <- aplicar_atajos_calidad_gbif(
+    filtros_calidad_gbif,
+    excluir_incidentes_geoespaciales,
+    solo_ocurrencias_presentes,
+    excluir_fosiles,
+    excluir_especimenes_vivos,
+    incertidumbre_max_m,
+    permitir_incertidumbre_desconocida,
+    distancia_min_centroide_m,
+    licencias_gbif
+  )
+
   cli::cli_h1("B\u00fasqueda Integrada: {toupper(nombre)} ({toupper(nivel)})")
   params_items <- character()
-  if (!is.null(departamento)) params_items <- c(params_items, paste0("Departamento: ", departamento))
-  if (!is.null(provincia) && nivel == "distrito") params_items <- c(params_items, paste0("Provincia: ", provincia))
-  if (!is.null(nombre_cientifico)) params_items <- c(params_items, paste0("Tax\u00f3n: ", nombre_cientifico))
-  if (!is.null(grupo)) params_items <- c(params_items, paste0("Grupo: ", grupo))
+  if (!is.null(departamento)) {
+    params_items <- c(params_items, paste0("Departamento: ", departamento))
+  }
+  if (!is.null(provincia) && nivel == "distrito") {
+    params_items <- c(params_items, paste0("Provincia: ", provincia))
+  }
+  if (!is.null(nombre_cientifico)) {
+    params_items <- c(params_items, paste0("Tax\u00f3n: ", nombre_cientifico))
+  }
+  if (!is.null(grupo)) {
+    params_items <- c(params_items, paste0("Grupo: ", grupo))
+  }
   if (length(params_items) > 0) {
     cli::cli_ul(params_items)
   }
-  
+
   # 1. Obtener el poligono de la unidad administrativa
-  unidad_sf <- tryCatch({
-    obtener_poligono_unidad(nombre = nombre, nivel = nivel, departamento = departamento, provincia = provincia)
-  }, error = function(e) {
-    cli::cli_abort(e$message, parent = e)
-  })
-  
-  nombre_oficial_dist <- if (!is.null(unidad_sf$distrito) && !is.na(unidad_sf$distrito[1])) unidad_sf$distrito[1] else NA_character_
-  nombre_oficial_prov <- if (!is.null(unidad_sf$provincia) && !is.na(unidad_sf$provincia[1])) unidad_sf$provincia[1] else NA_character_
-  nombre_oficial_dep <- if (!is.null(unidad_sf$departamento) && !is.na(unidad_sf$departamento[1])) unidad_sf$departamento[1] else NA_character_
-  etiqueta_unidad <- if (!is.na(nombre_oficial_dist)) nombre_oficial_dist else nombre_oficial_prov
-  
+  unidad_sf <- tryCatch(
+    {
+      obtener_poligono_unidad(
+        nombre = nombre,
+        nivel = nivel,
+        departamento = departamento,
+        provincia = provincia
+      )
+    },
+    error = function(e) {
+      cli::cli_abort(e$message, parent = e)
+    }
+  )
+
+  nombre_oficial_dist <- if (
+    !is.null(unidad_sf$distrito) && !is.na(unidad_sf$distrito[1])
+  ) {
+    unidad_sf$distrito[1]
+  } else {
+    NA_character_
+  }
+  nombre_oficial_prov <- if (
+    !is.null(unidad_sf$provincia) && !is.na(unidad_sf$provincia[1])
+  ) {
+    unidad_sf$provincia[1]
+  } else {
+    NA_character_
+  }
+  nombre_oficial_dep <- if (
+    !is.null(unidad_sf$departamento) && !is.na(unidad_sf$departamento[1])
+  ) {
+    unidad_sf$departamento[1]
+  } else {
+    NA_character_
+  }
+  etiqueta_unidad <- if (!is.na(nombre_oficial_dist)) {
+    nombre_oficial_dist
+  } else {
+    nombre_oficial_prov
+  }
+  resolucion_taxonomica <- resolver_taxonomia_gbif(
+    nombre_cientifico = nombre_cientifico,
+    grupo = grupo,
+    checklist_key = normalizar_taxonomia_gbif(taxonomia_gbif),
+    coincidencia = coincidencia_taxonomica,
+    reintentos = reintentos
+  )
+
   # 2. Provincias se descomponen en distritos; unidades extensas se teselan de forma adaptativa.
-  lotes_sf <- preparar_lotes_espaciales(unidad_sf, nivel, nombre, departamento,
-                                        estrategia_espacial, max_area_ha, max_lotes,
-                                        nombre_cientifico, grupo)
-  clave_ejecucion <- nombre_seguro_cache(c(nivel, nombre, departamento, nombre_cientifico, grupo,
-                                           limite_por_api, max_area_ha, max_lotes, tolerancia_simplificacion,
-                                           estrategia_espacial))
-  descarga <- consultar_lotes_espaciales(lotes_sf, nombre_cientifico, grupo, limite_por_api,
-                                         tolerancia_simplificacion, cache_dir, reintentos,
-                                         pausa_entre_lotes_s, clave_ejecucion)
+  lotes_sf <- preparar_lotes_espaciales(
+    unidad_sf,
+    nivel,
+    nombre,
+    departamento,
+    estrategia_espacial,
+    max_area_ha,
+    max_lotes,
+    nombre_cientifico,
+    grupo
+  )
+  clave_ejecucion <- nombre_seguro_cache(c(
+    nivel,
+    nombre,
+    departamento,
+    nombre_cientifico,
+    grupo,
+    limite_por_api,
+    max_area_ha,
+    max_lotes,
+    tolerancia_simplificacion,
+    estrategia_espacial,
+    taxonomia_gbif,
+    coincidencia_taxonomica,
+    unlist(filtros_calidad_gbif)
+  ))
+  descarga <- consultar_lotes_espaciales(
+    lotes_sf,
+    nombre_cientifico,
+    grupo,
+    limite_por_api,
+    tolerancia_simplificacion,
+    cache_dir,
+    reintentos,
+    pausa_entre_lotes_s,
+    clave_ejecucion,
+    taxonomia_gbif,
+    coincidencia_taxonomica,
+    filtros_calidad_gbif,
+    resolucion_taxonomica
+  )
   ocurrencias_combinadas <- descarga$ocurrencias
   if (nrow(ocurrencias_combinadas) == 0) {
-    cli::cli_alert_warning("No se encontraron ocurrencias en ninguna de las bases de datos.")
+    cli::cli_alert_warning(
+      "No se encontraron ocurrencias en ninguna de las bases de datos."
+    )
   } else {
-    cli::cli_alert_success("Consolidaci\u00f3n exitosa. Total de registros unificados: {.strong {nrow(ocurrencias_combinadas)}}")
+    cli::cli_alert_success(
+      "Consolidaci\u00f3n exitosa. Total de registros unificados: {.strong {nrow(ocurrencias_combinadas)}}"
+    )
   }
-  
+
   # 5. Generar Estadisticas de Resumen
   n_gbif <- sum(ocurrencias_combinadas$source == "GBIF")
   n_inat <- sum(ocurrencias_combinadas$source == "iNaturalist")
-  
+
   resumen <- list(
     nivel = nivel,
     unidad = etiqueta_unidad,
@@ -288,9 +519,13 @@ buscar_especies_peru <- function(nombre,
     inat_descarga_completa_api = FALSE,
     lotes_espaciales = nrow(lotes_sf),
     fallos_lotes = descarga$fallos,
-    nota_cobertura = if (is.null(limite_por_api)) "Se solicito descarga completa dentro de los limites tecnicos de las APIs." else "Se solicito una muestra limitada por API; la cobertura puede estar truncada."
+    nota_cobertura = if (is.null(limite_por_api)) {
+      "Se solicito descarga completa dentro de los limites tecnicos de las APIs."
+    } else {
+      "Se solicito una muestra limitada por API; la cobertura puede estar truncada."
+    }
   )
-  
+
   cli::cli_h2("Resumen de Registros")
   cli::cli_bullets(c(
     "*" = "GBIF: {.val {n_gbif}} registro(s)",
@@ -298,10 +533,12 @@ buscar_especies_peru <- function(nombre,
     "v" = "Total consolidado: {.strong {nrow(ocurrencias_combinadas)}} registro(s)"
   ))
   if (length(descarga$fallos) > 0) {
-    cli::cli_alert_danger("Se registraron fallos en {length(descarga$fallos)} lote(s):")
+    cli::cli_alert_danger(
+      "Se registraron fallos en {length(descarga$fallos)} lote(s):"
+    )
     cli::cli_ul(descarga$fallos)
   }
-  
+
   resultado_obj <- list(
     unidad_sf = unidad_sf,
     distrito_sf = unidad_sf, # Alias para compatibilidad
@@ -318,15 +555,18 @@ buscar_especies_peru <- function(nombre,
       tolerancia_simplificacion_m = tolerancia_simplificacion,
       estrategia_espacial = estrategia_espacial,
       max_area_ha = max_area_ha,
-      cache_dir = cache_dir
+      cache_dir = cache_dir,
+      taxonomia_gbif = descarga$taxonomia_gbif,
+      coincidencia_taxonomica = coincidencia_taxonomica,
+      filtros_calidad_gbif = filtros_calidad_gbif
     )
   )
-  
+
   # 6. Guardar Resultados en Archivos si se solicita explicitamente
   if (isTRUE(guardar_resultados) && nrow(ocurrencias_combinadas) > 0) {
     exportar_resultados(resultado_obj, dir_salida = dir_salida)
   }
-  
+
   return(resultado_obj)
 }
 
@@ -358,15 +598,17 @@ buscar_especies_peru <- function(nombre,
 #' head(res$ocurrencias)
 #' }
 #' @export
-buscar_especies_distrito <- function(distrito, 
-                                     departamento = NULL, 
-                                     provincia = NULL, 
-                                     nombre_cientifico = NULL, 
-                                     grupo = NULL, 
-                                     limite_por_api = configuracion_predeterminada()$limite_por_api,
-                                     guardar_resultados = FALSE,
-                                     tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
-                                     ...) {
+buscar_especies_distrito <- function(
+  distrito,
+  departamento = NULL,
+  provincia = NULL,
+  nombre_cientifico = NULL,
+  grupo = NULL,
+  limite_por_api = configuracion_predeterminada()$limite_por_api,
+  guardar_resultados = FALSE,
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  ...
+) {
   buscar_especies_peru(
     nombre = distrito,
     nivel = "distrito",
@@ -408,14 +650,16 @@ buscar_especies_distrito <- function(distrito,
 #' head(res$ocurrencias)
 #' }
 #' @export
-buscar_especies_provincia <- function(provincia, 
-                                      departamento = NULL, 
-                                      nombre_cientifico = NULL, 
-                                      grupo = NULL, 
-                                      limite_por_api = configuracion_predeterminada()$limite_por_api,
-                                      guardar_resultados = FALSE,
-                                      tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
-                                      ...) {
+buscar_especies_provincia <- function(
+  provincia,
+  departamento = NULL,
+  nombre_cientifico = NULL,
+  grupo = NULL,
+  limite_por_api = configuracion_predeterminada()$limite_por_api,
+  guardar_resultados = FALSE,
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  ...
+) {
   buscar_especies_peru(
     nombre = provincia,
     nivel = "provincia",
@@ -470,6 +714,21 @@ buscar_especies_provincia <- function(provincia,
 #'   llamadas remotas transitorias.
 #' @param pausa_entre_lotes_s Número no negativo de segundos de espera entre
 #'   lotes. Aumentarlo es útil ante respuestas de límite de tasa.
+#' @param taxonomia_gbif Taxonomía de GBIF: `"col"` (predeterminada) o
+#'   `"backbone"`.
+#' @param coincidencia_taxonomica Política para coincidencias no exactas:
+#'   `"exacta"`, `"permitir_fuzzy"` o `"permitir_rango_superior"`.
+#' @param filtros_calidad_gbif Lista de filtros de calidad de GBIF. Use
+#'   [filtros_calidad_gbif_predeterminados()] como punto de partida.
+#' @param excluir_incidentes_geoespaciales,solo_ocurrencias_presentes Atajos
+#'   lógicos de calidad. Con `NULL` conservan `filtros_calidad_gbif`.
+#' @param excluir_fosiles,excluir_especimenes_vivos Atajos lógicos para esos
+#'   tipos de registros.
+#' @param incertidumbre_max_m,distancia_min_centroide_m Umbrales espaciales en
+#'   metros.
+#' @param permitir_incertidumbre_desconocida Conserva valores de incertidumbre
+#'   ausentes al establecer `incertidumbre_max_m`.
+#' @param licencias_gbif Una licencia o vector de licencias permitidas.
 #' @return Lista con `unidad_sf`, `ocurrencias`, `resumen` y `parametros`.
 #'   `resumen$fallos_lotes` indica si alguna fuente/lote no pudo completarse.
 #' @examples
@@ -481,58 +740,145 @@ buscar_especies_provincia <- function(provincia,
 #'                                        grupo = "flora", limite_por_api = 500)
 #' }
 #' @export
-buscar_especies_poligono <- function(poligono,
-                                     nombre = NULL,
-                                     nombre_cientifico = NULL,
-                                     grupo = NULL,
-                                     limite_por_api = configuracion_predeterminada()$limite_por_api,
-                                     guardar_resultados = FALSE,
-                                     dir_salida = NULL,
-                                     tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
-                                     estrategia_espacial = c("auto", "directa", "segmentada"),
-                                     max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
-                                     max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
-                                     cache_dir = ruta_cache("consultas_ocurrencias"),
-                                     reintentos = configuracion_predeterminada()$reintentos_api,
-                                     pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s) {
-  
+buscar_especies_poligono <- function(
+  poligono,
+  nombre = NULL,
+  nombre_cientifico = NULL,
+  grupo = NULL,
+  limite_por_api = configuracion_predeterminada()$limite_por_api,
+  guardar_resultados = FALSE,
+  dir_salida = NULL,
+  tolerancia_simplificacion = configuracion_predeterminada()$tolerancia_simplificacion_m,
+  estrategia_espacial = c("auto", "directa", "segmentada"),
+  max_area_ha = configuracion_predeterminada()$max_area_ha_por_lote,
+  max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
+  cache_dir = ruta_cache("consultas_ocurrencias"),
+  reintentos = configuracion_predeterminada()$reintentos_api,
+  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s,
+  taxonomia_gbif = c("col", "backbone"),
+  coincidencia_taxonomica = c(
+    "exacta",
+    "permitir_fuzzy",
+    "permitir_rango_superior"
+  ),
+  filtros_calidad_gbif = filtros_calidad_gbif_predeterminados(),
+  excluir_incidentes_geoespaciales = NULL,
+  solo_ocurrencias_presentes = NULL,
+  excluir_fosiles = NULL,
+  excluir_especimenes_vivos = NULL,
+  incertidumbre_max_m = NULL,
+  permitir_incertidumbre_desconocida = NULL,
+  distancia_min_centroide_m = NULL,
+  licencias_gbif = NULL
+) {
   # 1. Preparar y validar el poligono provisto
   unidad_sf <- preparar_poligono_usuario(poligono = poligono, nombre = nombre)
-  etiqueta_unidad <- if (!is.null(unidad_sf$unidad) && !is.na(unidad_sf$unidad[1])) unidad_sf$unidad[1] else "Poligono_Personalizado"
-  
-  validar_entrada_busqueda(unidad = etiqueta_unidad, grupo = grupo, limite = limite_por_api, nivel = "poligono")
+  etiqueta_unidad <- if (
+    !is.null(unidad_sf$unidad) && !is.na(unidad_sf$unidad[1])
+  ) {
+    unidad_sf$unidad[1]
+  } else {
+    "Poligono_Personalizado"
+  }
+
+  validar_entrada_busqueda(
+    unidad = etiqueta_unidad,
+    grupo = grupo,
+    limite = limite_por_api,
+    nivel = "poligono"
+  )
   estrategia_espacial <- match.arg(estrategia_espacial)
-  
-  cli::cli_h1("B\u00fasqueda Integrada en Pol\u00edgono: {toupper(etiqueta_unidad)}")
+  taxonomia_gbif <- match.arg(taxonomia_gbif)
+  coincidencia_taxonomica <- match.arg(coincidencia_taxonomica)
+  filtros_calidad_gbif <- aplicar_atajos_calidad_gbif(
+    filtros_calidad_gbif,
+    excluir_incidentes_geoespaciales,
+    solo_ocurrencias_presentes,
+    excluir_fosiles,
+    excluir_especimenes_vivos,
+    incertidumbre_max_m,
+    permitir_incertidumbre_desconocida,
+    distancia_min_centroide_m,
+    licencias_gbif
+  )
+
+  cli::cli_h1(
+    "B\u00fasqueda Integrada en Pol\u00edgono: {toupper(etiqueta_unidad)}"
+  )
   params_items <- character()
-  if (!is.null(nombre_cientifico)) params_items <- c(params_items, paste0("Tax\u00f3n: ", nombre_cientifico))
-  if (!is.null(grupo)) params_items <- c(params_items, paste0("Grupo: ", grupo))
+  if (!is.null(nombre_cientifico)) {
+    params_items <- c(params_items, paste0("Tax\u00f3n: ", nombre_cientifico))
+  }
+  if (!is.null(grupo)) {
+    params_items <- c(params_items, paste0("Grupo: ", grupo))
+  }
   if (length(params_items) > 0) {
     cli::cli_ul(params_items)
   }
-  
+
   # 2. Particionamiento adaptativo de poligono personalizado
-  lotes_sf <- preparar_lotes_espaciales(unidad_sf, nivel = "poligono", nombre = etiqueta_unidad,
-                                        departamento = NULL, estrategia_espacial = estrategia_espacial,
-                                        max_area_ha = max_area_ha, max_lotes = max_lotes,
-                                        nombre_cientifico = nombre_cientifico, grupo = grupo)
-  clave_ejecucion <- nombre_seguro_cache(c("poligono", etiqueta_unidad, nombre_cientifico, grupo,
-                                           limite_por_api, max_area_ha, max_lotes, tolerancia_simplificacion,
-                                           estrategia_espacial))
-  descarga <- consultar_lotes_espaciales(lotes_sf, nombre_cientifico, grupo, limite_por_api,
-                                         tolerancia_simplificacion, cache_dir, reintentos,
-                                         pausa_entre_lotes_s, clave_ejecucion)
+  lotes_sf <- preparar_lotes_espaciales(
+    unidad_sf,
+    nivel = "poligono",
+    nombre = etiqueta_unidad,
+    departamento = NULL,
+    estrategia_espacial = estrategia_espacial,
+    max_area_ha = max_area_ha,
+    max_lotes = max_lotes,
+    nombre_cientifico = nombre_cientifico,
+    grupo = grupo
+  )
+  resolucion_taxonomica <- resolver_taxonomia_gbif(
+    nombre_cientifico = nombre_cientifico,
+    grupo = grupo,
+    checklist_key = normalizar_taxonomia_gbif(taxonomia_gbif),
+    coincidencia = coincidencia_taxonomica,
+    reintentos = reintentos
+  )
+  clave_ejecucion <- nombre_seguro_cache(c(
+    "poligono",
+    etiqueta_unidad,
+    nombre_cientifico,
+    grupo,
+    limite_por_api,
+    max_area_ha,
+    max_lotes,
+    tolerancia_simplificacion,
+    estrategia_espacial,
+    taxonomia_gbif,
+    coincidencia_taxonomica,
+    unlist(filtros_calidad_gbif)
+  ))
+  descarga <- consultar_lotes_espaciales(
+    lotes_sf,
+    nombre_cientifico,
+    grupo,
+    limite_por_api,
+    tolerancia_simplificacion,
+    cache_dir,
+    reintentos,
+    pausa_entre_lotes_s,
+    clave_ejecucion,
+    taxonomia_gbif,
+    coincidencia_taxonomica,
+    filtros_calidad_gbif,
+    resolucion_taxonomica
+  )
   ocurrencias_combinadas <- descarga$ocurrencias
   if (nrow(ocurrencias_combinadas) == 0) {
-    cli::cli_alert_warning("No se encontraron ocurrencias en ninguna de las bases de datos.")
+    cli::cli_alert_warning(
+      "No se encontraron ocurrencias en ninguna de las bases de datos."
+    )
   } else {
-    cli::cli_alert_success("Consolidaci\u00f3n exitosa. Total de registros unificados: {.strong {nrow(ocurrencias_combinadas)}}")
+    cli::cli_alert_success(
+      "Consolidaci\u00f3n exitosa. Total de registros unificados: {.strong {nrow(ocurrencias_combinadas)}}"
+    )
   }
-  
+
   # 5. Generar Estadisticas de Resumen
   n_gbif <- sum(ocurrencias_combinadas$source == "GBIF")
   n_inat <- sum(ocurrencias_combinadas$source == "iNaturalist")
-  
+
   resumen <- list(
     nivel = "poligono",
     unidad = etiqueta_unidad,
@@ -549,9 +895,13 @@ buscar_especies_poligono <- function(poligono,
     inat_descarga_completa_api = FALSE,
     lotes_espaciales = nrow(lotes_sf),
     fallos_lotes = descarga$fallos,
-    nota_cobertura = if (is.null(limite_por_api)) "Se solicito descarga completa dentro de los limites tecnicos de las APIs." else "Se solicito una muestra limitada por API; la cobertura puede estar truncada."
+    nota_cobertura = if (is.null(limite_por_api)) {
+      "Se solicito descarga completa dentro de los limites tecnicos de las APIs."
+    } else {
+      "Se solicito una muestra limitada por API; la cobertura puede estar truncada."
+    }
   )
-  
+
   cli::cli_h2("Resumen de Registros")
   cli::cli_bullets(c(
     "*" = "GBIF: {.val {n_gbif}} registro(s)",
@@ -559,10 +909,12 @@ buscar_especies_poligono <- function(poligono,
     "v" = "Total consolidado: {.strong {nrow(ocurrencias_combinadas)}} registro(s)"
   ))
   if (length(descarga$fallos) > 0) {
-    cli::cli_alert_danger("Se registraron fallos en {length(descarga$fallos)} lote(s):")
+    cli::cli_alert_danger(
+      "Se registraron fallos en {length(descarga$fallos)} lote(s):"
+    )
     cli::cli_ul(descarga$fallos)
   }
-  
+
   resultado_obj <- list(
     unidad_sf = unidad_sf,
     distrito_sf = unidad_sf, # Alias para compatibilidad
@@ -579,14 +931,17 @@ buscar_especies_poligono <- function(poligono,
       tolerancia_simplificacion_m = tolerancia_simplificacion,
       estrategia_espacial = estrategia_espacial,
       max_area_ha = max_area_ha,
-      cache_dir = cache_dir
+      cache_dir = cache_dir,
+      taxonomia_gbif = descarga$taxonomia_gbif,
+      coincidencia_taxonomica = coincidencia_taxonomica,
+      filtros_calidad_gbif = filtros_calidad_gbif
     )
   )
-  
+
   # 6. Guardar Resultados en Archivos si se solicita explicitamente
   if (isTRUE(guardar_resultados) && nrow(ocurrencias_combinadas) > 0) {
     exportar_resultados(resultado_obj, dir_salida = dir_salida)
   }
-  
+
   return(resultado_obj)
 }

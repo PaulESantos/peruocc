@@ -27,50 +27,92 @@
 #' @return `data.frame` estandarizado con las observaciones dentro del polígono.
 #'   Incluye los atributos `api_total` y `api_complete` cuando están disponibles.
 #' @noRd
-buscar_inat_por_poligono <- function(poligono_sf, 
-                                     query = NULL, 
-                                     taxon_name = NULL, 
-                                     grupo = NULL, 
-                                     calidad = "research", 
-                                     limite = 500,
-                                     reintentos = configuracion_predeterminada()$reintentos_api,
-                                     verbose = TRUE) {
-  
-  if (verbose) cli::cli_alert_info("[iNaturalist] Iniciando b\u00fasqueda de ocurrencias...")
-  
+buscar_inat_por_poligono <- function(
+  poligono_sf,
+  query = NULL,
+  taxon_name = NULL,
+  grupo = NULL,
+  calidad = "research",
+  limite = 500,
+  reintentos = configuracion_predeterminada()$reintentos_api,
+  consulta_fun = rinat::get_inat_obs,
+  verbose = TRUE
+) {
+  if (verbose) {
+    cli::cli_alert_info(
+      "[iNaturalist] Iniciando b\u00fasqueda de ocurrencias..."
+    )
+  }
+
   # Obtener nombres administrativos para registrar en el dataset
-  nombre_distrito <- if (!is.null(poligono_sf$distrito) && !is.na(poligono_sf$distrito[1])) poligono_sf$distrito[1] else NA_character_
-  nombre_provincia <- if (!is.null(poligono_sf$provincia) && !is.na(poligono_sf$provincia[1])) poligono_sf$provincia[1] else NA_character_
-  nombre_departamento <- if (!is.null(poligono_sf$departamento) && !is.na(poligono_sf$departamento[1])) poligono_sf$departamento[1] else NA_character_
-  etiqueta_unidad <- if (!is.na(nombre_distrito)) nombre_distrito else if (!is.na(nombre_provincia)) nombre_provincia else "Unidad seleccionada"
-  
+  nombre_distrito <- if (
+    !is.null(poligono_sf$distrito) && !is.na(poligono_sf$distrito[1])
+  ) {
+    poligono_sf$distrito[1]
+  } else {
+    NA_character_
+  }
+  nombre_provincia <- if (
+    !is.null(poligono_sf$provincia) && !is.na(poligono_sf$provincia[1])
+  ) {
+    poligono_sf$provincia[1]
+  } else {
+    NA_character_
+  }
+  nombre_departamento <- if (
+    !is.null(poligono_sf$departamento) && !is.na(poligono_sf$departamento[1])
+  ) {
+    poligono_sf$departamento[1]
+  } else {
+    NA_character_
+  }
+  etiqueta_unidad <- if (!is.na(nombre_distrito)) {
+    nombre_distrito
+  } else if (!is.na(nombre_provincia)) {
+    nombre_provincia
+  } else {
+    "Unidad seleccionada"
+  }
+
   # 1. Obtener el Bounding Box del poligono
   bbox <- sf::st_bbox(poligono_sf)
   bbox_vector <- c(bbox["ymin"], bbox["xmin"], bbox["ymax"], bbox["xmax"])
-  
+
   # 2. Configurar filtros de taxon y grupo
   taxon_query <- taxon_name
-  
+
   if (is.null(taxon_query) && !is.null(grupo)) {
     grupo_clean <- tolower(trimws(grupo))
     if (grupo_clean == "flora") {
       taxon_query <- "Plantae"
-      if (verbose) cli::cli_alert_info("[iNaturalist] Filtrando por reino Plantae (Flora).")
+      if (verbose) {
+        cli::cli_alert_info(
+          "[iNaturalist] Filtrando por reino Plantae (Flora)."
+        )
+      }
     } else if (grupo_clean == "fauna") {
       taxon_query <- "Animalia"
-      if (verbose) cli::cli_alert_info("[iNaturalist] Filtrando por reino Animalia (Fauna).")
+      if (verbose) {
+        cli::cli_alert_info(
+          "[iNaturalist] Filtrando por reino Animalia (Fauna)."
+        )
+      }
     }
   }
-  
+
   # 3. Consultar a iNaturalist usando el Bounding Box
   limite_etiqueta <- if (is.null(limite)) "completo" else as.character(limite)
-  if (verbose) cli::cli_alert_info("[iNaturalist] Consultando registros dentro de la caja delimitadora de {.strong {etiqueta_unidad}} (l\u00edmite: {.val {limite_etiqueta}})...")
-  
+  if (verbose) {
+    cli::cli_alert_info(
+      "[iNaturalist] Consultando registros dentro de la caja delimitadora de {.strong {etiqueta_unidad}} (l\u00edmite: {.val {limite_etiqueta}})..."
+    )
+  }
+
   parametros <- list(
     bounds = bbox_vector,
     geo = TRUE
   )
-  
+
   if (!is.null(query) && query != "") {
     parametros$query <- query
   }
@@ -80,30 +122,59 @@ buscar_inat_por_poligono <- function(poligono_sf,
   if (!is.null(calidad) && calidad != "") {
     parametros$quality <- calidad
   }
-  
+
   total_api <- NA_integer_
   df_vacio <- schema_ocurrencias()
 
   if (is.null(limite)) {
     metadatos <- tryCatch(
-      ejecutar_con_reintentos(function() {
-        tryCatch(
-          do.call(rinat::get_inat_obs, c(parametros, list(maxresults = 1, meta = TRUE))),
-          error = function(e) {
-            if (grepl("zero results|no records|invalid search", e$message, ignore.case = TRUE)) {
-              return(list(meta = list(found = 0L)))
+      ejecutar_con_reintentos(
+        function() {
+          tryCatch(
+            do.call(
+              consulta_fun,
+              c(parametros, list(maxresults = 1, meta = TRUE))
+            ),
+            error = function(e) {
+              if (
+                grepl(
+                  "zero results|no records|invalid search",
+                  e$message,
+                  ignore.case = TRUE
+                )
+              ) {
+                return(list(meta = list(found = 0L)))
+              }
+              stop(e)
             }
-            stop(e)
-          }
-        )
-      }, reintentos, "iNaturalist conteo"),
+          )
+        },
+        reintentos,
+        "iNaturalist conteo"
+      ),
       error = function(e) NULL
     )
-    total_api <- if (!is.null(metadatos$meta$found)) as.integer(metadatos$meta$found) else NA_integer_
-    if (is.na(total_api)) cli::cli_abort("iNaturalist no devolvi\u00f3 el conteo de la consulta; no es posible verificar una descarga completa.")
-    if (total_api > 10000L) cli::cli_abort("iNaturalist reporta {format(total_api, big.mark = ',')} registros. El cliente rinat solo descarga hasta 10000 por consulta; use la exportaci\u00f3n oficial de iNaturalist o divida la extracci\u00f3n por per\u00edodos antes de combinarla.")
+    total_api <- if (!is.null(metadatos$meta$found)) {
+      as.integer(metadatos$meta$found)
+    } else {
+      NA_integer_
+    }
+    if (is.na(total_api)) {
+      cli::cli_abort(
+        "iNaturalist no devolvi\u00f3 el conteo de la consulta; no es posible verificar una descarga completa."
+      )
+    }
+    if (total_api > 10000L) {
+      cli::cli_abort(
+        "iNaturalist reporta {format(total_api, big.mark = ',')} registros. El cliente rinat solo descarga hasta 10000 por consulta; use la exportaci\u00f3n oficial de iNaturalist o divida la extracci\u00f3n por per\u00edodos antes de combinarla."
+      )
+    }
     if (total_api == 0L) {
-      if (verbose) cli::cli_alert_info("[iNaturalist] No se encontraron ocurrencias en la caja delimitadora.")
+      if (verbose) {
+        cli::cli_alert_info(
+          "[iNaturalist] No se encontraron ocurrencias en la caja delimitadora."
+        )
+      }
       attr(df_vacio, "api_total") <- 0L
       attr(df_vacio, "api_complete") <- TRUE
       return(df_vacio)
@@ -112,55 +183,105 @@ buscar_inat_por_poligono <- function(poligono_sf,
   } else {
     parametros$maxresults <- limite
   }
-  
-  obs_raw <- tryCatch({
-    ejecutar_con_reintentos(function() {
-      tryCatch(
-        do.call(rinat::get_inat_obs, parametros),
-        error = function(e) {
-          if (grepl("zero results|no records|invalid search", e$message, ignore.case = TRUE)) {
-            return(data.frame())
-          }
-          stop(e)
-        }
+
+  obs_raw <- tryCatch(
+    {
+      ejecutar_con_reintentos(
+        function() {
+          tryCatch(
+            do.call(consulta_fun, parametros),
+            error = function(e) {
+              if (
+                grepl(
+                  "zero results|no records|invalid search",
+                  e$message,
+                  ignore.case = TRUE
+                )
+              ) {
+                return(data.frame())
+              }
+              stop(e)
+            }
+          )
+        },
+        reintentos,
+        "iNaturalist ocurrencias"
       )
-    }, reintentos, "iNaturalist ocurrencias")
-  }, error = function(e) {
-    if (verbose) cli::cli_alert_danger("[iNaturalist] Error durante la llamada a {.fn get_inat_obs}: {e$message}")
-    return(NULL)
-  })
-  
+    },
+    error = function(e) {
+      if (verbose) {
+        cli::cli_alert_danger(
+          "[iNaturalist] Error durante la llamada a {.fn get_inat_obs}: {e$message}"
+        )
+      }
+      return(NULL)
+    }
+  )
+
   if (is.null(obs_raw) || nrow(obs_raw) == 0) {
-    if (verbose) cli::cli_alert_info("[iNaturalist] No se encontraron ocurrencias en la caja delimitadora.")
+    if (verbose) {
+      cli::cli_alert_info(
+        "[iNaturalist] No se encontraron ocurrencias en la caja delimitadora."
+      )
+    }
     attr(df_vacio, "api_total") <- if (is.na(total_api)) 0L else total_api
     attr(df_vacio, "api_complete") <- is.null(limite) && !is.na(total_api)
     return(df_vacio)
   }
-  
-  if (verbose) cli::cli_alert_info("[iNaturalist] Se descargaron {nrow(obs_raw)} registros en la caja delimitadora. Aplicando filtro espacial...")
-  
+
+  if (verbose) {
+    cli::cli_alert_info(
+      "[iNaturalist] Se descargaron {nrow(obs_raw)} registros en la caja delimitadora. Aplicando filtro espacial..."
+    )
+  }
+
   # 4. Filtro Espacial (Interseccion con el poligono exacto)
-  obs_sf <- sf::st_as_sf(obs_raw, coords = c("longitude", "latitude"), crs = 4326, remove = FALSE)
+  obs_sf <- sf::st_as_sf(
+    obs_raw,
+    coords = c("longitude", "latitude"),
+    crs = 4326,
+    remove = FALSE
+  )
   poligono_exacto <- sf::st_make_valid(poligono_sf)
   obs_sf <- sf::st_make_valid(obs_sf)
-  
+
   interseccion <- sf::st_intersects(obs_sf, poligono_exacto, sparse = FALSE)
   obs_dentro <- obs_sf[interseccion[, 1], ]
-  
+
   if (nrow(obs_dentro) == 0) {
-    if (verbose) cli::cli_alert_warning("[iNaturalist] Ninguno de los registros se encuentra estrictamente dentro del pol\u00edgono seleccionado.")
+    if (verbose) {
+      cli::cli_alert_warning(
+        "[iNaturalist] Ninguno de los registros se encuentra estrictamente dentro del pol\u00edgono seleccionado."
+      )
+    }
     return(df_vacio)
   }
-  
+
   datos_raw <- sf::st_drop_geometry(obs_dentro)
-  
+
   # 5. Estandarizar columnas de salida
   datos_procesados <- schema_ocurrencias()[rep(1, nrow(datos_raw)), ]
-  
-  datos_procesados$scientificName <- if ("scientific_name" %in% colnames(datos_raw)) datos_raw$scientific_name else as.character(NA)
-  datos_procesados$decimalLatitude <- if ("latitude" %in% colnames(datos_raw)) as.numeric(datos_raw$latitude) else as.numeric(NA)
-  datos_procesados$decimalLongitude <- if ("longitude" %in% colnames(datos_raw)) as.numeric(datos_raw$longitude) else as.numeric(NA)
-  
+
+  datos_procesados$scientificName <- if (
+    "scientific_name" %in% colnames(datos_raw)
+  ) {
+    datos_raw$scientific_name
+  } else {
+    as.character(NA)
+  }
+  datos_procesados$decimalLatitude <- if ("latitude" %in% colnames(datos_raw)) {
+    as.numeric(datos_raw$latitude)
+  } else {
+    as.numeric(NA)
+  }
+  datos_procesados$decimalLongitude <- if (
+    "longitude" %in% colnames(datos_raw)
+  ) {
+    as.numeric(datos_raw$longitude)
+  } else {
+    as.numeric(NA)
+  }
+
   if ("observed_on" %in% colnames(datos_raw)) {
     datos_procesados$eventDate <- as.character(datos_raw$observed_on)
   } else if ("datetime" %in% colnames(datos_raw)) {
@@ -168,45 +289,83 @@ buscar_inat_por_poligono <- function(poligono_sf,
   } else {
     datos_procesados$eventDate <- as.character(NA)
   }
-  
-  datos_procesados$taxonRank <- if ("rank" %in% colnames(datos_raw)) datos_raw$rank else as.character(NA)
-  
+
+  datos_procesados$taxonRank <- if ("rank" %in% colnames(datos_raw)) {
+    datos_raw$rank
+  } else {
+    as.character(NA)
+  }
+
   if (!is.null(grupo)) {
     grupo_clean <- tolower(trimws(grupo))
-    datos_procesados$kingdom <- ifelse(grupo_clean == "flora", "Plantae", ifelse(grupo_clean == "fauna", "Animalia", as.character(NA)))
+    datos_procesados$kingdom <- ifelse(
+      grupo_clean == "flora",
+      "Plantae",
+      ifelse(grupo_clean == "fauna", "Animalia", as.character(NA))
+    )
   } else {
     if (!is.null(taxon_query)) {
-      if (taxon_query == "Plantae") datos_procesados$kingdom <- "Plantae"
-      else if (taxon_query == "Animalia") datos_procesados$kingdom <- "Animalia"
-      else datos_procesados$kingdom <- as.character(NA)
+      if (taxon_query == "Plantae") {
+        datos_procesados$kingdom <- "Plantae"
+      } else if (taxon_query == "Animalia") {
+        datos_procesados$kingdom <- "Animalia"
+      } else {
+        datos_procesados$kingdom <- as.character(NA)
+      }
     } else {
       datos_procesados$kingdom <- as.character(NA)
     }
   }
-  
+
   datos_procesados$phylum <- as.character(NA)
   datos_procesados$class <- as.character(NA)
   datos_procesados$order <- as.character(NA)
   datos_procesados$family <- as.character(NA)
   datos_procesados$genus <- as.character(NA)
   datos_procesados$species <- as.character(NA)
-  
-  datos_procesados$recordedBy <- if ("user_login" %in% colnames(datos_raw)) datos_raw$user_login else as.character(NA)
-  datos_procesados$coordinateUncertaintyInMeters <- if ("positional_accuracy" %in% colnames(datos_raw)) as.numeric(datos_raw$positional_accuracy) else as.numeric(NA)
-  datos_procesados$sourceRecordID <- as.character(valor_columna(datos_raw, "id"))
-  datos_procesados$occurrenceID <- ifelse(is.na(datos_procesados$sourceRecordID), NA_character_, paste0("https://www.inaturalist.org/observations/", datos_procesados$sourceRecordID))
+
+  datos_procesados$recordedBy <- if ("user_login" %in% colnames(datos_raw)) {
+    datos_raw$user_login
+  } else {
+    as.character(NA)
+  }
+  datos_procesados$coordinateUncertaintyInMeters <- if (
+    "positional_accuracy" %in% colnames(datos_raw)
+  ) {
+    as.numeric(datos_raw$positional_accuracy)
+  } else {
+    as.numeric(NA)
+  }
+  datos_procesados$sourceRecordID <- as.character(valor_columna(
+    datos_raw,
+    "id"
+  ))
+  datos_procesados$occurrenceID <- ifelse(
+    is.na(datos_procesados$sourceRecordID),
+    NA_character_,
+    paste0(
+      "https://www.inaturalist.org/observations/",
+      datos_procesados$sourceRecordID
+    )
+  )
   datos_procesados$sourceURL <- datos_procesados$occurrenceID
   datos_procesados$license <- as.character(valor_columna(datos_raw, "license"))
   datos_procesados$basisOfRecord <- "HumanObservation"
-  
+
   datos_procesados$source <- "iNaturalist"
   datos_procesados$district <- nombre_distrito
   datos_procesados$province <- nombre_provincia
   datos_procesados$department <- nombre_departamento
-  
-  if (verbose) cli::cli_alert_success("[iNaturalist] B\u00fasqueda finalizada. {nrow(datos_procesados)} de {nrow(obs_raw)} registros caen dentro del pol\u00edgono seleccionado.")
+
+  if (verbose) {
+    cli::cli_alert_success(
+      "[iNaturalist] B\u00fasqueda finalizada. {nrow(datos_procesados)} de {nrow(obs_raw)} registros caen dentro del pol\u00edgono seleccionado."
+    )
+  }
   attr(datos_procesados, "api_total") <- total_api
-  attr(datos_procesados, "api_complete") <- is.null(limite) && !is.na(total_api) && nrow(obs_raw) == total_api
-  
+  attr(datos_procesados, "api_complete") <- is.null(limite) &&
+    !is.na(total_api) &&
+    nrow(obs_raw) == total_api
+
   return(datos_procesados)
 }

@@ -89,7 +89,11 @@ reference:
   - title: "Exportación, Configuración y Directorios"
     desc: "Exportación de artefactos (CSV, GeoJSON, manifiesto), gestión del entorno de trabajo y almacenamiento en caché."
     contents:
+      - crear_descarga_gbif
       - exportar_resultados
+      - filtros_calidad_gbif_predeterminados
+      - leer_descarga_gbif
+      - recuperar_descarga_gbif
       - verificar_y_configurar_entorno
       - peruocc_data_dir
       - peruspecies_data_dir

@@ -20,7 +20,18 @@ buscar_especies_peru(
   max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
   cache_dir = ruta_cache("consultas_ocurrencias"),
   reintentos = configuracion_predeterminada()$reintentos_api,
-  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s
+  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s,
+  taxonomia_gbif = c("col", "backbone"),
+  coincidencia_taxonomica = c("exacta", "permitir_fuzzy", "permitir_rango_superior"),
+  filtros_calidad_gbif = filtros_calidad_gbif_predeterminados(),
+  excluir_incidentes_geoespaciales = NULL,
+  solo_ocurrencias_presentes = NULL,
+  excluir_fosiles = NULL,
+  excluir_especimenes_vivos = NULL,
+  incertidumbre_max_m = NULL,
+  permitir_incertidumbre_desconocida = NULL,
+  distancia_min_centroide_m = NULL,
+  licencias_gbif = NULL
 )
 }
 \arguments{
@@ -72,6 +83,30 @@ unidad geográfica para evitar saturar las cuotas de las APIs.}
 \item{reintentos}{Entero positivo con el número de intentos para llamadas API.}
 
 \item{pausa_entre_lotes_s}{Pausa en segundos entre lotes consecutivos.}
+
+\item{taxonomia_gbif}{Taxonomía de GBIF: \code{"col"} (predeterminada) o
+\code{"backbone"}. Todas las claves taxonómicas se resuelven en ella.}
+
+\item{coincidencia_taxonomica}{Política para coincidencias no exactas:
+\code{"exacta"}, \code{"permitir_fuzzy"} o \code{"permitir_rango_superior"}.}
+
+\item{filtros_calidad_gbif}{Lista de filtros; use
+\code{\link[=filtros_calidad_gbif_predeterminados]{filtros_calidad_gbif_predeterminados()}} como punto de partida.}
+
+\item{excluir_incidentes_geoespaciales, solo_ocurrencias_presentes}{Atajos
+lógicos para los filtros de calidad más habituales. Con \code{NULL} conservan
+la política de \code{filtros_calidad_gbif}.}
+
+\item{excluir_fosiles, excluir_especimenes_vivos}{Atajos lógicos para
+incluir o excluir esos tipos de registros.}
+
+\item{incertidumbre_max_m, distancia_min_centroide_m}{Umbrales espaciales en
+metros. Con \code{NULL} no modifican la política de calidad.}
+
+\item{permitir_incertidumbre_desconocida}{Conserva registros sin una
+incertidumbre declarada al usar \code{incertidumbre_max_m}.}
+
+\item{licencias_gbif}{Una licencia o vector de licencias admitidas.}
 }
 \value{
 Objeto con clase \code{peruocc_resultado} (lista con límite \code{unidad_sf},

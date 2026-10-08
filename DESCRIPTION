@@ -1,6 +1,6 @@
 Package: peruocc
 Title: Query and Standardize Biodiversity Occurrences in Peru
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person("Paul E.", "Santos Andrade", , 
     "paulefrens@gmail.com", role = c("aut", "cre", "cph"),
@@ -24,13 +24,15 @@ Imports:
     geoperu,
     ggplot2,
     jsonlite,
+    lifecycle,
     readr,
-    rgbif,
+    rgbif (>= 3.9.0),
     rinat,
     sf
 Suggests:
     knitr,
     rmarkdown,
+    arrow,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
