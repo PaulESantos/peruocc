@@ -24,7 +24,18 @@ buscar_especies_poligono(
   max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
   cache_dir = ruta_cache("consultas_ocurrencias"),
   reintentos = configuracion_predeterminada()$reintentos_api,
-  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s
+  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s,
+  taxonomia_gbif = c("col", "backbone"),
+  coincidencia_taxonomica = c("exacta", "permitir_fuzzy", "permitir_rango_superior"),
+  filtros_calidad_gbif = filtros_calidad_gbif_predeterminados(),
+  excluir_incidentes_geoespaciales = NULL,
+  solo_ocurrencias_presentes = NULL,
+  excluir_fosiles = NULL,
+  excluir_especimenes_vivos = NULL,
+  incertidumbre_max_m = NULL,
+  permitir_incertidumbre_desconocida = NULL,
+  distancia_min_centroide_m = NULL,
+  licencias_gbif = NULL
 )
 ```
 
@@ -102,6 +113,43 @@ buscar_especies_poligono(
 
   Número no negativo de segundos de espera entre lotes. Aumentarlo es
   útil ante respuestas de límite de tasa.
+
+- taxonomia_gbif:
+
+  Taxonomía de GBIF: `"col"` (predeterminada) o `"backbone"`.
+
+- coincidencia_taxonomica:
+
+  Política para coincidencias no exactas: `"exacta"`, `"permitir_fuzzy"`
+  o `"permitir_rango_superior"`.
+
+- filtros_calidad_gbif:
+
+  Lista de filtros de calidad de GBIF. Use
+  [`filtros_calidad_gbif_predeterminados()`](https://paulesantos.github.io/peruocc/reference/filtros_calidad_gbif_predeterminados.md)
+  como punto de partida.
+
+- excluir_incidentes_geoespaciales, solo_ocurrencias_presentes:
+
+  Atajos lógicos de calidad. Con `NULL` conservan
+  `filtros_calidad_gbif`.
+
+- excluir_fosiles, excluir_especimenes_vivos:
+
+  Atajos lógicos para esos tipos de registros.
+
+- incertidumbre_max_m, distancia_min_centroide_m:
+
+  Umbrales espaciales en metros.
+
+- permitir_incertidumbre_desconocida:
+
+  Conserva valores de incertidumbre ausentes al establecer
+  `incertidumbre_max_m`.
+
+- licencias_gbif:
+
+  Una licencia o vector de licencias permitidas.
 
 ## Value
 

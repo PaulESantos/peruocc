@@ -18,14 +18,19 @@
 <url><loc>https://paulesantos.github.io/peruocc/reference/buscar_especies_peru.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/buscar_especies_poligono.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/buscar_especies_provincia.html</loc></url>
+<url><loc>https://paulesantos.github.io/peruocc/reference/crear_descarga_gbif.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/exportar_resultados.html</loc></url>
+<url><loc>https://paulesantos.github.io/peruocc/reference/filtros_calidad_gbif_predeterminados.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/graficar_ocurrencias.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/index.html</loc></url>
+<url><loc>https://paulesantos.github.io/peruocc/reference/leer_descarga_gbif.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/obtener_poligono_distrito.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/obtener_poligono_provincia.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/obtener_poligono_unidad.html</loc></url>
+<url><loc>https://paulesantos.github.io/peruocc/reference/peruocc-package.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/peruocc_data_dir.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/preparar_poligono_usuario.html</loc></url>
+<url><loc>https://paulesantos.github.io/peruocc/reference/recuperar_descarga_gbif.html</loc></url>
 <url><loc>https://paulesantos.github.io/peruocc/reference/verificar_y_configurar_entorno.html</loc></url>
 </urlset>
 

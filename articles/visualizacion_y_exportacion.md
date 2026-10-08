@@ -30,9 +30,9 @@ exportados.
 ``` r
 
 library(peruocc)
-#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.1 ──
+#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.2 ──
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
-#> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
+#> ✔ rgbif   3.9.0   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
 #> ✔ sf      1.1.3   • Operaciones geométricas y filtros espaciales
 ```
@@ -123,7 +123,7 @@ resultado <- buscar_especies_distrito(
 #> ℹ Descargando límites de LIMA vía geoperu...
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 822 caracteres).
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
+#> ✔ [GBIF] Taxon resuelto: Plantae (Key: P, coincidencia: EXACT).
 #> ℹ [GBIF] Consultando registros dentro del polígono de MIRAFLORES (límite: "150")...
 #> ✔ [GBIF] Búsqueda finalizada. Se filtraron 148 registro(s) que caen dentro del polígono seleccionado.
 #> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...

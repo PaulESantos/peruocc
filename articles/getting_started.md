@@ -22,9 +22,9 @@ Carga el paquete en tu sesión de R:
 ``` r
 
 library(peruocc)
-#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.1 ──
+#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.2 ──
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
-#> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
+#> ✔ rgbif   3.9.0   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
 #> ✔ sf      1.1.3   • Operaciones geométricas y filtros espaciales
 ```
@@ -75,7 +75,7 @@ resultado_cusco <- buscar_especies_distrito(
 #> ℹ Descargando límites de CUSCO vía geoperu...
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1153 caracteres).
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
+#> ✔ [GBIF] Taxon resuelto: Plantae (Key: P, coincidencia: EXACT).
 #> ℹ [GBIF] Consultando registros dentro del polígono de CUSCO (límite: "150")...
 #> ✔ [GBIF] Búsqueda finalizada. Se filtraron 150 registro(s) que caen dentro del polígono seleccionado.
 #> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
@@ -111,7 +111,7 @@ resultado_urubamba <- buscar_especies_provincia(
 #> • Grupo: fauna
 #> ℹ Procesando 10 lotes espaciales (distritos): "MARAS", "HUAYLLABAMBA", "YUCAY", "CHINCHERO", "OLLANTAYTAMBO", "MACHUPICCHU", and "URUBAMBA"
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1213 caracteres).
-#> ✔ Lote 1/10 [MARAS]: 193 (GBIF) + 94 (iNat) = 287 registros.
+#> ✔ Lote 1/10 [MARAS]: 195 (GBIF) + 94 (iNat) = 289 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1211 caracteres).
 #> ✔ Lote 2/10 [HUAYLLABAMBA]: 200 (GBIF) + 107 (iNat) = 307 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 608 caracteres).
@@ -119,7 +119,7 @@ resultado_urubamba <- buscar_especies_provincia(
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 865 caracteres).
 #> ✔ Lote 4/10 [CHINCHERO]: 200 (GBIF) + 186 (iNat) = 386 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 300 metros (WKT: 898 caracteres).
-#> ✔ Lote 5/10 [OLLANTAYTAMBO]: 166 (GBIF) + 16 (iNat) = 182 registros.
+#> ✔ Lote 5/10 [OLLANTAYTAMBO]: 167 (GBIF) + 15 (iNat) = 182 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 819 caracteres).
 #> ✔ Lote 6/10 [OLLANTAYTAMBO]: 200 (GBIF) + 79 (iNat) = 279 registros.
 #> ✔ Lote 7/10 [OLLANTAYTAMBO]: 7 (GBIF) + 0 (iNat) = 7 registros.
@@ -129,13 +129,13 @@ resultado_urubamba <- buscar_especies_provincia(
 #> ✔ Lote 9/10 [MACHUPICCHU]: 200 (GBIF) + 190 (iNat) = 390 registros.
 #> ✔ Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1466 caracteres).
 #> ✔ Lote 10/10 [URUBAMBA]: 200 (GBIF) + 178 (iNat) = 378 registros.
-#> ✔ Consolidación exitosa. Total de registros unificados: 2823
+#> ✔ Consolidación exitosa. Total de registros unificados: 2825
 #> 
 #> ── Resumen de Registros ──
 #> 
-#> • GBIF: 1766 registro(s)
-#> • iNaturalist: 1057 registro(s)
-#> ✔ Total consolidado: 2823 registro(s)
+#> • GBIF: 1769 registro(s)
+#> • iNaturalist: 1056 registro(s)
+#> ✔ Total consolidado: 2825 registro(s)
 ```
 
 ### 3. Filtro por Especie o Taxón Específico
@@ -160,8 +160,7 @@ resultado_jaguar <- buscar_especies_distrito(
 #> ℹ Descargando límites de MADRE DE DIOS vía geoperu...
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
 #> ✔ Polígono simplificado con éxito a tolerancia de 8100 metros (WKT: 379 caracteres).
-#> ℹ [GBIF] Resolviendo taxonomía para "Panthera onca"...
-#> ✔ [GBIF] Taxón resuelto: Panthera onca (Linnaeus, 1758) (Key: 5219426, Rank: SPECIES)
+#> ✔ [GBIF] Taxon resuelto: Panthera onca (Linnaeus, 1758) (Key: 4CGXQ, coincidencia: EXACT).
 #> ℹ [GBIF] Consultando registros dentro del polígono de TAMBOPATA (límite: "50")...
 #> ✔ [GBIF] Búsqueda finalizada. Se filtraron 21 registro(s) que caen dentro del polígono seleccionado.
 #> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
@@ -242,9 +241,9 @@ destino mediante `dir_salida`:
 
 # Exportar resultados a un directorio (por ejemplo, temporal para la viñeta)
 archivos <- exportar_resultados(resultado_cusco, dir_salida = tempdir())
-#> ✔ Registros tabulares guardados en: /tmp/RtmpDELZ9v/ocurrencias_20261006T025630Z_distrito_cusco_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpDELZ9v/ocurrencias_20261006T025630Z_distrito_cusco_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /tmp/RtmpDELZ9v/manifiesto_20261006T025630Z_distrito_cusco_flora.json
+#> ✔ Registros tabulares guardados en: /tmp/RtmpeaYB6L/ocurrencias_20261008T181154Z_distrito_cusco_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpeaYB6L/ocurrencias_20261008T181154Z_distrito_cusco_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /tmp/RtmpeaYB6L/manifiesto_20261008T181154Z_distrito_cusco_flora.json
 ```
 
 ------------------------------------------------------------------------

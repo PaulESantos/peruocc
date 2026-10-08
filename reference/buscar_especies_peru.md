@@ -25,7 +25,18 @@ buscar_especies_peru(
   max_lotes = configuracion_predeterminada()$max_lotes_espaciales,
   cache_dir = ruta_cache("consultas_ocurrencias"),
   reintentos = configuracion_predeterminada()$reintentos_api,
-  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s
+  pausa_entre_lotes_s = configuracion_predeterminada()$pausa_entre_lotes_s,
+  taxonomia_gbif = c("col", "backbone"),
+  coincidencia_taxonomica = c("exacta", "permitir_fuzzy", "permitir_rango_superior"),
+  filtros_calidad_gbif = filtros_calidad_gbif_predeterminados(),
+  excluir_incidentes_geoespaciales = NULL,
+  solo_ocurrencias_presentes = NULL,
+  excluir_fosiles = NULL,
+  excluir_especimenes_vivos = NULL,
+  incertidumbre_max_m = NULL,
+  permitir_incertidumbre_desconocida = NULL,
+  distancia_min_centroide_m = NULL,
+  licencias_gbif = NULL
 )
 ```
 
@@ -113,6 +124,45 @@ buscar_especies_peru(
 - pausa_entre_lotes_s:
 
   Pausa en segundos entre lotes consecutivos.
+
+- taxonomia_gbif:
+
+  Taxonomía de GBIF: `"col"` (predeterminada) o `"backbone"`. Todas las
+  claves taxonómicas se resuelven en ella.
+
+- coincidencia_taxonomica:
+
+  Política para coincidencias no exactas: `"exacta"`, `"permitir_fuzzy"`
+  o `"permitir_rango_superior"`.
+
+- filtros_calidad_gbif:
+
+  Lista de filtros; use
+  [`filtros_calidad_gbif_predeterminados()`](https://paulesantos.github.io/peruocc/reference/filtros_calidad_gbif_predeterminados.md)
+  como punto de partida.
+
+- excluir_incidentes_geoespaciales, solo_ocurrencias_presentes:
+
+  Atajos lógicos para los filtros de calidad más habituales. Con `NULL`
+  conservan la política de `filtros_calidad_gbif`.
+
+- excluir_fosiles, excluir_especimenes_vivos:
+
+  Atajos lógicos para incluir o excluir esos tipos de registros.
+
+- incertidumbre_max_m, distancia_min_centroide_m:
+
+  Umbrales espaciales en metros. Con `NULL` no modifican la política de
+  calidad.
+
+- permitir_incertidumbre_desconocida:
+
+  Conserva registros sin una incertidumbre declarada al usar
+  `incertidumbre_max_m`.
+
+- licencias_gbif:
+
+  Una licencia o vector de licencias admitidas.
 
 ## Value
 

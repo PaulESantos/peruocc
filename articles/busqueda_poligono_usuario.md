@@ -23,9 +23,9 @@ Cargamos `peruocc` y `sf` para el manejo de geometrías vectoriales:
 ``` r
 
 library(peruocc)
-#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.1 ──
+#> ── Cargando peruocc ────────────────────────────────────────────────── v0.1.2 ──
 #> ✔ geoperu 0.0.1   • Límites cartográficos oficiales del Perú
-#> ✔ rgbif   3.8.5   • Extracción de ocurrencias desde GBIF
+#> ✔ rgbif   3.9.0   • Extracción de ocurrencias desde GBIF
 #> ✔ rinat   0.1.10  • Observaciones ciudadanas de iNaturalist
 #> ✔ sf      1.1.3   • Operaciones geométricas y filtros espaciales
 library(sf)
@@ -94,7 +94,7 @@ resultado_personalizado <- buscar_especies_poligono(
 #> ── Búsqueda Integrada en Polígono: AREA_ESTUDIO_COSTA ──────────────────────────
 #> • Grupo: flora
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
+#> ✔ [GBIF] Taxon resuelto: Plantae (Key: P, coincidencia: EXACT).
 #> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "25")...
 #> ✔ [GBIF] Búsqueda finalizada. Se filtraron 25 registro(s) que caen dentro del polígono seleccionado.
 #> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
@@ -281,7 +281,7 @@ resultado_desde_archivo <- buscar_especies_poligono(
 #> ── Búsqueda Integrada en Polígono: RESERVA_LOCAL ───────────────────────────────
 #> • Grupo: flora
 #> ℹ [GBIF] Iniciando búsqueda de ocurrencias...
-#> ℹ [GBIF] Filtrando por reino Plantae (Flora).
+#> ✔ [GBIF] Taxon resuelto: Plantae (Key: P, coincidencia: EXACT).
 #> ℹ [GBIF] Consultando registros dentro del polígono de Unidad seleccionada (límite: "15")...
 #> ✔ [GBIF] Búsqueda finalizada. Se filtraron 15 registro(s) que caen dentro del polígono seleccionado.
 #> ℹ [iNaturalist] Iniciando búsqueda de ocurrencias...
@@ -299,9 +299,9 @@ resultado_desde_archivo <- buscar_especies_poligono(
 
 # 3. Exportar resultados con manifiesto de reproducibilidad en directorio temporal
 archivos_exportados <- exportar_resultados(resultado_desde_archivo, dir_salida = tempdir())
-#> ✔ Registros tabulares guardados en: /tmp/RtmpzufhA6/ocurrencias_20261006T025533Z_poligono_reservalocal_flora.csv
-#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpzufhA6/ocurrencias_20261006T025533Z_poligono_reservalocal_flora.geojson
-#> ✔ Manifiesto JSON guardado en: /tmp/RtmpzufhA6/manifiesto_20261006T025533Z_poligono_reservalocal_flora.json
+#> ✔ Registros tabulares guardados en: /tmp/RtmpxpBCj9/ocurrencias_20261008T181044Z_poligono_reservalocal_flora.csv
+#> ✔ Capa espacial GeoJSON guardada en: /tmp/RtmpxpBCj9/ocurrencias_20261008T181044Z_poligono_reservalocal_flora.geojson
+#> ✔ Manifiesto JSON guardado en: /tmp/RtmpxpBCj9/manifiesto_20261008T181044Z_poligono_reservalocal_flora.json
 ```
 
 ------------------------------------------------------------------------

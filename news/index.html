@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peruocc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,21 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.1" id="peruocc-011">peruocc 0.1.1<a class="anchor" aria-label="anchor" href="#peruocc-011"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.2" id="peruocc-012">peruocc 0.1.2<a class="anchor" aria-label="anchor" href="#peruocc-012"></a></h2>
+<ul><li>Updated compatibility for ‘rgbif’ (&gt;= 3.9.0).</li>
+<li>
+<code>buscar_especies_*()</code> now uses a single explicit GBIF taxonomy (<code>checklistKey</code>), resolving group and scientific-name keys with Catalogue of Life (COL XR) by default to avoid mixing COL and legacy Backbone identifiers.</li>
+<li>
+<code>buscar_especies_*()</code> adds configurable GBIF quality filters (<code><a href="../reference/filtros_calidad_gbif_predeterminados.html">filtros_calidad_gbif_predeterminados()</a></code>) and requires an explicit opt-in for fuzzy or higher-rank taxonomic matches.</li>
+<li>Added <code><a href="../reference/crear_descarga_gbif.html">crear_descarga_gbif()</a></code> to create citable, mediated GBIF downloads for large polygons, with <code>SIMPLE_PARQUET</code> as the default format. <code><a href="../reference/crear_descarga_gbif.html">solicitar_descarga_gbif()</a></code> is retained as a deprecated alias.</li>
+<li>
+<code><a href="../reference/crear_descarga_gbif.html">crear_descarga_gbif()</a></code> simplifies extensive polygons without replacing them by their bounding box, and requires an explicit output directory when waiting for the archive.</li>
+<li>Added <code><a href="../reference/recuperar_descarga_gbif.html">recuperar_descarga_gbif()</a></code> to safely download an already-processed GBIF request and create the destination directory when needed.</li>
+<li>Added <code><a href="../reference/leer_descarga_gbif.html">leer_descarga_gbif()</a></code> to open GBIF Parquet downloads lazily via ‘arrow’, ignoring empty fragments included in partitioned archives.</li>
+<li>Marked <code><a href="../reference/crear_descarga_gbif.html">crear_descarga_gbif()</a></code>, <code><a href="../reference/recuperar_descarga_gbif.html">recuperar_descarga_gbif()</a></code>, and <code><a href="../reference/leer_descarga_gbif.html">leer_descarga_gbif()</a></code> as experimental using ‘lifecycle’.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1" id="peruocc-011">peruocc 0.1.1<a class="anchor" aria-label="anchor" href="#peruocc-011"></a></h2><p class="text-muted">CRAN release: 2026-10-06</p>
 <ul><li>
 <code><a href="../reference/peruocc_data_dir.html">peruocc_data_dir()</a></code> now stores canonical paths after creating the requested directory, ensuring consistent behavior on macOS systems where equivalent paths may traverse symbolic links.</li>
 </ul></div>

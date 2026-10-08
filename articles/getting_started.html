@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peruocc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,9 +93,9 @@ Facility</em>) * <strong>iNaturalist</strong></p>
 <p>Carga el paquete en tu sesión de R:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paulesantos.github.io/peruocc/">peruocc</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; ── <span style="font-weight: bold;">Cargando peruocc</span> ────────────────────────────────────────────────── v0.1.1 ──</span></span>
+<span><span class="co">#&gt; ── <span style="font-weight: bold;">Cargando peruocc</span> ────────────────────────────────────────────────── v0.1.2 ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">geoperu</span> 0.0.1   <span style="color: #555555;">• Límites cartográficos oficiales del Perú</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rgbif  </span> 3.8.5   <span style="color: #555555;">• Extracción de ocurrencias desde GBIF</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rgbif  </span> 3.9.0   <span style="color: #555555;">• Extracción de ocurrencias desde GBIF</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">rinat  </span> 0.1.10  <span style="color: #555555;">• Observaciones ciudadanas de iNaturalist</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">sf     </span> 1.1.3   <span style="color: #555555;">• Operaciones geométricas y filtros espaciales</span></span></span></code></pre></div>
 <div class="section level3">
@@ -141,7 +141,7 @@ distrito de <strong>Cusco</strong>, en la provincia y departamento de
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Descargando límites de <span style="font-weight: bold;">CUSCO</span> vía <span style="color: #0000BB;">geoperu</span>...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1153 caracteres).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Filtrando por reino Plantae (Flora).</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Taxon resuelto: <span style="font-weight: bold;">Plantae</span> (Key: P, coincidencia: EXACT).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">CUSCO</span> (límite: <span style="color: #0000BB;">"150"</span>)...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Búsqueda finalizada. Se filtraron 150 registro(s) que caen dentro del polígono seleccionado.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
@@ -175,7 +175,7 @@ disuelve automáticamente las geometrías distritales):</p>
 <span><span class="co">#&gt; • Grupo: fauna</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Procesando 10 lotes espaciales (distritos): <span style="color: #0000BB;">"MARAS"</span>, <span style="color: #0000BB;">"HUAYLLABAMBA"</span>, <span style="color: #0000BB;">"YUCAY"</span>, <span style="color: #0000BB;">"CHINCHERO"</span>, <span style="color: #0000BB;">"OLLANTAYTAMBO"</span>, <span style="color: #0000BB;">"MACHUPICCHU"</span>, and <span style="color: #0000BB;">"URUBAMBA"</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1213 caracteres).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 1/10 [MARAS]: 193 (GBIF) + 94 (iNat) = 287 registros.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 1/10 [MARAS]: 195 (GBIF) + 94 (iNat) = 289 registros.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1211 caracteres).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 2/10 [HUAYLLABAMBA]: 200 (GBIF) + 107 (iNat) = 307 registros.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 608 caracteres).</span></span>
@@ -183,7 +183,7 @@ disuelve automáticamente las geometrías distritales):</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 865 caracteres).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 4/10 [CHINCHERO]: 200 (GBIF) + 186 (iNat) = 386 registros.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 300 metros (WKT: 898 caracteres).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 5/10 [OLLANTAYTAMBO]: 166 (GBIF) + 16 (iNat) = 182 registros.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 5/10 [OLLANTAYTAMBO]: 167 (GBIF) + 15 (iNat) = 182 registros.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 819 caracteres).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 6/10 [OLLANTAYTAMBO]: 200 (GBIF) + 79 (iNat) = 279 registros.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 7/10 [OLLANTAYTAMBO]: 7 (GBIF) + 0 (iNat) = 7 registros.</span></span>
@@ -193,13 +193,13 @@ disuelve automáticamente las geometrías distritales):</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 9/10 [MACHUPICCHU]: 200 (GBIF) + 190 (iNat) = 390 registros.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 100 metros (WKT: 1466 caracteres).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Lote 10/10 [URUBAMBA]: 200 (GBIF) + 178 (iNat) = 378 registros.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Consolidación exitosa. Total de registros unificados: <span style="font-weight: bold;">2823</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Consolidación exitosa. Total de registros unificados: <span style="font-weight: bold;">2825</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Resumen de Registros</span> ──</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> GBIF: <span style="color: #0000BB;">1766</span> registro(s)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> iNaturalist: <span style="color: #0000BB;">1057</span> registro(s)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Total consolidado: <span style="font-weight: bold;">2823</span> registro(s)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> GBIF: <span style="color: #0000BB;">1769</span> registro(s)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> iNaturalist: <span style="color: #0000BB;">1056</span> registro(s)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Total consolidado: <span style="font-weight: bold;">2825</span> registro(s)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="filtro-por-especie-o-taxón-específico">3. Filtro por Especie o Taxón Específico<a class="anchor" aria-label="anchor" href="#filtro-por-especie-o-tax%C3%B3n-espec%C3%ADfico"></a>
@@ -222,8 +222,7 @@ utilizando el argumento <code>nombre_cientifico</code>:</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Descargando límites de <span style="font-weight: bold;">MADRE DE DIOS</span> vía <span style="color: #0000BB;">geoperu</span>...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Iniciando búsqueda de ocurrencias...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Polígono simplificado con éxito a tolerancia de 8100 metros (WKT: 379 caracteres).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Resolviendo taxonomía para <span style="color: #0000BB;">"Panthera onca"</span>...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Taxón resuelto: <span style="font-weight: bold;">Panthera onca (Linnaeus, 1758)</span> (Key: 5219426, Rank: SPECIES)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Taxon resuelto: <span style="font-weight: bold;">Panthera onca (Linnaeus, 1758)</span> (Key: 4CGXQ, coincidencia: EXACT).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [GBIF] Consultando registros dentro del polígono de <span style="font-weight: bold;">TAMBOPATA</span> (límite: <span style="color: #0000BB;">"50"</span>)...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> [GBIF] Búsqueda finalizada. Se filtraron 21 registro(s) que caen dentro del polígono seleccionado.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> [iNaturalist] Iniciando búsqueda de ocurrencias...</span></span>
@@ -332,9 +331,9 @@ reproducibilidad), especifica el directorio de destino mediante
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Exportar resultados a un directorio (por ejemplo, temporal para la viñeta)</span></span>
 <span><span class="va">archivos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exportar_resultados.html">exportar_resultados</a></span><span class="op">(</span><span class="va">resultado_cusco</span>, dir_salida <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/tmp/RtmpDELZ9v/ocurrencias_20261006T025630Z_distrito_cusco_flora.csv</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/tmp/RtmpDELZ9v/ocurrencias_20261006T025630Z_distrito_cusco_flora.geojson</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/tmp/RtmpDELZ9v/manifiesto_20261006T025630Z_distrito_cusco_flora.json</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Registros tabulares guardados en: <span style="color: #0000BB;">/tmp/RtmpeaYB6L/ocurrencias_20261008T181154Z_distrito_cusco_flora.csv</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Capa espacial GeoJSON guardada en: <span style="color: #0000BB;">/tmp/RtmpeaYB6L/ocurrencias_20261008T181154Z_distrito_cusco_flora.geojson</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Manifiesto JSON guardado en: <span style="color: #0000BB;">/tmp/RtmpeaYB6L/manifiesto_20261008T181154Z_distrito_cusco_flora.json</span></span></span></code></pre></div>
 <hr>
 </div>
 </div>

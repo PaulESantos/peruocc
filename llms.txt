@@ -615,8 +615,22 @@ puntos.
 Exportación de artefactos (CSV, GeoJSON, manifiesto), gestión del
 entorno de trabajo y almacenamiento en caché.
 
+- [`crear_descarga_gbif()`](https://paulesantos.github.io/peruocc/reference/crear_descarga_gbif.md)
+  [`solicitar_descarga_gbif()`](https://paulesantos.github.io/peruocc/reference/crear_descarga_gbif.md)
+  **\[experimental\]** : Crea una descarga reproducible de ocurrencias
+  desde GBIF
+
 - [`exportar_resultados()`](https://paulesantos.github.io/peruocc/reference/exportar_resultados.md)
   : Exporta un resultado de búsqueda a formatos interoperables
+
+- [`filtros_calidad_gbif_predeterminados()`](https://paulesantos.github.io/peruocc/reference/filtros_calidad_gbif_predeterminados.md)
+  : Filtros de calidad predeterminados para consultas GBIF
+
+- [`leer_descarga_gbif()`](https://paulesantos.github.io/peruocc/reference/leer_descarga_gbif.md)
+  **\[experimental\]** : Abre archivos Parquet de una descarga GBIF
+
+- [`recuperar_descarga_gbif()`](https://paulesantos.github.io/peruocc/reference/recuperar_descarga_gbif.md)
+  **\[experimental\]** : Recupera una descarga GBIF ya solicitada
 
 - [`verificar_y_configurar_entorno()`](https://paulesantos.github.io/peruocc/reference/verificar_y_configurar_entorno.md)
   :

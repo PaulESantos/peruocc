@@ -41,5 +41,5 @@ dir_temporal <- file.path(tempdir(), "peruocc-ejemplo")
 peruocc_data_dir(dir_temporal)
 # consultar la ruta activa:
 peruocc_data_dir()
-#> [1] "/tmp/RtmpTu6SVP/peruocc-ejemplo"
+#> [1] "/tmp/Rtmp5tP4JO/peruocc-ejemplo"
 ```
